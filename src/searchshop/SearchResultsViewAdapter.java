@@ -63,7 +63,6 @@ public class SearchResultsViewAdapter extends ArrayAdapter<SearchResultsData> {
 
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, File response) {
-					Log.i("Search", response + "");
 					Drawable d = Drawable.createFromPath(response.toString());
 					itemImageView.setImageDrawable(d);
 				}

@@ -1,8 +1,5 @@
 package searchshop;
 
-import io.realm.*;
-import io.realm.annotations.RealmClass;
-
 import java.util.ArrayList;
 
 import org.apache.http.Header;
@@ -12,7 +9,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,15 +28,22 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private static final String BASE_URL = "http://10.73.45.133:8080/search/shop";
 	private ArrayList<SearchResultsData> searchResultsDatas;
-	private int resultPageIndex = 1;
-	private int numOfResultDisplay = 20; 
+	private int resultPageStart = 1;
+	private int numOfResultDisplay = 20;
 	private String resultSorting = "sim";
+	private String query;
+	private ListView listView;
+	private SearchResultsViewAdapter searchResultsViewAdapter;
+	private AsyncHttpClient client = new AsyncHttpClient();
+	private RequestParams params = new RequestParams();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_results);
 		handleIntent(getIntent());
+		listView = (ListView) findViewById(R.id.search_results_listView);
+		listView.setOnItemClickListener(this);
 	}
 
 	@Override
@@ -50,64 +53,79 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			final String query = intent.getStringExtra(SearchManager.QUERY);
+			searchResultsDatas = new ArrayList<SearchResultsData>();
+			query = intent.getStringExtra(SearchManager.QUERY);
 			this.setTitle("Search Results for " + query);
-
-			AsyncHttpClient client = new AsyncHttpClient();
-			RequestParams params = new RequestParams();
-			params.put("query", query);
-			params.put("display", numOfResultDisplay);
-			params.put("start", resultPageIndex);
-			params.put("sort", resultSorting);
-
-			client.get(BASE_URL, params, new JsonHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-					searchResultsDatas = new ArrayList<SearchResultsData>();
-					try {
-						JSONObject data = response.getJSONObject("response");
-						JSONArray itemList = data.getJSONArray("itemList");
-						for (int index = 0; index < itemList.length(); ++index) {
-							SearchResultsData searchData = new SearchResultsData();
-							searchData.setTitle(itemList.getJSONObject(index).getString("title"));
-							searchData.setLink(itemList.getJSONObject(index).getString("link"));
-							searchData.setImage(itemList.getJSONObject(index).getString("image"));
-							searchData.setLprice(itemList.getJSONObject(index).getInt("lprice"));
-							searchData.setHprice(itemList.getJSONObject(index).getInt("hprice"));
-							searchData.setMallName(itemList.getJSONObject(index).getString("mallName"));
-							searchData.setProductId(itemList.getJSONObject(index).getLong("productId"));
-							searchData.setProductType(itemList.getJSONObject(index).getInt("productType"));
-							;
-
-							searchResultsDatas.add(searchData);
-						}
-
-						setListView();
-
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
-
-				@Override
-				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
-					super.onFailure(statusCode, headers, responseString, throwable);
-				}
-
-			});
+			fetchDataFromServer(query, resultPageStart);
 		}
 	}
 
+	private void fetchDataFromServer(String query, int offset) {
+		params.put("query", query);
+		params.put("display", numOfResultDisplay);
+		params.put("start", offset);
+		params.put("sort", resultSorting);
+
+		client.get(BASE_URL, params, new JsonHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				try {
+					JSONObject data = response.getJSONObject("response");
+					JSONArray itemList = data.getJSONArray("itemList");
+					for (int index = 0; index < itemList.length(); ++index) {
+						SearchResultsData searchData = new SearchResultsData();
+						searchData.setTitle(itemList.getJSONObject(index).getString("title"));
+						searchData.setLink(itemList.getJSONObject(index).getString("link"));
+						searchData.setImage(itemList.getJSONObject(index).getString("image"));
+						searchData.setLprice(itemList.getJSONObject(index).getInt("lprice"));
+						searchData.setHprice(itemList.getJSONObject(index).getInt("hprice"));
+						searchData.setMallName(itemList.getJSONObject(index).getString("mallName"));
+						searchData.setProductId(itemList.getJSONObject(index).getLong("productId"));
+						searchData.setProductType(itemList.getJSONObject(index).getInt("productType"));
+						;
+
+						searchResultsDatas.add(searchData);
+					}
+
+					setListView();
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+				super.onFailure(statusCode, headers, responseString, throwable);
+			}
+
+		});
+	}
+
 	private void setListView() {
-		ListView listView = (ListView) findViewById(R.id.search_results_listView);
-		SearchResultsViewAdapter searchResultsViewAdapter = new SearchResultsViewAdapter(this,
-				R.layout.searchresults_list_row, searchResultsDatas);
-		listView.setAdapter(searchResultsViewAdapter);
-		listView.setOnItemClickListener(this);
+		if (searchResultsViewAdapter == null) {
+			searchResultsViewAdapter = new SearchResultsViewAdapter(this, R.layout.searchresults_list_row,
+					searchResultsDatas);
+			listView.setAdapter(searchResultsViewAdapter);
+			listView.setOnScrollListener(new EndlessScrollListener() {
+
+				@Override
+				public void onLoadMore(int page, int totalItemsCount) {
+					customLoadMoreDataFromApi(page);
+				}
+			});
+			Log.i("Search", "setting Adapter");
+
+		}
+	}
+
+	private void customLoadMoreDataFromApi(int offset) {
+		Log.i("Search", "load more");
+		fetchDataFromServer(query, offset);
 	}
 
 	@Override
