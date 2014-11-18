@@ -4,5 +4,10 @@
     <string name="app_name">SnapShop</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="like">Like!</string>
+    <string name="search_title">Search!</string>
+    <string name="search_hint">Search What you want!</string>
+    <string name="title_activity_search_results">Search Results</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
