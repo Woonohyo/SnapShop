@@ -1653,7 +1653,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f060030;
         public static final int action_mode_bar_stub=0x7f06002f;
         public static final int action_mode_close_button=0x7f060022;
-        public static final int action_settings=0x7f06004b;
+        public static final int action_settings=0x7f06004c;
         public static final int activity_chooser_view_content=0x7f060023;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
@@ -1678,17 +1678,18 @@ containing a value of this type.
         public static final int list_item=0x7f060027;
         public static final int middle=0x7f060013;
         public static final int never=0x7f06000b;
-        public static final int newsfeed_list_row_itemPrice_text_view=0x7f060045;
-        public static final int newsfeed_list_row_item_image_view=0x7f060043;
-        public static final int newsfeed_list_row_item_name_text_view=0x7f060044;
-        public static final int newsfeed_list_row_like_image_view=0x7f060046;
-        public static final int newsfeed_main_listView=0x7f060041;
+        public static final int newsfeed_list_row_itemPrice_text_view=0x7f060047;
+        public static final int newsfeed_list_row_item_image_view=0x7f060045;
+        public static final int newsfeed_list_row_item_name_text_view=0x7f060046;
+        public static final int newsfeed_list_row_like_image_view=0x7f060048;
+        public static final int newsfeed_main_listView=0x7f060042;
         public static final int none=0x7f060004;
         public static final int normal=0x7f060001;
         public static final int progress_circular=0x7f06001e;
         public static final int progress_horizontal=0x7f06001f;
         public static final int radio=0x7f06002d;
-        public static final int search=0x7f06004a;
+        public static final int realtabcontent=0x7f060041;
+        public static final int search=0x7f06004d;
         public static final int search_badge=0x7f060037;
         public static final int search_bar=0x7f060036;
         public static final int search_button=0x7f060038;
@@ -1697,12 +1698,13 @@ containing a value of this type.
         public static final int search_go_btn=0x7f06003f;
         public static final int search_mag_icon=0x7f06003a;
         public static final int search_plate=0x7f06003b;
-        public static final int search_results_listView=0x7f060042;
+        public static final int search_results_listView=0x7f060043;
         public static final int search_src_text=0x7f06003c;
         public static final int search_voice_btn=0x7f060040;
-        public static final int searchresults_list_row_image_view=0x7f060047;
-        public static final int searchresults_list_row_itemPrice_text_view=0x7f060049;
-        public static final int searchresults_list_row_item_name_text_view=0x7f060048;
+        public static final int searchresults_list_row_image_view=0x7f060049;
+        public static final int searchresults_list_row_itemPrice_text_view=0x7f06004b;
+        public static final int searchresults_list_row_item_name_text_view=0x7f06004a;
+        public static final int section_label=0x7f060044;
         public static final int shortcut=0x7f06002c;
         public static final int showCustom=0x7f060009;
         public static final int showHome=0x7f060006;
@@ -1766,15 +1768,18 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030014;
         public static final int abc_search_view=0x7f030015;
         public static final int abc_simple_dropdown_hint=0x7f030016;
-        public static final int activity_newsfeed=0x7f030017;
-        public static final int activity_search_results=0x7f030018;
-        public static final int newsfeed_list_row=0x7f030019;
-        public static final int searchresults_list_row=0x7f03001a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
+        public static final int activity_main=0x7f030017;
+        public static final int activity_newsfeed=0x7f030018;
+        public static final int activity_search_results=0x7f030019;
+        public static final int fragment_main=0x7f03001a;
+        public static final int newsfeed_list_row=0x7f03001b;
+        public static final int searchresults_list_row=0x7f03001c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001d;
     }
     public static final class menu {
-        public static final int options_menu=0x7f0d0000;
-        public static final int search_results=0x7f0d0001;
+        public static final int main=0x7f0d0000;
+        public static final int options_menu=0x7f0d0001;
+        public static final int search_results=0x7f0d0002;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1838,6 +1843,9 @@ containing a value of this type.
         public static final int search_title=0x7f0b0013;
         public static final int title_activity_main=0x7f0b0011;
         public static final int title_activity_search_results=0x7f0b0015;
+        public static final int title_section1=0x7f0b0017;
+        public static final int title_section2=0x7f0b0018;
+        public static final int title_section3=0x7f0b0019;
     }
     public static final class style {
         /** 
