@@ -44,6 +44,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.l3cache.snapshop.favorite.FavoriteView"
+            android:label="@string/title_activity_favorite_view" >
+        </activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
+import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.search.SearchResultsView;
 
@@ -33,6 +34,10 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		
 		mTabHost.addTab(mTabHost.newTabSpec("newsfeed").setIndicator("Newsfeed"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("Favorite"), FavoriteView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("write").setIndicator("Write"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("MyPost"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), NewsfeedView.class, null);
 	}
 
 	
