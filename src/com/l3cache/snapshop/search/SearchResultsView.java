@@ -88,8 +88,9 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				try {
 					JSONObject data = response.getJSONObject("response");
+					data = data.getJSONObject("data");
 					numOfTotalResult = data.getInt("total");
-					JSONArray itemList = data.getJSONArray("itemList");
+					JSONArray itemList = data.getJSONArray("list");
 
 					for (int index = 0; index < itemList.length(); ++index) {
 						SearchResultsData searchData = new SearchResultsData();

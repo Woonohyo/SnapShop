@@ -1,16 +1,19 @@
 package com.l3cache.snapshop;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.TabHost.OnTabChangeListener;
 
 import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
@@ -32,15 +35,24 @@ public class MainTabHostView extends FragmentActivity {
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-		
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
+			@Override
+			public void onTabChanged(String tabId) {
+				if (tabId.equals("snap")) {
+					SnapDialogFragment snapDialog = new SnapDialogFragment();	
+					snapDialog.show(getSupportFragmentManager(), null);
+				}
+			}
+		});
+
 		mTabHost.addTab(mTabHost.newTabSpec("newsfeed").setIndicator("Newsfeed"), NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("Favorite"), FavoriteView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("write").setIndicator("Write"), NewsfeedView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("MyPost"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), NewsfeedView.class, null);
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -68,5 +80,5 @@ public class MainTabHostView extends FragmentActivity {
 
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 }

@@ -16,6 +16,9 @@ public final class R {
         public static final int abc_slide_out_bottom=0x7f040004;
         public static final int abc_slide_out_top=0x7f040005;
     }
+    public static final class array {
+        public static final int snap_array=0x7f0d0000;
+    }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1775,12 +1778,13 @@ containing a value of this type.
         public static final int fragment_main=0x7f03001b;
         public static final int newsfeed_list_row=0x7f03001c;
         public static final int searchresults_list_row=0x7f03001d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
+        public static final int snapdialogfragment=0x7f03001e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
     }
     public static final class menu {
-        public static final int main=0x7f0d0000;
-        public static final int options_menu=0x7f0d0001;
-        public static final int search_results=0x7f0d0002;
+        public static final int main=0x7f0e0000;
+        public static final int options_menu=0x7f0e0001;
+        public static final int search_results=0x7f0e0002;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1838,6 +1842,7 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000d;
         public static final int action_settings=0x7f0b0016;
         public static final int app_name=0x7f0b000f;
+        public static final int dialog_snap=0x7f0b001b;
         public static final int hello_world=0x7f0b0010;
         public static final int like=0x7f0b0012;
         public static final int search_hint=0x7f0b0014;

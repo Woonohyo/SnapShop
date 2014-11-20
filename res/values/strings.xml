@@ -3,7 +3,7 @@
 
     <string name="app_name">SnapShop</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">SnapShop</string>
     <string name="like">Like!</string>
     <string name="search_title">Search!</string>
     <string name="search_hint">Search What you want!</string>
@@ -13,5 +13,11 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="title_activity_favorite_view">FavoriteView</string>
+    <string name="dialog_snap">스냅</string>
+    <string-array name="snap_array">
+      <item>카메라</item>
+      <item>앨범</item>
+      <item>웹</item>  
+    </string-array>
 
 </resources>
