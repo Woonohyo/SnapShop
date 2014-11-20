@@ -1,5 +1,7 @@
 package com.l3cache.snapshop;
 
+import io.realm.internal.TableSpec;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -7,14 +9,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.test.PerformanceTestCase;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TabHost.OnTabChangeListener;
-
+import android.widget.TabHost.TabSpec;
 import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.search.SearchResultsView;
@@ -35,22 +42,29 @@ public class MainTabHostView extends FragmentActivity {
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
-
-			@Override
-			public void onTabChanged(String tabId) {
-				if (tabId.equals("snap")) {
-					SnapDialogFragment snapDialog = new SnapDialogFragment();	
-					snapDialog.show(getSupportFragmentManager(), null);
-				}
-			}
-		});
 
 		mTabHost.addTab(mTabHost.newTabSpec("newsfeed").setIndicator("Newsfeed"), NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("Favorite"), FavoriteView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), NewsfeedView.class, null);
+
+		mTabHost.getTabWidget().getChildAt(2).setOnTouchListener(new OnTouchListener() {
+
+			@SuppressLint("ClickableViewAccessibility")
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+
+				if (action == MotionEvent.ACTION_UP) {
+					SnapDialogFragment snapDialog = new SnapDialogFragment();
+					snapDialog.show(getSupportFragmentManager(), null);
+					return true;
+				}
+				return false;
+			}
+		});
+
 	}
 
 	@Override
