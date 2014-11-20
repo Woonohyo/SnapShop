@@ -1,32 +1,31 @@
 package com.l3cache.snapshop;
 
-import io.realm.internal.TableSpec;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.test.PerformanceTestCase;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabSpec;
+
 import com.l3cache.snapshop.favorite.FavoriteView;
+import com.l3cache.snapshop.info.InfoView;
+import com.l3cache.snapshop.myposts.MyPostsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.search.SearchResultsView;
 
 public class MainTabHostView extends FragmentActivity {
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private static final int RESULT_OK = 110;
+	private static final int RESULT_CANCELED = 120;
 	private FragmentTabHost mTabHost;
 
 	@Override
@@ -45,12 +44,11 @@ public class MainTabHostView extends FragmentActivity {
 
 		mTabHost.addTab(mTabHost.newTabSpec("newsfeed").setIndicator("Newsfeed"), NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("Favorite"), FavoriteView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), NewsfeedView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), NewsfeedView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), null, null);
+		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), MyPostsView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), InfoView.class, null);
 
 		mTabHost.getTabWidget().getChildAt(2).setOnTouchListener(new OnTouchListener() {
-
 			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -66,6 +64,8 @@ public class MainTabHostView extends FragmentActivity {
 		});
 
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

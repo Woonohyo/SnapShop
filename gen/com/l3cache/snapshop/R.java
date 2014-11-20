@@ -1772,14 +1772,16 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030015;
         public static final int abc_simple_dropdown_hint=0x7f030016;
         public static final int activity_favorite_view=0x7f030017;
-        public static final int activity_main=0x7f030018;
-        public static final int activity_newsfeed=0x7f030019;
-        public static final int activity_search_results=0x7f03001a;
-        public static final int fragment_main=0x7f03001b;
-        public static final int newsfeed_list_row=0x7f03001c;
-        public static final int searchresults_list_row=0x7f03001d;
-        public static final int snapdialogfragment=0x7f03001e;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
+        public static final int activity_info=0x7f030018;
+        public static final int activity_main=0x7f030019;
+        public static final int activity_my_posts_view=0x7f03001a;
+        public static final int activity_newsfeed=0x7f03001b;
+        public static final int activity_search_results=0x7f03001c;
+        public static final int fragment_main=0x7f03001d;
+        public static final int newsfeed_list_row=0x7f03001e;
+        public static final int searchresults_list_row=0x7f03001f;
+        public static final int snapdialogfragment=0x7f030020;
+        public static final int support_simple_spinner_dropdown_item=0x7f030021;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;
@@ -1848,7 +1850,9 @@ containing a value of this type.
         public static final int search_hint=0x7f0b0014;
         public static final int search_title=0x7f0b0013;
         public static final int title_activity_favorite_view=0x7f0b001a;
+        public static final int title_activity_info=0x7f0b001d;
         public static final int title_activity_main=0x7f0b0011;
+        public static final int title_activity_my_posts_view=0x7f0b001c;
         public static final int title_activity_search_results=0x7f0b0015;
         public static final int title_section1=0x7f0b0017;
         public static final int title_section2=0x7f0b0018;

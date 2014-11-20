@@ -6,6 +6,11 @@
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -45,8 +50,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.favorite.FavoriteView"
+            android:name=".favorite.FavoriteView"
             android:label="@string/title_activity_favorite_view" >
+        </activity>
+        <activity
+            android:name="com.l3cache.snapshop.myposts.MyPostsView"
+            android:label="@string/title_activity_my_posts_view" >
+        </activity>
+        <activity
+            android:name="com.l3cache.snapshop.info.InfoView"
+            android:label="@string/title_activity_info" >
         </activity>
     </application>
 

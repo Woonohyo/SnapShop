@@ -2,38 +2,34 @@ package com.l3cache.snapshop.newsfeed;
 
 import java.util.ArrayList;
 
-import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.R.id;
-import com.l3cache.snapshop.R.layout;
-import com.l3cache.snapshop.R.menu;
-import com.l3cache.snapshop.search.SearchResultsView;
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
+
+import com.l3cache.snapshop.R;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class NewsfeedView extends Fragment implements OnItemClickListener {
-
+	private static final String BASE_URL = "http://10.73.45.133:8080/app/posts/";
+	private int POST_START_PAGE = 1;
+	private int POST_SORT = 0;
 	private ArrayList<NewsfeedData> newsfeedDatas = new ArrayList<NewsfeedData>();
+	private AsyncHttpClient mClient = new AsyncHttpClient();
+	private ListView mListView;
+	private NewsfeedViewAdapter mNewsfeedViewAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,22 +37,23 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	}
 
 	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if(mNewsfeedViewAdapter != null) {
+			mNewsfeedViewAdapter.notifyDataSetChanged();
+		}
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		Log.i("Newsfeed", "created");
 
-		NewsfeedData data1 = new NewsfeedData("JessicaInLove.png", "아이템이름1", "아이템가격1");
-		newsfeedDatas.add(data1);
-
-		NewsfeedData data2 = new NewsfeedData("JessicaInLove.png", "아이템이름2", "아이템가격2");
-		newsfeedDatas.add(data2);
-
-		ListView listView = (ListView) getView().findViewById(R.id.newsfeed_main_listView);
-
-		NewsfeedViewAdapter newsfeedViewAdapter = new NewsfeedViewAdapter(getActivity(), R.layout.newsfeed_list_row,
-				newsfeedDatas);
-		listView.setAdapter(newsfeedViewAdapter);
-		listView.setOnItemClickListener(this);
+		fetchDataFromServer(POST_START_PAGE, POST_SORT);
+		newsfeedDatas.clear();
+		mListView = (ListView) getView().findViewById(R.id.newsfeed_main_listView);
+		mListView.setOnItemClickListener(this);
 	}
 
 	@Override
@@ -66,8 +63,43 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void fetchDataFromServer(int start, final int sort) {
+		RequestParams params = new RequestParams();
+		params.put("sort", sort);
+		params.put("start", start);
+
+		mClient.get(BASE_URL, new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				try {
+					JSONObject data = response.getJSONObject("response");
+					data = data.getJSONObject("data");
+					JSONArray itemList = data.getJSONArray("list");
+					for (int index = 0; index < itemList.length(); ++index) {
+						NewsfeedData newsfeedData = new NewsfeedData();
+						newsfeedData.setName(itemList.getJSONObject(index).getString("title"));
+						newsfeedData.setImgName(itemList.getJSONObject(index).getString("imgUrl"));
+						newsfeedData.setPrice(itemList.getJSONObject(index).getString("price"));
+						newsfeedDatas.add(newsfeedData);
+					}
+
+					setListView();
+
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+
+		});
+	}
+
+	private void setListView() {
+		if (mNewsfeedViewAdapter == null) {
+			mNewsfeedViewAdapter = new NewsfeedViewAdapter(getActivity(), R.layout.newsfeed_list_row, newsfeedDatas);
+		}
+		mListView.setAdapter(mNewsfeedViewAdapter);
+	}
 }

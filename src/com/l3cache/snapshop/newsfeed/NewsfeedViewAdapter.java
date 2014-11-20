@@ -1,10 +1,19 @@
 package com.l3cache.snapshop.newsfeed;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import org.apache.http.Header;
+
 import com.l3cache.snapshop.R;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +27,7 @@ public class NewsfeedViewAdapter extends ArrayAdapter<NewsfeedData> {
 	private Context mContext;
 	private int mLayoutResourceId;
 	private ArrayList<NewsfeedData> mListData;
+	private ImageView mItemImageView;
 
 	public NewsfeedViewAdapter(Context context, int layoutResourceId, ArrayList<NewsfeedData> listData) {
 		super(context, layoutResourceId, listData);
@@ -36,7 +46,7 @@ public class NewsfeedViewAdapter extends ArrayAdapter<NewsfeedData> {
 			row = inflater.inflate(mLayoutResourceId, parent, false);
 		}
 
-		ImageView itemImageView = (ImageView) row.findViewById(R.id.newsfeed_list_row_item_image_view);
+		mItemImageView = (ImageView) row.findViewById(R.id.newsfeed_list_row_item_image_view);
 		TextView itemNameTextView = (TextView) row.findViewById(R.id.newsfeed_list_row_item_name_text_view);
 		TextView itemPriceTextView = (TextView) row.findViewById(R.id.newsfeed_list_row_itemPrice_text_view);
 
@@ -44,9 +54,23 @@ public class NewsfeedViewAdapter extends ArrayAdapter<NewsfeedData> {
 		itemPriceTextView.setText(mListData.get(position).getPrice());
 
 		try {
-			InputStream is = mContext.getAssets().open(mListData.get(position).getImgName());
-			Drawable d = Drawable.createFromStream(is, null);
-			itemImageView.setImageDrawable(d);
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.get(mListData.get(position).getImgName(), new FileAsyncHttpResponseHandler(mContext) {
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, Throwable throwable, File response) {
+					
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, File response) {
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					options.inSampleSize = 2;
+					Bitmap bitmap = BitmapFactory.decodeFile(response.toString(), options);
+					bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+					mItemImageView.setImageBitmap(bitmap);
+				}
+			});
 
 		} catch (Exception e) {
 			Log.e("NewsFeed", "Image Error: " + e);

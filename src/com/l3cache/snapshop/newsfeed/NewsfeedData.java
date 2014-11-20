@@ -11,6 +11,10 @@ public class NewsfeedData {
 		this.price = price;
 	}
 
+	public NewsfeedData() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getName() {
 		return name;
 	}
