@@ -20,7 +20,7 @@ public class SnapDialogFragment extends DialogFragment {
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int RESULT_OK = 110;
 	private static final int RESULT_LOAD_IMAGE = 200;
-	private static final int RESULT_CANCELED = 120; 
+	private static final int RESULT_CANCELED = 120;
 	private static final int MEDIA_TYPE_IMAGE = 1;
 	private Uri fileUri;
 
@@ -45,7 +45,8 @@ public class SnapDialogFragment extends DialogFragment {
 				}
 
 				case 1: {
-					Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+					Intent intent = new Intent(Intent.ACTION_PICK,
+							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 					startActivityForResult(intent, RESULT_LOAD_IMAGE);
 					break;
 				}
@@ -59,11 +60,11 @@ public class SnapDialogFragment extends DialogFragment {
 		});
 		return builder.create();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == RESULT_OK ) {
+			if (resultCode == RESULT_OK) {
 				Log.i("CameraApp", "Capture OK");
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
@@ -75,7 +76,7 @@ public class SnapDialogFragment extends DialogFragment {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	private Uri getOutputMediaFileUri(int type) {
 		return Uri.fromFile(getOutputMediaFile(type));
 	}

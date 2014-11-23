@@ -23,9 +23,6 @@ import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.search.SearchResultsView;
 
 public class MainTabHostView extends FragmentActivity {
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	private static final int RESULT_OK = 110;
-	private static final int RESULT_CANCELED = 120;
 	private FragmentTabHost mTabHost;
 
 	@Override
@@ -42,8 +39,8 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-		mTabHost.addTab(mTabHost.newTabSpec("newsfeed").setIndicator("Newsfeed"), NewsfeedView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("Favorite"), FavoriteView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("newsfeed").setIndicator("NEWSFEED"), NewsfeedView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("LIKE"), FavoriteView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), null, null);
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), MyPostsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), InfoView.class, null);
@@ -53,7 +50,6 @@ public class MainTabHostView extends FragmentActivity {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				int action = event.getAction();
-
 				if (action == MotionEvent.ACTION_UP) {
 					SnapDialogFragment snapDialog = new SnapDialogFragment();
 					snapDialog.show(getSupportFragmentManager(), null);
@@ -62,10 +58,7 @@ public class MainTabHostView extends FragmentActivity {
 				return false;
 			}
 		});
-
 	}
-	
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

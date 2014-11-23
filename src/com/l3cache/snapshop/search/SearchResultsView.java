@@ -24,6 +24,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.adapter.SearchResultsViewAdapter;
+import com.l3cache.snapshop.data.SearchResultsData;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -182,7 +184,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
+		Log.i("Search", position + "번 선택");
 
 	}
 }

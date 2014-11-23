@@ -18,8 +18,8 @@
         tools:ignore="OldTargetApi" />
 
     <application
+        android:name="com.l3cache.snapshop.app.AppController"
         android:allowBackup="true"
-        android:hint="@string/search_hint"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/SnapActionBarTheme" >
         <activity

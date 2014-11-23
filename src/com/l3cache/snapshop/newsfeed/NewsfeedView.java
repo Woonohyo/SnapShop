@@ -18,15 +18,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.adapter.NewsfeedViewAdapter;
+import com.l3cache.snapshop.data.NewsfeedData;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class NewsfeedView extends Fragment implements OnItemClickListener {
-	private static final String BASE_URL = "http://10.73.45.133:8080/app/posts/";
+	private static final String URL_FEED = "http://10.73.45.133:8080/app/posts/";
 	private int POST_START_PAGE = 1;
 	private int POST_SORT = 0;
-	private ArrayList<NewsfeedData> newsfeedDatas = new ArrayList<NewsfeedData>();
+	private ArrayList<NewsfeedData> newsfeedDatas;
 	private AsyncHttpClient mClient = new AsyncHttpClient();
 	private ListView mListView;
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
@@ -48,10 +50,9 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		Log.i("Newsfeed", "created");
 
 		fetchDataFromServer(POST_START_PAGE, POST_SORT);
-		newsfeedDatas.clear();
+		newsfeedDatas = new ArrayList<NewsfeedData>();
 		mListView = (ListView) getView().findViewById(R.id.newsfeed_main_listView);
 		mListView.setOnItemClickListener(this);
 	}
@@ -71,7 +72,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		params.put("sort", sort);
 		params.put("start", start);
 
-		mClient.get(BASE_URL, new JsonHttpResponseHandler() {
+		mClient.get(URL_FEED, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				try {
