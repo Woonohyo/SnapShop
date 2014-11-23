@@ -16,6 +16,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,7 @@ public class NewsfeedViewAdapter extends ArrayAdapter<NewsfeedData> {
 
 		try {
 			AsyncHttpClient client = new AsyncHttpClient();
-			client.get(mListData.get(position).getImgName(), new FileAsyncHttpResponseHandler(mContext) {
+			client.get(mListData.get(position).getImage(), new FileAsyncHttpResponseHandler(mContext) {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, Throwable throwable, File response) {

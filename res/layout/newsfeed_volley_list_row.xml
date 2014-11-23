@@ -50,6 +50,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/feed_item_profile_name"
+                    android:text="name textview"
                     android:textStyle="bold" />
  
 
@@ -57,6 +58,7 @@
                     android:id="@+id/timestamp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:text="timestmap textview"
                     android:textColor="@color/timestamp"
                     android:textSize="@dimen/feed_item_timestamp" />
             

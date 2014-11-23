@@ -23,10 +23,10 @@ import com.l3cache.snapshop.newsfeed.FeedImageView;
 public class FavoriteAdapter extends BaseAdapter {
 	private Activity activity;
     private LayoutInflater inflater;
-    private List<FavoriteItem> favoriteItems;
+    private List<FavoriteData> favoriteItems;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
  
-    public FavoriteAdapter(Activity activity, List<FavoriteItem> feedItems) {
+    public FavoriteAdapter(Activity activity, List<FavoriteData> feedItems) {
         this.activity = activity;
         this.favoriteItems = feedItems;
     }
@@ -69,7 +69,7 @@ public class FavoriteAdapter extends BaseAdapter {
         FeedImageView feedImageView = (FeedImageView) convertView
                 .findViewById(R.id.feedImage1);
  
-        FavoriteItem item = favoriteItems.get(position);
+        FavoriteData item = favoriteItems.get(position);
  
         name.setText(item.getName());
  

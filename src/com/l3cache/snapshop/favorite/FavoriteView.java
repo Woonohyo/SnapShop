@@ -28,7 +28,7 @@ public class FavoriteView extends Fragment {
 	private static final String TAG = FavoriteView.class.getSimpleName();
 	private ListView listView;
 	private FavoriteAdapter listAdapter;
-	private ArrayList<FavoriteItem> feedItems;
+	private ArrayList<FavoriteData> feedItems;
 	private String URL_FEED = "http://api.androidhive.info/feed/feed.json";
 
 	@Override
@@ -42,7 +42,7 @@ public class FavoriteView extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		listView = (ListView) getView().findViewById(R.id.favorite_main_list_view);
 
-		feedItems = new ArrayList<FavoriteItem>();
+		feedItems = new ArrayList<FavoriteData>();
 
 		listAdapter = new FavoriteAdapter(getActivity(), feedItems);
 		listView.setAdapter(listAdapter);
@@ -94,7 +94,7 @@ public class FavoriteView extends Fragment {
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-				FavoriteItem item = new FavoriteItem();
+				FavoriteData item = new FavoriteData();
 				item.setId(feedObj.getInt("id"));
 				item.setName(feedObj.getString("name"));
 

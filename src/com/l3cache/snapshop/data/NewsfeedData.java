@@ -1,12 +1,16 @@
 package com.l3cache.snapshop.data;
 
 public class NewsfeedData {
-	private String imgName;
+	private String image;
 	private String name;
 	private String price;
+	private String url;
+	private String timeStamp;
+	private String status;
+	private String profilePic;
 
 	public NewsfeedData(String imgName, String name, String price) {
-		this.imgName = imgName;
+		this.image = imgName;
 		this.name = name;
 		this.price = price;
 	}
@@ -31,12 +35,44 @@ public class NewsfeedData {
 		this.price = price;
 	}
 
-	public String getImgName() {
-		return imgName;
+	public String getImage() {
+		return image;
 	}
 
-	public void setImgName(String imgName) {
-		this.imgName = imgName;
+	public void setImage(String imgName) {
+		this.image = imgName;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(String timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
 	}
 
 }
