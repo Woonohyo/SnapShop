@@ -32,7 +32,7 @@ import com.loopj.android.http.RequestParams;
 
 public class SearchResultsView extends Activity implements OnItemClickListener {
 
-	private static final String BASE_URL = "http://10.73.45.133:8080/search/shop";
+	private static final String URL_FEED = "http://10.73.45.133:8080/search/shop";
 	private ArrayList<SearchResultsData> searchResultsDatas;
 	private int resultPageStart = 1;
 	private int numOfTotalResult;
@@ -84,7 +84,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		params.put("start", offset);
 		params.put("sort", resultSorting);
 
-		client.get(BASE_URL, params, new JsonHttpResponseHandler() {
+		client.get(URL_FEED, params, new JsonHttpResponseHandler() {
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -166,7 +166,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.search_results, menu);
 		return true;
 	}
 

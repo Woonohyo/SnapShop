@@ -1806,8 +1806,9 @@ containing a value of this type.
         public static final int newsfeed_list_row=0x7f03001e;
         public static final int newsfeed_volley_list_row=0x7f03001f;
         public static final int searchresults_list_row=0x7f030020;
-        public static final int snapdialogfragment=0x7f030021;
-        public static final int support_simple_spinner_dropdown_item=0x7f030022;
+        public static final int searchresults_volley_list_row=0x7f030021;
+        public static final int snapdialogfragment=0x7f030022;
+        public static final int support_simple_spinner_dropdown_item=0x7f030023;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;

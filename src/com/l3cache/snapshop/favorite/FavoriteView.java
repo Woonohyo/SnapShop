@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.favorite;
 
 import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 
 import org.json.JSONArray;
