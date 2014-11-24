@@ -24,16 +24,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.data.SearchResultsData;
+import com.l3cache.snapshop.data.SearchResultsItem;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
-public class SearchResultsViewAdapter extends ArrayAdapter<SearchResultsData> {
+public class SearchResultsViewAdapter extends ArrayAdapter<SearchResultsItem> {
 	private Context mContext;
 	private int mLayoutResourceId;
-	private ArrayList<SearchResultsData> mResultData;
+	private ArrayList<SearchResultsItem> mResultData;
 
-	public SearchResultsViewAdapter(Context context, int layoutResourceId, ArrayList<SearchResultsData> resultData) {
+	public SearchResultsViewAdapter(Context context, int layoutResourceId, ArrayList<SearchResultsItem> resultData) {
 		super(context, layoutResourceId, resultData);
 		mContext = context;
 		mLayoutResourceId = layoutResourceId;

@@ -2,22 +2,17 @@ package com.l3cache.snapshop.newsfeed;
 
 import java.util.ArrayList;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.app.AppController;
-import com.l3cache.snapshop.data.NewsfeedData;
 import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.data.NewsfeedData;
 
 public class NewsfeedVolleyAdapter extends BaseAdapter {
 	private Activity activity;
@@ -58,7 +53,6 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 	 
 	        FeedImageView feedImageView = (FeedImageView) convertView
 	                .findViewById(R.id.feedImage1);
-	        
 	 
 	        NewsfeedData item = newsfeedDatas.get(position);
 	 
