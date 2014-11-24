@@ -3,6 +3,7 @@ package com.l3cache.snapshop.data;
 public class NewsfeedData {
 	private String image;
 	private String name;
+	private String title;
 	private String price;
 	private String url;
 	private String timeStamp;
@@ -73,6 +74,14 @@ public class NewsfeedData {
 
 	public void setProfilePic(String profilePic) {
 		this.profilePic = profilePic;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

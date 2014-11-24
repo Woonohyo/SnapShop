@@ -35,7 +35,6 @@ public class FavoriteView extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.activity_favorite_view, container, false);
-
 	}
 
 	@Override
@@ -76,7 +75,6 @@ public class FavoriteView extends Fragment {
 							}
 						}
 					}, new Response.ErrorListener() {
-
 						@Override
 						public void onErrorResponse(VolleyError error) {
 							VolleyLog.d(TAG, "Error: " + error.getMessage());

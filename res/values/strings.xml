@@ -14,7 +14,11 @@
     <string name="title_section3">Section 3</string>
     <string name="title_activity_favorite_view">FavoriteView</string>
     <string name="dialog_snap">스냅</string>
-
+    <string name="button_recommended">추천</string>
+    <string name="button_recent">최근</string>
+    <string name="button_hot">인기</string>
+    
+    
     <string-array name="snap_array">
         <item>카메라</item>
         <item>앨범</item>

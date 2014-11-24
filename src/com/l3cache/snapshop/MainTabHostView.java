@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -28,12 +29,12 @@ public class MainTabHostView extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main_tab_host);
 
 		// Status Bar 없는 상태로 만들기. XML은 TitleBar까지 없애므로 코드로 처리
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// Status Bar에서 App Icon 제거하기
-		// getActionBar().setDisplayShowHomeEnabled(false);
+//		getActionBar().setDisplayShowHomeEnabled(false);
 
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
@@ -44,6 +45,8 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), null, null);
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), MyPostsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), InfoView.class, null);
+		
+		mTabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.GREEN);
 
 		mTabHost.getTabWidget().getChildAt(2).setOnTouchListener(new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")

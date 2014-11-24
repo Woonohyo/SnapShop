@@ -15,12 +15,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
@@ -29,13 +31,14 @@ import com.android.volley.VolleyError;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.adapter.SearchResultsViewAdapter;
 import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.SearchResultsItem;
 import com.loopj.android.http.AsyncHttpClient;
 
 public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private final String TAG = SearchResultsView.class.getSimpleName();
-	private static final String URL_FEED = "http://10.73.45.133:8080/search/shop";
+	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.SEARCH_REQUEST();
 	private ArrayList<SearchResultsItem> resultItems = new ArrayList<SearchResultsItem>();
 	private int resultPageStart = 1;
 	private int numOfTotalResult;
@@ -43,11 +46,8 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	private String resultSorting = "sim";
 	private ListView listView;
 	private String query;
-	private SearchResultsViewAdapter searchResultsViewAdapter;
 	private SearchResultsVolleyAdapter searchResultsViewVolleyAdapter;
-	private AsyncHttpClient client = new AsyncHttpClient();
 	private Map<String, String> params;
-	private ProgressDialog progressDialog;
 	Handler handler = new Handler();
 
 	@Override
@@ -61,19 +61,13 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		listView.setOnScrollListener(new EndlessScrollListener() {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
+				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
+					return;
+				}
 				fetchDataFromServer(page);
 			}
 		});
 		handleIntent(getIntent());
-	}
-	
-	private void customLoadMoreDataFromApi(int offset) {
-		Log.i("Search", "load more and total: " + numOfTotalResult);
-		// 검색 결과가 10개 미만인 경우 추가 로드 방지
-		if (numOfTotalResult < 10) {
-			return;
-		}
-		fetchDataFromServer(offset);
 	}
 
 	@Override
@@ -90,7 +84,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private void fetchDataFromServer(int offset) {
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
-		
+
 		Entry entry = cache.get(URL_FEED);
 		if (entry != null) {
 			// fetch the data from cache
@@ -128,37 +122,16 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 					Log.i(TAG, "Error: " + error.getMessage());
 				}
 			});
-			/*
-			 * String requestUrl =
-			 * "http://10.73.45.133:8080/search/shop?query=청바지&display=20&start=1&sort=sim"
-			 * ; JsonObjectRequest jsonReq = new JsonObjectRequest(Method.GET,
-			 * requestUrl, null, new Response.Listener<JSONObject>() {
-			 * 
-			 * @Override public void onResponse(JSONObject response) {
-			 * VolleyLog.d(TAG, "Response: " + response.toString()); if
-			 * (response != null) { parseJsonFeed(response); } } }, new
-			 * Response.ErrorListener() {
-			 * 
-			 * @Override public void onErrorResponse(VolleyError error) {
-			 * VolleyLog.d(TAG, "Error: " + error.getMessage()); } });
-			 */
 
-			// Adding request to volley request queue
 			AppController.getInstance().addToRequestQueue(searchReq);
 		}
-
-		/*
-		 * resultItems = new ArrayList<SearchResultsItem>(); query =
-		 * intent.getStringExtra(SearchManager.QUERY);
-		 * this.setTitle("Search Results for " + query);
-		 * fetchDataFromServer(query, resultPageStart);
-		 */
 	}
 
 	private void parseJsonFeed(JSONObject response) {
 		try {
 			JSONObject jsonData = response.getJSONObject("response");
 			jsonData = jsonData.getJSONObject("data");
+			numOfTotalResult = jsonData.getInt("total");
 			JSONArray feedArray = jsonData.getJSONArray("list");
 
 			for (int i = 0; i < feedArray.length(); i++) {
@@ -181,77 +154,10 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			searchResultsViewVolleyAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
+			Toast toast = Toast.makeText(SearchResultsView.this, "검색 결과가 없습니다!", Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
 		}
-	}
-
-	/*
-	 * private void fetchDataFromServer(String query, int offset) {
-	 * handler.post(new Runnable() {
-	 * 
-	 * @Override public void run() { progressDialog =
-	 * ProgressDialog.show(SearchResultsView.this, "", "Fetching..."); } });
-	 * 
-	 * params.put("query", query); params.put("display", numOfResultDisplay+"");
-	 * params.put("start", offset+""); params.put("sort", resultSorting);
-	 * 
-	 * client.get(URL_FEED, params, new JsonHttpResponseHandler() {
-	 * 
-	 * @Override public void onSuccess(int statusCode, Header[] headers,
-	 * JSONObject response) { try { JSONObject data =
-	 * response.getJSONObject("response"); data = data.getJSONObject("data");
-	 * numOfTotalResult = data.getInt("total"); JSONArray itemList =
-	 * data.getJSONArray("list");
-	 * 
-	 * for (int index = 0; index < itemList.length(); ++index) {
-	 * SearchResultsItem searchData = new SearchResultsItem();
-	 * searchData.setTitle(itemList.getJSONObject(index).getString("title"));
-	 * searchData.setLink(itemList.getJSONObject(index).getString("link"));
-	 * searchData.setImage(itemList.getJSONObject(index).getString("image"));
-	 * searchData.setLprice(itemList.getJSONObject(index).getInt("lprice"));
-	 * searchData.setHprice(itemList.getJSONObject(index).getInt("hprice"));
-	 * searchData
-	 * .setMallName(itemList.getJSONObject(index).getString("mallName"));
-	 * searchData
-	 * .setProductId(itemList.getJSONObject(index).getLong("productId"));
-	 * searchData
-	 * .setProductType(itemList.getJSONObject(index).getInt("productType")); ;
-	 * 
-	 * resultItems.add(searchData); } Log.i("Search", "Number of DataSource: " +
-	 * resultItems.size());
-	 * 
-	 * setListView();
-	 * 
-	 * } catch (JSONException e) { handler.post(new Runnable() {
-	 * 
-	 * @Override public void run() { progressDialog.cancel(); } }); Toast toast
-	 * = Toast.makeText(SearchResultsView.this, "검색 결과가 없습니다!",
-	 * Toast.LENGTH_LONG); toast.setGravity(Gravity.CENTER, 0, 0); toast.show();
-	 * } }
-	 * 
-	 * @Override public void onFailure(int statusCode, Header[] headers, String
-	 * responseString, Throwable throwable) { super.onFailure(statusCode,
-	 * headers, responseString, throwable); } }); }
-	 */
-
-	private void setListView() {
-		if (searchResultsViewAdapter == null) {
-			searchResultsViewAdapter = new SearchResultsViewAdapter(this, R.layout.searchresults_list_row, resultItems);
-			listView.setAdapter(searchResultsViewAdapter);
-			listView.setOnScrollListener(new EndlessScrollListener() {
-				@Override
-				public void onLoadMore(int page, int totalItemsCount) {
-					customLoadMoreDataFromApi(page);
-				}
-			});
-			Log.i("Search", "setting Adapter");
-		}
-
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				progressDialog.cancel();
-			}
-		});
 	}
 
 	@Override

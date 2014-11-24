@@ -1,5 +1,6 @@
 package com.l3cache.snapshop.newsfeed;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -8,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
@@ -51,10 +54,15 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 	        if (imageLoader == null)
 	            imageLoader = AppController.getInstance().getImageLoader();
 	 
+	        
 	        FeedImageView feedImageView = (FeedImageView) convertView
 	                .findViewById(R.id.feedImage1);
-	 
+	        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
+	        TextView statusView = (TextView) convertView.findViewById(R.id.txtStatusMsg);
 	        NewsfeedData item = newsfeedDatas.get(position);
+	        
+	        profilePic.setImageUrl("http://i.imgur.com/n3DP2to.png", imageLoader);
+	        statusView.setText(item.getTitle());
 	 
 	        // Feed image
 	        if (item.getImage() != null) {

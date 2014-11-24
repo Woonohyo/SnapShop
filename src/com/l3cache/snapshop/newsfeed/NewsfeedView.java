@@ -2,6 +2,8 @@ package com.l3cache.snapshop.newsfeed;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -29,6 +31,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.adapter.NewsfeedViewAdapter;
 import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.favorite.FavoriteData;
 import com.loopj.android.http.AsyncHttpClient;
@@ -37,9 +40,7 @@ import com.loopj.android.http.RequestParams;
 
 public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private static final String TAG = NewsfeedView.class.getSimpleName();
-	private static final String URL_FEED = "http://10.73.45.133:8080/app/posts/";
-	private int POST_START_PAGE = 1;
-	private int POST_SORT = 0;
+	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private AsyncHttpClient mClient = new AsyncHttpClient();
 	private ListView mListView;
@@ -84,24 +85,37 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				e.printStackTrace();
 			}
 		} else {
-			// making fresh volley reqeust and getting json
-			JsonObjectRequest jsonReq = new JsonObjectRequest(Method.GET, URL_FEED, null,
-					new Response.Listener<JSONObject>() {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("sort", "0");
+			params.put("start", "1");
+			params.put("email", "");
+			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
+				@Override
+				public void onResponse(JSONObject response) {
+					Log.i(TAG, "Response: " + response.toString());
+					if (response != null) {
+						parseJsonFeed(response);
+					}
+				}
+			}, new Response.ErrorListener() {
 
-						@Override
-						public void onResponse(JSONObject response) {
-							VolleyLog.d(TAG, "Response: " + response.toString());
-							if (response != null) {
-								parseJsonFeed(response);
-							}
-						}
-					}, new Response.ErrorListener() {
-
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							VolleyLog.d(TAG, "Error: " + error.getMessage());
-						}
-					});
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					Log.i(TAG, "Error: " + error.getMessage());
+				}
+			});
+			/*
+			 * JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
+			 * URL_FEED, null, new Response.Listener<JSONObject>() {
+			 * 
+			 * @Override public void onResponse(JSONObject response) {
+			 * VolleyLog.d(TAG, "Response: " + response.toString()); if
+			 * (response != null) { parseJsonFeed(response); } } }, new
+			 * Response.ErrorListener() {
+			 * 
+			 * @Override public void onErrorResponse(VolleyError error) {
+			 * VolleyLog.d(TAG, "Error: " + error.getMessage()); } });
+			 */
 
 			// Adding request to volley request queue
 			AppController.getInstance().addToRequestQueue(jsonReq);
@@ -116,22 +130,22 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private void parseJsonFeed(JSONObject response) {
 		try {
 			JSONObject jsonData = response.getJSONObject("response");
-			jsonData = jsonData.getJSONObject("data");
-			JSONArray feedArray = jsonData.getJSONArray("list");
+			JSONArray feedArray = jsonData.getJSONArray("data");
 
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 
 				NewsfeedData item = new NewsfeedData();
 				// item.setId(feedObj.getInt("id"));
-//				item.setName(feedObj.getString("name"));
+				// item.setName(feedObj.getString("name"));
 
 				// Image might be null sometimes
 				String image = feedObj.isNull("imgUrl") ? null : feedObj.getString("imgUrl");
 				item.setImage(image);
-//				item.setStatus(feedObj.getString("status"));
-//				item.setProfilePic(feedObj.getString("profilePic"));
-//				item.setTimeStamp(feedObj.getString("timeStamp"));
+				item.setTitle(feedObj.getString("title"));
+				// item.setStatus(feedObj.getString("status"));
+				// item.setProfilePic(feedObj.getString("profilePic"));
+				// item.setTimeStamp(feedObj.getString("timeStamp"));
 				item.setPrice(feedObj.getString("price"));
 
 				// url might be null sometimes
@@ -158,12 +172,11 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-	
 	private void fetchDataFromServer(int start, final int sort) {
 		RequestParams params = new RequestParams();
 		params.put("sort", sort);
 		params.put("start", start);
+		params.put("email", "abc");
 
 		mClient.get(URL_FEED, new JsonHttpResponseHandler() {
 			@Override

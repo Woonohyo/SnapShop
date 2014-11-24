@@ -33,7 +33,6 @@ public class SearchResultsVolleyAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return resultItems.size();
 	}
 
