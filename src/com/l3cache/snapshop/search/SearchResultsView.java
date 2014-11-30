@@ -11,17 +11,23 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -45,9 +51,10 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	private int numOfResultDisplay = 20;
 	private String resultSorting = "sim";
 	private ListView listView;
-	private String query;
+	private static String query;
 	private SearchResultsVolleyAdapter searchResultsViewVolleyAdapter;
 	private Map<String, String> params;
+	private SearchView searchView;
 	Handler handler = new Handler();
 
 	@Override
@@ -67,19 +74,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 				fetchDataFromServer(page);
 			}
 		});
-		handleIntent(getIntent());
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			query = intent.getStringExtra("query");
-			fetchDataFromServer(resultPageStart);
-		}
 	}
 
 	private void fetchDataFromServer(int offset) {
@@ -162,8 +156,31 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.options_menu, menu);
+
+		searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				Log.i("Search", "Query Submitted: " + query);
+				SearchResultsView.query = query;
+				fetchDataFromServer(resultPageStart);
+				searchView.clearFocus();
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		
+		
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -181,6 +198,5 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Log.i("Search", position + "번 선택");
-
 	}
 }

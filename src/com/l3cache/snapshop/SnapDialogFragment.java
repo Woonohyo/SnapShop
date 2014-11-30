@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.l3cache.snapshop.search.SearchResultsView;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -51,7 +53,8 @@ public class SnapDialogFragment extends DialogFragment {
 					break;
 				}
 				case 2: {
-					Log.i("Snap", which + ": Web");
+					Intent intent = new Intent(getActivity(), SearchResultsView.class);
+					startActivity(intent);
 					break;
 				}
 				}

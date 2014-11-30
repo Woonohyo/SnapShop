@@ -34,7 +34,7 @@ public class MainTabHostView extends FragmentActivity {
 		// Status Bar 없는 상태로 만들기. XML은 TitleBar까지 없애므로 코드로 처리
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// Status Bar에서 App Icon 제거하기
-//		getActionBar().setDisplayShowHomeEnabled(false);
+		// getActionBar().setDisplayShowHomeEnabled(false);
 
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
@@ -45,8 +45,8 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost.addTab(mTabHost.newTabSpec("snap").setIndicator("Snap"), null, null);
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), MyPostsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), InfoView.class, null);
-		
-		mTabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.GREEN);
+
+		mTabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#2DB400"));
 
 		mTabHost.getTabWidget().getChildAt(2).setOnTouchListener(new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
@@ -66,6 +66,7 @@ public class MainTabHostView extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		/*
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 
@@ -73,22 +74,10 @@ public class MainTabHostView extends FragmentActivity {
 		SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 		ComponentName cn = new ComponentName(this, SearchResultsView.class);
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
 
 		return super.onCreateOptionsMenu(menu);
+		*/
+		return true;
 	}
 
 }

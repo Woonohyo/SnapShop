@@ -57,12 +57,13 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 	        
 	        FeedImageView feedImageView = (FeedImageView) convertView
 	                .findViewById(R.id.feedImage1);
-	        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
+//	        NetworkImageView profilePic = (NetworkImageView) convertView.findViewById(R.id.profilePic);
 	        TextView statusView = (TextView) convertView.findViewById(R.id.txtStatusMsg);
 	        NewsfeedData item = newsfeedDatas.get(position);
 	        
-	        profilePic.setImageUrl("http://i.imgur.com/n3DP2to.png", imageLoader);
+//	        profilePic.setImageUrl("http://i.imgur.com/n3DP2to.png", imageLoader);
 	        statusView.setText(item.getTitle());
+	        
 	 
 	        // Feed image
 	        if (item.getImage() != null) {

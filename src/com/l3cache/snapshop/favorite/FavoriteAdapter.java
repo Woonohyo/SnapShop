@@ -64,8 +64,8 @@ public class FavoriteAdapter extends BaseAdapter {
         TextView statusMsg = (TextView) convertView
                 .findViewById(R.id.txtStatusMsg);
         TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
-        NetworkImageView profilePic = (NetworkImageView) convertView
-                .findViewById(R.id.profilePic);
+//        NetworkImageView profilePic = (NetworkImageView) convertView
+//                .findViewById(R.id.profilePic);
         FeedImageView feedImageView = (FeedImageView) convertView
                 .findViewById(R.id.feedImage1);
  
@@ -102,7 +102,7 @@ public class FavoriteAdapter extends BaseAdapter {
         }
  
         // user profile pic
-        profilePic.setImageUrl(item.getProfilePic(), imageLoader);
+//        profilePic.setImageUrl(item.getProfilePic(), imageLoader);
  
         // Feed image
         if (item.getImage() != null) {
