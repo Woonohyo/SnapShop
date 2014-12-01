@@ -70,6 +70,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		NewsfeedData item = newsfeedDatas.get(position);
 
 		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.snapButton);
+		// likeButton의 체크 여부를 item에서 가져와서 세팅하자
 		likeButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override

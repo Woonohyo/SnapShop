@@ -33,7 +33,7 @@
         android:name=".app.AppController"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/Theme.AppCompat" >
+        android:theme="@style/SnapActionBarTheme" >
 
         <activity
             android:name=".newsfeed.NewsfeedView"
@@ -69,6 +69,7 @@
         <activity
             android:name="com.l3cache.snapshop.login.LoginView"
             android:label="@string/title_activity_login_view"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

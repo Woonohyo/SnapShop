@@ -12,4 +12,8 @@ public class SnapConstants {
 	public static String SEARCH_REQUEST() {
 		return "search/shop";
 	}
+	
+	public static String LOGIN_REQUEST() {
+		return "app/users/login";
+	}
 }

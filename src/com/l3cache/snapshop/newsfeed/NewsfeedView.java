@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.android.volley.Cache;
@@ -39,7 +41,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private AsyncHttpClient mClient = new AsyncHttpClient();
-	private ListView mListView;
+	private GridView mListView;
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 
@@ -60,7 +62,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		mListView = (ListView) getView().findViewById(R.id.newsfeed_main_listView);
+		mListView = (GridView) getView().findViewById(R.id.newsfeed_main_listView);
 
 		newsfeedDatas = new ArrayList<NewsfeedData>();
 		newsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
@@ -205,4 +207,11 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		}
 		mListView.setAdapter(mNewsfeedViewAdapter);
 	}
+	
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
+	
 }

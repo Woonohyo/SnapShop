@@ -36,9 +36,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd" 
-                android:paddingRight="@dimen/feed_item_profile_info_padd"
-                >
+                android:paddingLeft="@dimen/feed_item_profile_info_padd"
+                android:paddingRight="@dimen/feed_item_profile_info_padd" >
  
 
                 <TextView
@@ -84,33 +83,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/newsfeed_volley_list_row_buttonshape"
-                android:textOn="LIKED"
                 android:textOff="LIKE"
-                android:textStyle="bold"
+                android:textOn="LIKED"
                 android:textSize="13sp"
-                 >
+                android:textStyle="bold" >
             </ToggleButton>
-            
+
             <View
-                android:layout_height="match_parent"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                >
-                
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
             </View>
 
             <Button
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="#FFF"
+                android:layout_gravity="end"
                 android:background="@drawable/newsfeed_volley_list_row_priceshape"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_gravity="end"
-                >
-                
+                android:textColor="#FFF" >
             </Button>
-            
         </LinearLayout>
     </LinearLayout>
 
