@@ -21,6 +21,7 @@ import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.info.InfoView;
 import com.l3cache.snapshop.myposts.MyPostsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
+import com.l3cache.snapshop.upload.UploadSnapView;
 
 public class MainTabHostView extends FragmentActivity {
 	private FragmentTabHost mTabHost;
@@ -75,7 +76,9 @@ public class MainTabHostView extends FragmentActivity {
 				Toast.makeText(getApplicationContext(), "Capture Failed", Toast.LENGTH_LONG).show();
 			}
 		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
-			
+			Intent uploadIntent = new Intent(getApplicationContext(), UploadSnapView.class);
+			uploadIntent.putExtra("data", data);
+			startActivity(uploadIntent);
 		}
 	}
 

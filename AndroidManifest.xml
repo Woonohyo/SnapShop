@@ -40,7 +40,11 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat"
             android:windowSoftInputMode="adjustResize|stateHidden" >
-            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".newsfeed.NewsfeedView"
@@ -71,13 +75,7 @@
         </activity>
         <activity
             android:name=".upload.UploadSnapView"
-            android:theme="@style/Theme.AppCompat"
             android:label="@string/title_activity_upload_snap_view" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

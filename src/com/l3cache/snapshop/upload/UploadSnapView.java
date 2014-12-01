@@ -1,39 +1,52 @@
 package com.l3cache.snapshop.upload;
 
-import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.R.id;
-import com.l3cache.snapshop.R.layout;
-import com.l3cache.snapshop.R.menu;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.provider.MediaStore;
+import android.widget.ImageView;
 
-public class UploadSnapView extends ActionBarActivity {
+import com.l3cache.snapshop.R;
+
+public class UploadSnapView extends Activity {
+	private Bitmap bitmap;
+	private String filePath;
+	private String fileName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload_snap_view);
+
+		ImageView uploadingImageView = (ImageView) findViewById(R.id.upload_snap_image_view);
+
+		Intent data = (Intent) getIntent().getExtras().get("data");
+		Uri uri = getRealPathUri(data.getData());
+		filePath = uri.toString();
+		fileName = uri.getLastPathSegment();
+
+		bitmap = BitmapFactory.decodeFile(filePath);
+		Bitmap resized = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+		uploadingImageView.setImageBitmap(resized);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.upload_snap_view, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+	private Uri getRealPathUri(Uri uri) {
+		Uri filePathUri = uri;
+		if (uri.getScheme().toString().compareTo("content") == 0) {
+			Cursor cursor = getApplicationContext().getContentResolver().query(uri, null, null, null, null);
+			if (cursor.moveToFirst()) {
+				int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				filePathUri = Uri.parse(cursor.getString(column_index));
+			}
 		}
-		return super.onOptionsItemSelected(item);
+		return filePathUri;
 	}
 }
