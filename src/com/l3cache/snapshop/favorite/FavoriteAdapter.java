@@ -63,7 +63,7 @@ public class FavoriteAdapter extends BaseAdapter {
                 .findViewById(R.id.timestamp);
         TextView statusMsg = (TextView) convertView
                 .findViewById(R.id.txtStatusMsg);
-        TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
+//        TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
 //        NetworkImageView profilePic = (NetworkImageView) convertView
 //                .findViewById(R.id.profilePic);
         FeedImageView feedImageView = (FeedImageView) convertView
@@ -86,19 +86,6 @@ public class FavoriteAdapter extends BaseAdapter {
         } else {
             // status is empty, remove from view
             statusMsg.setVisibility(View.GONE);
-        }
- 
-        // Checking for null feed url
-        if (item.getUrl() != null) {
-            url.setText(Html.fromHtml("<a href=\"" + item.getUrl() + "\">"
-                    + item.getUrl() + "</a> "));
- 
-            // Making url clickable
-            url.setMovementMethod(LinkMovementMethod.getInstance());
-            url.setVisibility(View.VISIBLE);
-        } else {
-            // url is null, remove from the view
-            url.setVisibility(View.GONE);
         }
  
         // user profile pic

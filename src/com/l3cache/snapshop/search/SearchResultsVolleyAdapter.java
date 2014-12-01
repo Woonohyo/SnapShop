@@ -67,7 +67,7 @@ public class SearchResultsVolleyAdapter extends BaseAdapter {
 		itemNameTextView.setText(Html.fromHtml(item.getTitle()));
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
 		format.setParseIntegerOnly(true);
-		String formattedLowPrice = format.format(item.getLprice()) + "원";
+		String formattedLowPrice = format.format(item.getLprice());
 		itemPriceTextView.setText(formattedLowPrice);
 
 		// Feed image

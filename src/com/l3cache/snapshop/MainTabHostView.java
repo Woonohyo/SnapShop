@@ -1,27 +1,20 @@
 package com.l3cache.snapshop;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
 import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.info.InfoView;
 import com.l3cache.snapshop.myposts.MyPostsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
-import com.l3cache.snapshop.search.SearchResultsView;
 
 public class MainTabHostView extends FragmentActivity {
 	private FragmentTabHost mTabHost;

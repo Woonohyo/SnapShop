@@ -17,8 +17,7 @@
     <string name="button_recommended">추천</string>
     <string name="button_recent">최근</string>
     <string name="button_hot">인기</string>
-    
-    
+
     <string-array name="snap_array">
         <item>카메라</item>
         <item>앨범</item>
@@ -27,5 +26,8 @@
 
     <string name="title_activity_my_posts_view">MyPostsView</string>
     <string name="title_activity_info">InfoActivity</string>
+    <string name="title_activity_upload_view">Upload New Snap</string>
+    <string name="title_activity_upload_snap_view">UploadSnapView</string>
+    <string name="title_activity_login_view">LoginView</string>
 
 </resources>

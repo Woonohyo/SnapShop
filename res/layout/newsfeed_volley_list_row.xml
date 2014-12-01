@@ -27,8 +27,8 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/feed_item_margin"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/feed_item_padding_left_right"
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
@@ -36,7 +36,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd" >
+                android:paddingLeft="@dimen/feed_item_profile_info_padd" 
+                android:paddingRight="@dimen/feed_item_profile_info_padd"
+                >
  
 
                 <TextView
@@ -59,32 +61,57 @@
             </LinearLayout>
         
         </LinearLayout>
- 
-        
 
         <TextView
             android:id="@+id/txtStatusMsg"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:paddingRight="@dimen/feed_item_status_pad_left_right"
+            android:paddingLeft="@dimen/feed_item_padding_left_right"
+            android:paddingRight="@dimen/feed_item_padding_left_right"
             android:paddingTop="@dimen/feed_item_status_pad_top" />
- 
-        
 
-        <TextView
-            android:id="@+id/txtUrl"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:linksClickable="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:textColorLink="@color/link" />
- 
-    
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="@dimen/feed_item_margin"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/feed_item_padding_left_right"
+            android:paddingRight="@dimen/feed_item_padding_left_right" >
+
+            <ToggleButton
+                android:id="@+id/snapButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/newsfeed_volley_list_row_buttonshape"
+                android:textOn="LIKED"
+                android:textOff="LIKE"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                 >
+            </ToggleButton>
+            
+            <View
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                >
+                
+            </View>
+
+            <Button
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#FFF"
+                android:background="@drawable/newsfeed_volley_list_row_priceshape"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="end"
+                >
+                
+            </Button>
+            
+        </LinearLayout>
     </LinearLayout>
- 
 
 </LinearLayout>
