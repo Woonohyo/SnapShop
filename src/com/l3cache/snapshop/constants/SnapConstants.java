@@ -1,7 +1,7 @@
 package com.l3cache.snapshop.constants;
 
 public final class SnapConstants {
-	public static String SERVER_URL() {
+	public static final String SERVER_URL() {
 		return "http://125.209.199.221:8080/";
 	}
 

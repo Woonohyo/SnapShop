@@ -1,16 +1,22 @@
 package com.l3cache.snapshop;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.info.InfoView;
 import com.l3cache.snapshop.myposts.MyPostsView;
@@ -39,9 +45,9 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("My Post"), MyPostsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), InfoView.class, null);
 
-		mTabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#2DB400"));
-
-		mTabHost.getTabWidget().getChildAt(2).setOnTouchListener(new OnTouchListener() {
+		View snapTabWidget = mTabHost.getTabWidget().getChildAt(2);
+		snapTabWidget.setBackgroundColor(getResources().getColor(R.color.naver_green));
+		snapTabWidget.setOnTouchListener(new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -54,6 +60,23 @@ public class MainTabHostView extends FragmentActivity {
 				return false;
 			}
 		});
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.i("Snap", "HI MAIN! Requesting: " + requestCode + " and Result:" + resultCode);
+		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				
+			} else if (resultCode == RESULT_CANCELED) {
+				
+			} else {
+				Toast.makeText(getApplicationContext(), "Capture Failed", Toast.LENGTH_LONG).show();
+			}
+		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
+			
+		}
 	}
 
 	@Override

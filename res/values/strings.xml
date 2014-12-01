@@ -12,11 +12,12 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="title_activity_favorite_view">FavoriteView</string>
+    <string name="title_activity_favorite_view">Favorite View</string>
     <string name="dialog_snap">스냅</string>
     <string name="button_recommended">추천</string>
     <string name="button_recent">최근</string>
     <string name="button_hot">인기</string>
+    <string name="uploadingImage">Uploading Image</string>
 
     <string-array name="snap_array">
         <item>카메라</item>
@@ -24,10 +25,9 @@
         <item>웹</item>
     </string-array>
 
-    <string name="title_activity_my_posts_view">MyPostsView</string>
-    <string name="title_activity_info">InfoActivity</string>
-    <string name="title_activity_upload_view">Upload New Snap</string>
-    <string name="title_activity_upload_snap_view">UploadSnapView</string>
-    <string name="title_activity_login_view">LoginView</string>
+    <string name="title_activity_my_posts_view">My Posts</string>
+    <string name="title_activity_info">User Info</string>
+    <string name="title_activity_upload_snap_view">Upload Snap</string>
+    <string name="title_activity_login_view">Login</string>
 
 </resources>

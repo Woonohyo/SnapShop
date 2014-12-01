@@ -4,9 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.search.SearchResultsView;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,9 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.l3cache.snapshop.constants.SnapConstants;
+import com.l3cache.snapshop.search.SearchResultsView;
 
 public class SnapDialogFragment extends DialogFragment {
 
@@ -39,19 +39,24 @@ public class SnapDialogFragment extends DialogFragment {
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
 					// start the image capture Intent
-					startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+					getActivity().startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 					break;
 				}
 
 				case 1: {
-					Intent intent = new Intent(Intent.ACTION_PICK,
-							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-					startActivityForResult(intent, SnapConstants.RESULT_LOAD_IMAGE);
+					// Intent intent = new Intent(Intent.ACTION_PICK,
+					// android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+					// startActivityForResult(intent,
+					// SnapConstants.RESULT_LOAD_IMAGE);
+					Intent intent = new Intent(Intent.ACTION_PICK);
+					intent.setType(Images.Media.CONTENT_TYPE);
+					intent.setData(Images.Media.EXTERNAL_CONTENT_URI);
+					getActivity().startActivityForResult(intent, SnapConstants.RESULT_LOAD_IMAGE);
 					break;
 				}
 				case 2: {
 					Intent intent = new Intent(getActivity(), SearchResultsView.class);
-					startActivity(intent);
+					getActivity().startActivity(intent);
 					break;
 				}
 				}
@@ -60,23 +65,7 @@ public class SnapDialogFragment extends DialogFragment {
 		});
 		return builder.create();
 	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == SnapConstants.RESULT_OK) {
-				Log.i("CameraApp", "Capture OK");
-			} else if (resultCode == SnapConstants.RESULT_CANCELED) {
-				// User cancelled the image capture
-			} else {
-				// Image capture failed, advise user
-			}
-		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
-			Log.i("Snap", "Image Selected");
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
+	
 	private Uri getOutputMediaFileUri(int type) {
 		return Uri.fromFile(getOutputMediaFile(type));
 	}

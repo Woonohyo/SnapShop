@@ -1,15 +1,10 @@
 package com.l3cache.snapshop.login;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-import retrofit.mime.TypedInput;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;

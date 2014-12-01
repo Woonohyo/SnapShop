@@ -1,6 +1,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/feed_bg"
     android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/feed_item_margin"
+        android:layout_marginRight="@dimen/feed_item_margin"
+        android:layout_marginTop="@dimen/feed_item_margin"
+        android:background="@drawable/bg_parent_rounded_corner"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/upload_item_padding_left_right"
+        android:paddingLeft="@dimen/upload_item_padding_left_right"
+        android:paddingRight="@dimen/upload_item_padding_left_right"
+        android:paddingTop="@dimen/upload_item_padding_left_right" >
+
+        <ImageView
+            android:id="@+id/upload_snap_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/uploadingImage"
+            android:src="@android:drawable/ic_menu_gallery" />
+
+        <EditText
+            android:id="@+id/upload_snap_editText_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_marginTop="@dimen/upload_item_margin"
+            android:background="@drawable/upload_snap_edit_text"
+            android:ems="10"
+            android:hint="Choose a title"
+            android:textColor="@color/textColorGray"
+            android:textColorHint="@color/hintColorGray"
+            android:textSize="@dimen/upload_item_text_size" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/upload_snap_editText_contents"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_marginTop="@dimen/upload_item_margin"
+            android:background="@drawable/upload_snap_edit_text"
+            android:ems="10"
+            android:hint="Optional note"
+            android:textColor="@color/textColorGray"
+            android:textColorHint="@color/hintColorGray"
+            android:textSize="@dimen/upload_item_text_size" />
+
+        <EditText
+            android:id="@+id/upload_snap_editText_price"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_marginTop="@dimen/upload_item_margin"
+            android:background="@drawable/upload_snap_edit_text"
+            android:ems="10"
+            android:hint="Price of item"
+            android:textColor="@color/textColorGray"
+            android:textColorHint="@color/hintColorGray"
+            android:textSize="@dimen/upload_item_text_size" />
+
+        <EditText
+            android:id="@+id/upload_snap_editText_link"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_marginTop="@dimen/upload_item_margin"
+            android:background="@drawable/upload_snap_edit_text"
+            android:ems="10"
+            android:hint="Optional Web link"
+            android:textColor="@color/textColorGray"
+            android:textColorHint="@color/hintColorGray"
+            android:textSize="@dimen/upload_item_text_size" />
+
+        <Button
+            android:id="@+id/upload_snap_button_upload"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_marginTop="@dimen/upload_item_margin"
+            android:background="@drawable/upload_snap_button"
+            android:text="Add to SnapShop"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </LinearLayout>
