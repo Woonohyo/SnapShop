@@ -1,14 +1,15 @@
 package com.l3cache.snapshop.login;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.converter.ConversionException;
-import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
-import retrofit.mime.TypedOutput;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,14 +40,14 @@ public class EmailSignInFragment extends DialogFragment {
 		Button signinButton = (Button) view.findViewById(R.id.button_sign_in);
 		emailField = (EditText) view.findViewById(R.id.editText_email);
 		passwordField = (EditText) view.findViewById(R.id.editText_password);
+		emailField.setText("test@test.com");
+		passwordField.setText("test");
 		signinButton.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					fakeSignin();
 					authorizeSignin();
-
 				}
 
 				return true;
@@ -57,7 +58,7 @@ public class EmailSignInFragment extends DialogFragment {
 		return view;
 	}
 
-	protected void fakeSignin() {
+	protected void intentTabHostActivity() {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);
 		startActivity(intent);
 
@@ -68,22 +69,49 @@ public class EmailSignInFragment extends DialogFragment {
 				.setConverter(new GsonConverter(new Gson())).build();
 
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(emailField.getText().toString(), passwordField.getText().toString(), new Callback<Response>() {
+		service.login(emailField.getText().toString(), passwordField.getText().toString(),
+				new Callback<LoginResponse>() {
 
-			@Override
-			public void failure(RetrofitError error) {
-				Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
-				Log.i("Login", error.toString());
+					@Override
+					public void failure(RetrofitError error) {
+						Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
+						Log.i("Login", error.toString());
+					}
 
-			}
+					@Override
+					public void success(LoginResponse loginResponse, Response response) {
+						int status = loginResponse.getStatus();
 
-			@Override
-			public void success(Response response0, Response response1) {
-				Toast.makeText(getActivity(), "Success", Toast.LENGTH_LONG).show();
-				Log.i("Login", response0.toString());
-				Log.i("Login", response1.toString());
-			}
-		});
+						switch (status) {
+						case SnapConstants.SUCCESS: {
+							Toast.makeText(getActivity(), "Welcome user " + loginResponse.getId(), Toast.LENGTH_LONG)
+									.show();
+							intentTabHostActivity();
+							break;
+						}
+						case SnapConstants.EMAIL_ERROR: {
+							Toast.makeText(getActivity(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG)
+									.show();
+							break;
+						}
+						case SnapConstants.PASSWORD_ERROR: {
+							Toast.makeText(getActivity(), "Password Error " + loginResponse.getId(), Toast.LENGTH_LONG)
+									.show();
+							break;
+						}
+
+						case SnapConstants.ERROR: {
+							Toast.makeText(getActivity(), "Unrecognized Error " + loginResponse.getId(),
+									Toast.LENGTH_LONG).show();
+							break;
+						}
+
+						default:
+							break;
+						}
+
+					}
+				});
 
 	}
 

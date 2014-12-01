@@ -9,6 +9,7 @@ public class NewsfeedData {
 	private String timeStamp;
 	private String status;
 	private String profilePic;
+	private String writer;
 
 	public NewsfeedData(String imgName, String name, String price) {
 		this.image = imgName;
@@ -82,6 +83,14 @@ public class NewsfeedData {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+
+	public String getWriter() {
+		return writer;
 	}
 
 }

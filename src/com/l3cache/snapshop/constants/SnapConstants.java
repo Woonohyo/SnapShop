@@ -1,19 +1,31 @@
 package com.l3cache.snapshop.constants;
 
-public class SnapConstants {
+public final class SnapConstants {
 	public static String SERVER_URL() {
 		return "http://125.209.199.221:8080/";
 	}
-	
-	public static String NEWSFEED_REQUEST() {
+
+	public static final String NEWSFEED_REQUEST() {
 		return "app/posts/";
 	}
-	
-	public static String SEARCH_REQUEST() {
+
+	public static final String SEARCH_REQUEST() {
 		return "search/shop";
 	}
-	
-	public static String LOGIN_REQUEST() {
+
+	public static final String LOGIN_REQUEST() {
 		return "app/users/login";
 	}
+
+	public static final int SUCCESS = 10;
+	public static final int ERROR = 20;
+	public static final int EMAIL_DUPLICATION = 21;
+	public static final int EMAIL_ERROR = 22;
+	public static final int PASSWORD_ERROR = 23;
+	public static final int ACCESS_DENIED = 24;
+	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	public static final int RESULT_OK = 110;
+	public static final int RESULT_LOAD_IMAGE = 200;
+	public static final int RESULT_CANCELED = 120;
+	public static final int MEDIA_TYPE_IMAGE = 1;
 }

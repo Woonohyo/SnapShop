@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/feed_item_margin"
         android:background="@drawable/bg_parent_rounded_corner"
         android:orientation="vertical"
         android:paddingBottom="@dimen/feed_item_padding_top_bottom" >
@@ -20,8 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/newsfeed_feedimage"
+            android:paddingBottom="1dp"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
+            android:paddingTop="1dp"
             android:scaleType="fitXY"
             android:visibility="visible" />
         

@@ -86,7 +86,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("sort", "0");
 			params.put("start", "1");
-			params.put("email", "");
+			params.put("id", "0");
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
@@ -141,6 +141,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				String image = feedObj.isNull("imgUrl") ? null : feedObj.getString("imgUrl");
 				item.setImage(image);
 				item.setTitle(feedObj.getString("title"));
+				item.setWriter(feedObj.getString("writer"));
 				// item.setStatus(feedObj.getString("status"));
 				// item.setProfilePic(feedObj.getString("profilePic"));
 				// item.setTimeStamp(feedObj.getString("timeStamp"));

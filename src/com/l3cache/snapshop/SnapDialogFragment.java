@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.search.SearchResultsView;
 
 import android.app.AlertDialog;
@@ -19,11 +20,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class SnapDialogFragment extends DialogFragment {
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	private static final int RESULT_OK = 110;
-	private static final int RESULT_LOAD_IMAGE = 200;
-	private static final int RESULT_CANCELED = 120;
-	private static final int MEDIA_TYPE_IMAGE = 1;
+
 	private Uri fileUri;
 
 	@Override
@@ -38,18 +35,18 @@ public class SnapDialogFragment extends DialogFragment {
 					// calling application
 					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-					fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+					fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
 					// start the image capture Intent
-					startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+					startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 					break;
 				}
 
 				case 1: {
 					Intent intent = new Intent(Intent.ACTION_PICK,
 							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-					startActivityForResult(intent, RESULT_LOAD_IMAGE);
+					startActivityForResult(intent, SnapConstants.RESULT_LOAD_IMAGE);
 					break;
 				}
 				case 2: {
@@ -66,15 +63,15 @@ public class SnapDialogFragment extends DialogFragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
+		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == SnapConstants.RESULT_OK) {
 				Log.i("CameraApp", "Capture OK");
-			} else if (resultCode == RESULT_CANCELED) {
+			} else if (resultCode == SnapConstants.RESULT_CANCELED) {
 				// User cancelled the image capture
 			} else {
 				// Image capture failed, advise user
 			}
-		} else if (requestCode == RESULT_LOAD_IMAGE) {
+		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
 			Log.i("Snap", "Image Selected");
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -105,7 +102,7 @@ public class SnapDialogFragment extends DialogFragment {
 		// Create a media file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		File mediaFile;
-		if (type == MEDIA_TYPE_IMAGE) {
+		if (type == SnapConstants.MEDIA_TYPE_IMAGE) {
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
 		} else {
 			return null;

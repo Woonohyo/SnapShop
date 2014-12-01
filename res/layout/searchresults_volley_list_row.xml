@@ -27,6 +27,8 @@
                 android:layout_height="120dp"
                 android:contentDescription="ItemPhoto"
                 android:scaleType="fitXY"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
                 android:src="@android:drawable/ic_menu_gallery" />
 
             <LinearLayout
