@@ -202,12 +202,14 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		Log.i("Snap", "HI MAIN! Requesting: " + requestCode + " and Result:" + resultCode);
 		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
+				Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
 
 			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Toast.makeText(getActivity().getApplicationContext(), "Canceled", Toast.LENGTH_LONG).show();
 
-			} else {
+			} else
 				Toast.makeText(getActivity().getApplicationContext(), "Capture Failed", Toast.LENGTH_LONG).show();
-			}
+
 		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
 			if (resultCode == Activity.RESULT_OK) {
 				Intent uploadIntent = new Intent(getActivity().getApplicationContext(), UploadSnapView.class);

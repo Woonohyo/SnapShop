@@ -15,4 +15,5 @@ public interface SnapShopService {
 	@POST("/app/users/new")
 	void signUp(@Query("email") String email, @Query("password") String password, Callback<SignUpResponse> cb);
 	
+//	@POST("/app/posts/new")
 }
