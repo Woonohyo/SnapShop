@@ -44,6 +44,7 @@ import com.l3cache.snapshop.adapter.SearchResultsViewAdapter;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.SearchResultsItem;
+import com.l3cache.snapshop.upload.UploadSnapView;
 import com.loopj.android.http.AsyncHttpClient;
 
 public class SearchResultsView extends Activity implements OnItemClickListener {
@@ -214,8 +215,12 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		SearchResultsItem item = resultItems.get(position);
-		Uri uri = Uri.parse(item.getLink());
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
+		Intent uploadIntent = new Intent(this, UploadSnapView.class);
+		uploadIntent.putExtra("image", item.getImage());
+		uploadIntent.putExtra("handler", SnapConstants.INTERNET_BUTTON);
+		uploadIntent.putExtra("shopUrl", item.getLink());
+		uploadIntent.putExtra("price", item.getLprice());
+		
+		startActivity(uploadIntent);
 	}
 }

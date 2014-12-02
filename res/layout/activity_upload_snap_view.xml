@@ -17,7 +17,7 @@
         android:paddingRight="@dimen/upload_item_padding_left_right"
         android:paddingTop="@dimen/upload_item_padding_left_right" >
 
-        <ImageView
+        <com.l3cache.snapshop.newsfeed.FeedImageView
             android:id="@+id/upload_snap_image_view"
             android:layout_width="200dp"
             android:layout_height="200dp"

@@ -47,13 +47,13 @@ public class EmailSignUpFragment extends DialogFragment {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					if (isEmailValid(emailField.getText().toString()) == false) {
-						Toast.makeText(getActivity(), "Invalid Email Address", Toast.LENGTH_LONG).show();
+					if (emailField.getText().toString().length() == 0) {
+						Toast.makeText(getActivity(), "What's your Email Address?", Toast.LENGTH_LONG).show();
 						return true;
 					}
 
-					if (passwordField.getText().toString().equals(passwordAgainField.getText().toString()) == false) {
-						Toast.makeText(getActivity(), "Password do not match", Toast.LENGTH_LONG).show();
+					if (isEmailValid(emailField.getText().toString()) == false) {
+						Toast.makeText(getActivity(), "Invalid Email Address", Toast.LENGTH_LONG).show();
 						return true;
 					}
 
@@ -61,9 +61,8 @@ public class EmailSignUpFragment extends DialogFragment {
 						Toast.makeText(getActivity(), "Password is too short (minimum 7)", Toast.LENGTH_LONG).show();
 						return true;
 					}
-
-					if (emailField.getText().toString().length() == 0) {
-						Toast.makeText(getActivity(), "What's your Email Address?", Toast.LENGTH_LONG).show();
+					if (passwordField.getText().toString().equals(passwordAgainField.getText().toString()) == false) {
+						Toast.makeText(getActivity(), "Password do not match", Toast.LENGTH_LONG).show();
 						return true;
 					}
 

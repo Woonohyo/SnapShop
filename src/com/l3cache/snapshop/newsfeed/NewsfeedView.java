@@ -57,9 +57,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 	private Uri fileUri;
-	private final int CAMERA_BUTTON = 1;
-	private final int GALLERY_BUTTON = 2;
-	private final int INTERNET_BUTTON = 3;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,7 +82,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 					int id = v.getId();
 
 					switch (id) {
-					case CAMERA_BUTTON: {
+					case SnapConstants.CAMERA_BUTTON: {
 						Log.i("Snap", id + ": Camera");
 						// create Intent to take a picture and return control to
 						// the
@@ -99,14 +96,14 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 						getActivity().startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 						break;
 					}
-					case GALLERY_BUTTON: {
+					case SnapConstants.GALLERY_BUTTON: {
 						Intent intent = new Intent(Intent.ACTION_PICK);
 						intent.setType(Images.Media.CONTENT_TYPE);
 						intent.setData(Images.Media.EXTERNAL_CONTENT_URI);
 						getActivity().startActivityForResult(intent, SnapConstants.RESULT_LOAD_IMAGE);
 						break;
 					}
-					case INTERNET_BUTTON: {
+					case SnapConstants.INTERNET_BUTTON: {
 						Intent intent = new Intent(getActivity(), SearchResultsView.class);
 						getActivity().startActivity(intent);
 						break;
@@ -125,9 +122,9 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		FloatingActionButton internetButton = (FloatingActionButton) getView().findViewById(
 				R.id.newsfeed_internet_button);
 
-		cameraButton.setId(CAMERA_BUTTON);
-		galleryButton.setId(GALLERY_BUTTON);
-		internetButton.setId(INTERNET_BUTTON);
+		cameraButton.setId(SnapConstants.CAMERA_BUTTON);
+		galleryButton.setId(SnapConstants.GALLERY_BUTTON);
+		internetButton.setId(SnapConstants.INTERNET_BUTTON);
 
 		cameraButton.setOnTouchListener(snapButtonTouchListener);
 		galleryButton.setOnTouchListener(snapButtonTouchListener);
@@ -214,6 +211,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			if (resultCode == Activity.RESULT_OK) {
 				Intent uploadIntent = new Intent(getActivity().getApplicationContext(), UploadSnapView.class);
 				uploadIntent.putExtra("data", data);
+				uploadIntent.putExtra("handler", SnapConstants.GALLERY_BUTTON);
 				startActivity(uploadIntent);
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Toast.makeText(getActivity().getApplicationContext(), "Canceled", Toast.LENGTH_LONG).show();
