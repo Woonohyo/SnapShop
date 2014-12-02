@@ -16,7 +16,7 @@
  
 
         <com.l3cache.snapshop.newsfeed.FeedImageView
-            android:id="@+id/feedImage1"
+            android:id="@+id/newsfeed_item_image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/newsfeed_feedimage"
@@ -43,7 +43,7 @@
  
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/newsfeed_item_writer_text_view"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="name textview"
@@ -52,7 +52,7 @@
  
 
                 <TextView
-                    android:id="@+id/timestamp"
+                    android:id="@+id/newsfeed_item_timestamp_text_view"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="timestmap textview"
@@ -64,7 +64,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/txtStatusMsg"
+            android:id="@+id/newsfeed_item_contents_text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
@@ -81,7 +81,7 @@
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
             <ToggleButton
-                android:id="@+id/snapButton"
+                android:id="@+id/newsfeed_item_like_toggle_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/newsfeed_volley_list_row_buttonshape"
@@ -98,7 +98,7 @@
             </View>
 
             <Button
-                android:id="@+id/priceTextView"
+                android:id="@+id/newsfeed_item_price_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"

@@ -28,5 +28,19 @@ public class LoginView extends FragmentActivity {
 				return true;
 			}
 		});
+
+		Button signUpEmailButton = (Button) findViewById(R.id.login_view_sign_up_button);
+		signUpEmailButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					EmailSignUpFragment fragment = new EmailSignUpFragment();
+					fragment.show(getSupportFragmentManager(), null);
+				}
+				return true;
+			}
+		});
+
 	}
 }

@@ -10,19 +10,6 @@ public class SearchResultsItem {
 	private long productId;
 	private int productType;
 
-	public SearchResultsItem(String title, String link, String image, int lprice, int hprice, String mallName,
-			long productId, int productType) {
-		super();
-		this.title = title;
-		this.link = link;
-		this.image = image;
-		this.lprice = lprice;
-		this.hprice = hprice;
-		this.mallName = mallName;
-		this.productId = productId;
-		this.productType = productType;
-	}
-
 	public SearchResultsItem() {
 
 	}

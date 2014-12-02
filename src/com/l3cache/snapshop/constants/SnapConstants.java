@@ -2,19 +2,19 @@ package com.l3cache.snapshop.constants;
 
 public final class SnapConstants {
 	public static final String SERVER_URL() {
-		return "http://125.209.199.221:8080/";
+		return "http://125.209.199.221:8080";
 	}
 
 	public static final String NEWSFEED_REQUEST() {
-		return "app/posts/";
+		return "/app/posts/";
 	}
 
 	public static final String SEARCH_REQUEST() {
-		return "search/shop";
+		return "/search/shop";
 	}
 
 	public static final String LOGIN_REQUEST() {
-		return "app/users/login";
+		return "/app/users/login";
 	}
 
 	public static final int SUCCESS = 10;

@@ -1,7 +1,10 @@
 package com.l3cache.snapshop.newsfeed;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,28 +13,37 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.res.Configuration;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
+import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Cache.Entry;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.adapter.NewsfeedViewAdapter;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
+import com.l3cache.snapshop.fab.FloatingActionButton;
+import com.l3cache.snapshop.search.SearchResultsView;
+import com.l3cache.snapshop.upload.UploadSnapView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -44,6 +56,10 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private GridView mListView;
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
+	private Uri fileUri;
+	private final int CAMERA_BUTTON = 1;
+	private final int GALLERY_BUTTON = 2;
+	private final int INTERNET_BUTTON = 3;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +78,61 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					int id = v.getId();
+
+					switch (id) {
+					case CAMERA_BUTTON: {
+						Log.i("Snap", id + ": Camera");
+						// create Intent to take a picture and return control to
+						// the
+						// calling application
+						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+						fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+						// start the image capture Intent
+						getActivity().startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+						break;
+					}
+					case GALLERY_BUTTON: {
+						Intent intent = new Intent(Intent.ACTION_PICK);
+						intent.setType(Images.Media.CONTENT_TYPE);
+						intent.setData(Images.Media.EXTERNAL_CONTENT_URI);
+						getActivity().startActivityForResult(intent, SnapConstants.RESULT_LOAD_IMAGE);
+						break;
+					}
+					case INTERNET_BUTTON: {
+						Intent intent = new Intent(getActivity(), SearchResultsView.class);
+						getActivity().startActivity(intent);
+						break;
+					}
+
+					}
+
+				}
+				return true;
+			}
+		};
+
+		FloatingActionButton cameraButton = (FloatingActionButton) getView().findViewById(R.id.newsfeed_camera_button);
+		FloatingActionButton galleryButton = (FloatingActionButton) getView()
+				.findViewById(R.id.newsfeed_gallery_button);
+		FloatingActionButton internetButton = (FloatingActionButton) getView().findViewById(
+				R.id.newsfeed_internet_button);
+
+		cameraButton.setId(CAMERA_BUTTON);
+		galleryButton.setId(GALLERY_BUTTON);
+		internetButton.setId(INTERNET_BUTTON);
+
+		cameraButton.setOnTouchListener(snapButtonTouchListener);
+		galleryButton.setOnTouchListener(snapButtonTouchListener);
+		internetButton.setOnTouchListener(snapButtonTouchListener);
+
 		mListView = (GridView) getView().findViewById(R.id.newsfeed_main_listView);
 
 		newsfeedDatas = new ArrayList<NewsfeedData>();
@@ -125,7 +196,66 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		 */
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.i("Snap", "HI MAIN! Requesting: " + requestCode + " and Result:" + resultCode);
+		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+
+			} else {
+				Toast.makeText(getActivity().getApplicationContext(), "Capture Failed", Toast.LENGTH_LONG).show();
+			}
+		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
+			if (resultCode == Activity.RESULT_OK) {
+				Intent uploadIntent = new Intent(getActivity().getApplicationContext(), UploadSnapView.class);
+				uploadIntent.putExtra("data", data);
+				startActivity(uploadIntent);
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Toast.makeText(getActivity().getApplicationContext(), "Canceled", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
+
+	private Uri getOutputMediaFileUri(int type) {
+		return Uri.fromFile(getOutputMediaFile(type));
+	}
+
+	/** Create a File for saving an image or video */
+	private static File getOutputMediaFile(int type) {
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+
+		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				"MyCameraApp");
+		// This location works best if you want the created images to be shared
+		// between applications and persist after your app has been uninstalled.
+
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		File mediaFile;
+		if (type == SnapConstants.MEDIA_TYPE_IMAGE) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+		} else {
+			return null;
+		}
+
+		return mediaFile;
+	}
+
 	private void parseJsonFeed(JSONObject response) {
+		// Realm realm = Realm.getInstance(getActivity());
+		// realm.beginTransaction();
 		try {
 			JSONObject jsonData = response.getJSONObject("response");
 			JSONArray feedArray = jsonData.getJSONArray("data");
@@ -134,41 +264,35 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 
 				NewsfeedData item = new NewsfeedData();
-				// item.setId(feedObj.getInt("id"));
-				// item.setName(feedObj.getString("name"));
-
-				// Image might be null sometimes
-				String image = feedObj.isNull("imgUrl") ? null : feedObj.getString("imgUrl");
-				item.setImage(image);
+				// NewsfeedData item = realm.createObject(NewsfeedData.class);
+				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
-				item.setWriter(feedObj.getString("writer"));
-				// item.setStatus(feedObj.getString("status"));
-				// item.setProfilePic(feedObj.getString("profilePic"));
-				// item.setTimeStamp(feedObj.getString("timeStamp"));
-				item.setPrice(feedObj.getString("price"));
-
 				// url might be null sometimes
 				String feedUrl = feedObj.isNull("shopUrl") ? null : feedObj.getString("shopUrl");
-				item.setUrl(feedUrl);
+				item.setShopUrl(feedUrl);
+				item.setContents(feedObj.getString("contents"));
+				item.setImageUrl(feedObj.getString("imgUrl"));
+				item.setNumLike(feedObj.getInt("numLike"));
+				item.setPrice(feedObj.getString("price"));
+				item.setTimeStamp(feedObj.getString("writeDate"));
+				item.setWriter(feedObj.getString("writer"));
+				item.setIsLike(feedObj.getInt("like"));
+				item.setRead(feedObj.getInt("read"));
 
 				newsfeedDatas.add(item);
 			}
-
+			// realm.commitTransaction();
 			// notify data changes to list adapater
 			newsfeedVolleyAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
+			// realm.commitTransaction();
 		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Log.i("Newsfeed", position + "번 포스트 선택");
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
 	}
 
 	private void fetchDataFromServer(int start, final int sort) {
@@ -187,7 +311,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 					for (int index = 0; index < itemList.length(); ++index) {
 						NewsfeedData newsfeedData = new NewsfeedData();
 						newsfeedData.setName(itemList.getJSONObject(index).getString("title"));
-						newsfeedData.setImage(itemList.getJSONObject(index).getString("imgUrl"));
+						newsfeedData.setImageUrl(itemList.getJSONObject(index).getString("imgUrl"));
 						newsfeedData.setPrice(itemList.getJSONObject(index).getString("price"));
 						newsfeedDatas.add(newsfeedData);
 					}
@@ -208,11 +332,4 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		}
 		mListView.setAdapter(mNewsfeedViewAdapter);
 	}
-	
-	
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-	}
-	
 }

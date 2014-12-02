@@ -564,6 +564,88 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int expandActivityOverflowButtonDrawable=0x7f010085;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fab_addButtonColorNormal=0x7f0100af;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fab_addButtonColorPressed=0x7f0100ae;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fab_addButtonPlusIconColor=0x7f0100b0;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fab_colorNormal=0x7f0100aa;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fab_colorPressed=0x7f0100a9;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>up</code></td><td>0</td><td></td></tr>
+<tr><td><code>down</code></td><td>1</td><td></td></tr>
+<tr><td><code>left</code></td><td>2</td><td></td></tr>
+<tr><td><code>right</code></td><td>3</td><td></td></tr>
+</table>
+         */
+        public static final int fab_expandDirection=0x7f0100b1;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int fab_icon=0x7f0100ab;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fab_plusIconColor=0x7f0100ad;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>normal</code></td><td>0</td><td></td></tr>
+<tr><td><code>mini</code></td><td>1</td><td></td></tr>
+</table>
+         */
+        public static final int fab_size=0x7f0100ac;
         /**  The max gap between the bars when they are parallel to each other 
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
@@ -1379,27 +1461,30 @@ containing a value of this type.
         public static final int abc_config_showMenuShortcutsWhenKeyboardPresent=0x7f060003;
     }
     public static final class color {
-        public static final int abc_background_cache_hint_selector_material_dark=0x7f07003e;
-        public static final int abc_background_cache_hint_selector_material_light=0x7f07003f;
+        public static final int abc_background_cache_hint_selector_material_dark=0x7f070045;
+        public static final int abc_background_cache_hint_selector_material_light=0x7f070046;
         public static final int abc_input_method_navigation_guard=0x7f070003;
-        public static final int abc_primary_text_disable_only_material_dark=0x7f070040;
-        public static final int abc_primary_text_disable_only_material_light=0x7f070041;
-        public static final int abc_primary_text_material_dark=0x7f070042;
-        public static final int abc_primary_text_material_light=0x7f070043;
-        public static final int abc_search_url_text=0x7f070044;
+        public static final int abc_primary_text_disable_only_material_dark=0x7f070047;
+        public static final int abc_primary_text_disable_only_material_light=0x7f070048;
+        public static final int abc_primary_text_material_dark=0x7f070049;
+        public static final int abc_primary_text_material_light=0x7f07004a;
+        public static final int abc_search_url_text=0x7f07004b;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
-        public static final int abc_secondary_text_material_dark=0x7f070045;
-        public static final int abc_secondary_text_material_light=0x7f070046;
+        public static final int abc_secondary_text_material_dark=0x7f07004c;
+        public static final int abc_secondary_text_material_light=0x7f07004d;
         public static final int accent_material_dark=0x7f07000f;
         public static final int accent_material_light=0x7f07000e;
         public static final int actionBarText=0x7f070031;
+        public static final int background=0x7f07003e;
         public static final int background_floating_material_dark=0x7f070006;
         public static final int background_floating_material_light=0x7f070007;
         public static final int background_material_dark=0x7f070004;
         public static final int background_material_light=0x7f070005;
         public static final int black=0x7f070034;
+        public static final int blue_semi_transparent=0x7f070043;
+        public static final int blue_semi_transparent_pressed=0x7f070044;
         /**  White 50% 
          */
         public static final int bright_foreground_disabled_material_dark=0x7f070016;
@@ -1420,6 +1505,7 @@ containing a value of this type.
         public static final int feed_bg=0x7f070035;
         public static final int feed_item_bg=0x7f070036;
         public static final int feed_item_border=0x7f070037;
+        public static final int half_black=0x7f07003f;
         /**  TODO: This is 40% alpha on the default accent color. 
          */
         public static final int highlighted_text_material_dark=0x7f070020;
@@ -1438,6 +1524,8 @@ containing a value of this type.
         public static final int material_deep_teal_200=0x7f07002c;
         public static final int material_deep_teal_500=0x7f07002d;
         public static final int naver_green=0x7f070032;
+        public static final int pink=0x7f070041;
+        public static final int pink_pressed=0x7f070042;
         public static final int primary_dark_material_dark=0x7f07000a;
         public static final int primary_dark_material_light=0x7f07000b;
         public static final int primary_material_dark=0x7f070008;
@@ -1462,6 +1550,7 @@ containing a value of this type.
         public static final int timestamp=0x7f070039;
         public static final int twitterBlue=0x7f07003b;
         public static final int white=0x7f070033;
+        public static final int white_pressed=0x7f070040;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1595,6 +1684,15 @@ containing a value of this type.
         public static final int dialog_fixed_width_minor=0x7f08000d;
         public static final int disabled_alpha_material_dark=0x7f080001;
         public static final int disabled_alpha_material_light=0x7f080000;
+        public static final int fab_actions_spacing=0x7f080049;
+        public static final int fab_icon_size=0x7f080043;
+        public static final int fab_plus_icon_size=0x7f080044;
+        public static final int fab_plus_icon_stroke=0x7f080045;
+        public static final int fab_shadow_offset=0x7f080046;
+        public static final int fab_shadow_radius=0x7f080047;
+        public static final int fab_size_mini=0x7f080042;
+        public static final int fab_size_normal=0x7f080041;
+        public static final int fab_stroke_width=0x7f080048;
         public static final int feed_item_border_width=0x7f080037;
         public static final int feed_item_button_margin_left_right=0x7f080039;
         public static final int feed_item_button_pad_left_right=0x7f080038;
@@ -1668,125 +1766,150 @@ containing a value of this type.
         public static final int abc_textfield_search_activated_mtrl_alpha=0x7f020030;
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
-        public static final int actionbar_background=0x7f020042;
-        public static final int actionbar_textColor=0x7f020043;
+        public static final int actionbar_background=0x7f020049;
+        public static final int actionbar_textColor=0x7f02004a;
         public static final int bg_parent_rounded_corner=0x7f020033;
         public static final int buttonshape=0x7f020034;
-        public static final int ic_launcher=0x7f020035;
-        public static final int ic_search=0x7f020036;
-        public static final int jessicainlove=0x7f020037;
-        public static final int login_facebook_button=0x7f020038;
-        public static final int login_google_button=0x7f020039;
-        public static final int login_twitter_button=0x7f02003a;
-        public static final int newsfeed_feedimage=0x7f02003b;
-        public static final int newsfeed_volley_list_row_button_text=0x7f02003c;
-        public static final int newsfeed_volley_list_row_button_text_color=0x7f02003d;
-        public static final int newsfeed_volley_list_row_buttonshape=0x7f02003e;
-        public static final int newsfeed_volley_list_row_priceshape=0x7f02003f;
-        public static final int upload_snap_button=0x7f020040;
-        public static final int upload_snap_edit_text=0x7f020041;
+        public static final int fab_bg_mini=0x7f020035;
+        public static final int fab_bg_normal=0x7f020036;
+        public static final int ic_fab_star=0x7f020037;
+        public static final int ic_launcher=0x7f020038;
+        public static final int ic_search=0x7f020039;
+        public static final int jessicainlove=0x7f02003a;
+        public static final int login_facebook_button=0x7f02003b;
+        public static final int login_google_button=0x7f02003c;
+        public static final int login_twitter_button=0x7f02003d;
+        public static final int new_snap_camera=0x7f02003e;
+        public static final int new_snap_gallery=0x7f02003f;
+        public static final int new_snap_internet=0x7f020040;
+        public static final int news=0x7f020041;
+        public static final int newsfeed_feedimage=0x7f020042;
+        public static final int newsfeed_volley_list_row_button_text=0x7f020043;
+        public static final int newsfeed_volley_list_row_button_text_color=0x7f020044;
+        public static final int newsfeed_volley_list_row_buttonshape=0x7f020045;
+        public static final int newsfeed_volley_list_row_priceshape=0x7f020046;
+        public static final int upload_snap_button=0x7f020047;
+        public static final int upload_snap_edit_text=0x7f020048;
     }
     public static final class id {
-        public static final int action_bar=0x7f0a0031;
+        public static final int action_bar=0x7f0a0036;
         public static final int action_bar_activity_content=0x7f0a0003;
-        public static final int action_bar_container=0x7f0a0030;
-        public static final int action_bar_root=0x7f0a002c;
+        public static final int action_bar_container=0x7f0a0035;
+        public static final int action_bar_root=0x7f0a0031;
         public static final int action_bar_spinner=0x7f0a0002;
-        public static final int action_bar_subtitle=0x7f0a001f;
-        public static final int action_bar_title=0x7f0a001e;
-        public static final int action_context_bar=0x7f0a0032;
+        public static final int action_bar_subtitle=0x7f0a0024;
+        public static final int action_bar_title=0x7f0a0023;
+        public static final int action_context_bar=0x7f0a0037;
         public static final int action_menu_divider=0x7f0a0005;
         public static final int action_menu_presenter=0x7f0a0006;
-        public static final int action_mode_bar=0x7f0a002e;
-        public static final int action_mode_bar_stub=0x7f0a002d;
-        public static final int action_mode_close_button=0x7f0a0020;
-        public static final int action_settings=0x7f0a0062;
-        public static final int activity_chooser_view_content=0x7f0a0021;
-        public static final int always=0x7f0a0014;
-        public static final int beginning=0x7f0a001b;
-        public static final int button_sign_in=0x7f0a0054;
-        public static final int checkbox=0x7f0a0029;
-        public static final int collapseActionView=0x7f0a0015;
-        public static final int decor_content_parent=0x7f0a002f;
-        public static final int default_activity_button=0x7f0a0024;
-        public static final int dialog=0x7f0a0019;
-        public static final int disableHome=0x7f0a000d;
-        public static final int dropdown=0x7f0a001a;
-        public static final int editText_email=0x7f0a0052;
-        public static final int editText_password=0x7f0a0053;
-        public static final int edit_query=0x7f0a0033;
-        public static final int end=0x7f0a001c;
-        public static final int expand_activities_button=0x7f0a0022;
-        public static final int expanded_menu=0x7f0a0028;
-        public static final int favorite_main_list_view=0x7f0a003f;
-        public static final int feedImage1=0x7f0a0059;
+        public static final int action_mode_bar=0x7f0a0033;
+        public static final int action_mode_bar_stub=0x7f0a0032;
+        public static final int action_mode_close_button=0x7f0a0025;
+        public static final int action_settings=0x7f0a0074;
+        public static final int activity_chooser_view_content=0x7f0a0026;
+        public static final int always=0x7f0a0015;
+        public static final int beginning=0x7f0a001c;
+        public static final int button_sign_in=0x7f0a005e;
+        public static final int button_sign_up=0x7f0a0060;
+        public static final int checkbox=0x7f0a002e;
+        public static final int collapseActionView=0x7f0a0016;
+        public static final int decor_content_parent=0x7f0a0034;
+        public static final int default_activity_button=0x7f0a0029;
+        public static final int dialog=0x7f0a001a;
+        public static final int disableHome=0x7f0a000e;
+        public static final int down=0x7f0a0020;
+        public static final int dropdown=0x7f0a001b;
+        public static final int editText_email=0x7f0a005c;
+        public static final int editText_password=0x7f0a005d;
+        public static final int editText_password_again=0x7f0a005f;
+        public static final int edit_query=0x7f0a0038;
+        public static final int end=0x7f0a001d;
+        public static final int expand_activities_button=0x7f0a0027;
+        public static final int expanded_menu=0x7f0a002d;
+        public static final int fab_expand_menu_button=0x7f0a0009;
+        public static final int favorite_main_list_view=0x7f0a0044;
+        public static final int feedImage1=0x7f0a006b;
         public static final int home=0x7f0a0000;
-        public static final int homeAsUp=0x7f0a000e;
-        public static final int icon=0x7f0a0026;
-        public static final int ifRoom=0x7f0a0016;
-        public static final int image=0x7f0a0023;
-        public static final int listMode=0x7f0a000a;
-        public static final int list_item=0x7f0a0025;
-        public static final int login_view_create_account_button=0x7f0a0046;
-        public static final int login_view_description=0x7f0a0041;
-        public static final int login_view_email_signin_button=0x7f0a0045;
-        public static final int login_view_facebook_signin_button=0x7f0a0043;
-        public static final int login_view_google_signin_button=0x7f0a0042;
-        public static final int login_view_title=0x7f0a0040;
-        public static final int login_view_twitter_signin_button=0x7f0a0044;
-        public static final int middle=0x7f0a001d;
-        public static final int name=0x7f0a005a;
-        public static final int never=0x7f0a0017;
-        public static final int newsfeed_list_row_itemPrice_text_view=0x7f0a0057;
-        public static final int newsfeed_list_row_item_image_view=0x7f0a0055;
-        public static final int newsfeed_list_row_item_name_text_view=0x7f0a0056;
-        public static final int newsfeed_list_row_like_image_view=0x7f0a0058;
-        public static final int newsfeed_main_listView=0x7f0a0048;
-        public static final int none=0x7f0a000f;
-        public static final int normal=0x7f0a000b;
-        public static final int priceTextView=0x7f0a005e;
+        public static final int homeAsUp=0x7f0a000f;
+        public static final int icon=0x7f0a002b;
+        public static final int ifRoom=0x7f0a0017;
+        public static final int image=0x7f0a0028;
+        public static final int left=0x7f0a0021;
+        public static final int listMode=0x7f0a000b;
+        public static final int list_item=0x7f0a002a;
+        public static final int login_view_create_account_button=0x7f0a004c;
+        public static final int login_view_description=0x7f0a0046;
+        public static final int login_view_email_signin_button=0x7f0a004a;
+        public static final int login_view_facebook_signin_button=0x7f0a0048;
+        public static final int login_view_google_signin_button=0x7f0a0047;
+        public static final int login_view_sign_up_button=0x7f0a004b;
+        public static final int login_view_title=0x7f0a0045;
+        public static final int login_view_twitter_signin_button=0x7f0a0049;
+        public static final int middle=0x7f0a001e;
+        public static final int mini=0x7f0a001f;
+        public static final int multiple_actions=0x7f0a004f;
+        public static final int name=0x7f0a006c;
+        public static final int never=0x7f0a0018;
+        public static final int newsfeed_camera_button=0x7f0a0052;
+        public static final int newsfeed_gallery_button=0x7f0a0051;
+        public static final int newsfeed_internet_button=0x7f0a0050;
+        public static final int newsfeed_item_contents_text_view=0x7f0a0068;
+        public static final int newsfeed_item_image_view=0x7f0a0065;
+        public static final int newsfeed_item_like_toggle_button=0x7f0a0069;
+        public static final int newsfeed_item_price_button=0x7f0a006a;
+        public static final int newsfeed_item_timestamp_text_view=0x7f0a0067;
+        public static final int newsfeed_item_writer_text_view=0x7f0a0066;
+        public static final int newsfeed_list_row_itemPrice_text_view=0x7f0a0063;
+        public static final int newsfeed_list_row_item_image_view=0x7f0a0061;
+        public static final int newsfeed_list_row_item_name_text_view=0x7f0a0062;
+        public static final int newsfeed_list_row_like_image_view=0x7f0a0064;
+        public static final int newsfeed_main_listView=0x7f0a004e;
+        public static final int none=0x7f0a0010;
+        public static final int normal=0x7f0a000c;
+        public static final int priceTextView=0x7f0a0070;
         public static final int progress_circular=0x7f0a0007;
         public static final int progress_horizontal=0x7f0a0008;
-        public static final int radio=0x7f0a002b;
-        public static final int realtabcontent=0x7f0a0047;
-        public static final int search=0x7f0a0063;
-        public static final int search_badge=0x7f0a0035;
-        public static final int search_bar=0x7f0a0034;
-        public static final int search_button=0x7f0a0036;
-        public static final int search_close_btn=0x7f0a003b;
-        public static final int search_edit_frame=0x7f0a0037;
-        public static final int search_go_btn=0x7f0a003d;
-        public static final int search_mag_icon=0x7f0a0038;
-        public static final int search_plate=0x7f0a0039;
-        public static final int search_results_listView=0x7f0a0049;
-        public static final int search_src_text=0x7f0a003a;
-        public static final int search_voice_btn=0x7f0a003e;
-        public static final int searchresults_list_row_image_view=0x7f0a005f;
-        public static final int searchresults_list_row_itemPrice_text_view=0x7f0a0061;
-        public static final int searchresults_list_row_item_name_text_view=0x7f0a0060;
-        public static final int section_label=0x7f0a0050;
-        public static final int shortcut=0x7f0a002a;
-        public static final int showCustom=0x7f0a0010;
-        public static final int showHome=0x7f0a0011;
-        public static final int showTitle=0x7f0a0012;
-        public static final int snapButton=0x7f0a005d;
+        public static final int radio=0x7f0a0030;
+        public static final int realtabcontent=0x7f0a004d;
+        public static final int right=0x7f0a0022;
+        public static final int search=0x7f0a0075;
+        public static final int search_badge=0x7f0a003a;
+        public static final int search_bar=0x7f0a0039;
+        public static final int search_button=0x7f0a003b;
+        public static final int search_close_btn=0x7f0a0040;
+        public static final int search_edit_frame=0x7f0a003c;
+        public static final int search_go_btn=0x7f0a0042;
+        public static final int search_mag_icon=0x7f0a003d;
+        public static final int search_plate=0x7f0a003e;
+        public static final int search_results_listView=0x7f0a0053;
+        public static final int search_src_text=0x7f0a003f;
+        public static final int search_voice_btn=0x7f0a0043;
+        public static final int searchresults_list_row_image_view=0x7f0a0071;
+        public static final int searchresults_list_row_itemPrice_text_view=0x7f0a0073;
+        public static final int searchresults_list_row_item_name_text_view=0x7f0a0072;
+        public static final int section_label=0x7f0a005a;
+        public static final int shortcut=0x7f0a002f;
+        public static final int showCustom=0x7f0a0011;
+        public static final int showHome=0x7f0a0012;
+        public static final int showTitle=0x7f0a0013;
+        public static final int snapButton=0x7f0a006f;
         public static final int split_action_bar=0x7f0a0004;
-        public static final int submit_area=0x7f0a003c;
-        public static final int tabMode=0x7f0a000c;
-        public static final int textView_description=0x7f0a0051;
-        public static final int timestamp=0x7f0a005b;
-        public static final int title=0x7f0a0027;
-        public static final int txtStatusMsg=0x7f0a005c;
+        public static final int submit_area=0x7f0a0041;
+        public static final int tabMode=0x7f0a000d;
+        public static final int textView_description=0x7f0a005b;
+        public static final int timestamp=0x7f0a006d;
+        public static final int title=0x7f0a002c;
+        public static final int txtStatusMsg=0x7f0a006e;
         public static final int up=0x7f0a0001;
-        public static final int upload_snap_button_upload=0x7f0a004f;
-        public static final int upload_snap_editText_contents=0x7f0a004c;
-        public static final int upload_snap_editText_link=0x7f0a004e;
-        public static final int upload_snap_editText_price=0x7f0a004d;
-        public static final int upload_snap_editText_title=0x7f0a004b;
-        public static final int upload_snap_image_view=0x7f0a004a;
-        public static final int useLogo=0x7f0a0013;
-        public static final int withText=0x7f0a0018;
-        public static final int wrap_content=0x7f0a0009;
+        public static final int upload_snap_button_upload=0x7f0a0059;
+        public static final int upload_snap_editText_contents=0x7f0a0056;
+        public static final int upload_snap_editText_link=0x7f0a0058;
+        public static final int upload_snap_editText_price=0x7f0a0057;
+        public static final int upload_snap_editText_title=0x7f0a0055;
+        public static final int upload_snap_image_view=0x7f0a0054;
+        public static final int useLogo=0x7f0a0014;
+        public static final int withText=0x7f0a0019;
+        public static final int wrap_content=0x7f0a000a;
     }
     public static final class integer {
         /**  The maximum number of action buttons that should be permitted within
@@ -1847,12 +1970,13 @@ containing a value of this type.
         public static final int activity_upload_snap_view=0x7f03001e;
         public static final int fragment_main=0x7f03001f;
         public static final int fragment_sign_in_email=0x7f030020;
-        public static final int newsfeed_list_row=0x7f030021;
-        public static final int newsfeed_volley_list_row=0x7f030022;
-        public static final int searchresults_list_row=0x7f030023;
-        public static final int searchresults_volley_list_row=0x7f030024;
-        public static final int snapdialogfragment=0x7f030025;
-        public static final int support_simple_spinner_dropdown_item=0x7f030026;
+        public static final int fragment_sign_up_email=0x7f030021;
+        public static final int newsfeed_list_row=0x7f030022;
+        public static final int newsfeed_volley_list_row=0x7f030023;
+        public static final int searchresults_list_row=0x7f030024;
+        public static final int searchresults_volley_list_row=0x7f030025;
+        public static final int snapdialogfragment=0x7f030026;
+        public static final int support_simple_spinner_dropdown_item=0x7f030027;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;
@@ -2986,6 +3110,34 @@ containing a value of this type.
           @attr name com.l3cache.snapshop:initialActivityCount
         */
         public static final int ActivityChooserView_initialActivityCount = 0;
+        /** Attributes that can be used with a AddFloatingActionButton.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #AddFloatingActionButton_fab_plusIconColor com.l3cache.snapshop:fab_plusIconColor}</code></td><td></td></tr>
+           </table>
+           @see #AddFloatingActionButton_fab_plusIconColor
+         */
+        public static final int[] AddFloatingActionButton = {
+            0x7f0100ad
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_plusIconColor}
+          attribute's value can be found in the {@link #AddFloatingActionButton} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.l3cache.snapshop:fab_plusIconColor
+        */
+        public static final int AddFloatingActionButton_fab_plusIconColor = 0;
         /** Attributes that can be used with a CompatTextView.
            <p>Includes the following attributes:</p>
            <table>
@@ -3181,6 +3333,165 @@ containing a value of this type.
           @attr name com.l3cache.snapshop:topBottomBarArrowSize
         */
         public static final int DrawerArrowToggle_topBottomBarArrowSize = 4;
+        /** Attributes that can be used with a FloatingActionButton.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #FloatingActionButton_fab_colorNormal com.l3cache.snapshop:fab_colorNormal}</code></td><td></td></tr>
+           <tr><td><code>{@link #FloatingActionButton_fab_colorPressed com.l3cache.snapshop:fab_colorPressed}</code></td><td></td></tr>
+           <tr><td><code>{@link #FloatingActionButton_fab_icon com.l3cache.snapshop:fab_icon}</code></td><td></td></tr>
+           <tr><td><code>{@link #FloatingActionButton_fab_size com.l3cache.snapshop:fab_size}</code></td><td></td></tr>
+           </table>
+           @see #FloatingActionButton_fab_colorNormal
+           @see #FloatingActionButton_fab_colorPressed
+           @see #FloatingActionButton_fab_icon
+           @see #FloatingActionButton_fab_size
+         */
+        public static final int[] FloatingActionButton = {
+            0x7f0100a9, 0x7f0100aa, 0x7f0100ab, 0x7f0100ac
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_colorNormal}
+          attribute's value can be found in the {@link #FloatingActionButton} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.l3cache.snapshop:fab_colorNormal
+        */
+        public static final int FloatingActionButton_fab_colorNormal = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_colorPressed}
+          attribute's value can be found in the {@link #FloatingActionButton} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.l3cache.snapshop:fab_colorPressed
+        */
+        public static final int FloatingActionButton_fab_colorPressed = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_icon}
+          attribute's value can be found in the {@link #FloatingActionButton} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.l3cache.snapshop:fab_icon
+        */
+        public static final int FloatingActionButton_fab_icon = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_size}
+          attribute's value can be found in the {@link #FloatingActionButton} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>normal</code></td><td>0</td><td></td></tr>
+<tr><td><code>mini</code></td><td>1</td><td></td></tr>
+</table>
+          @attr name com.l3cache.snapshop:fab_size
+        */
+        public static final int FloatingActionButton_fab_size = 3;
+        /** Attributes that can be used with a FloatingActionsMenu.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #FloatingActionsMenu_fab_addButtonColorNormal com.l3cache.snapshop:fab_addButtonColorNormal}</code></td><td></td></tr>
+           <tr><td><code>{@link #FloatingActionsMenu_fab_addButtonColorPressed com.l3cache.snapshop:fab_addButtonColorPressed}</code></td><td></td></tr>
+           <tr><td><code>{@link #FloatingActionsMenu_fab_addButtonPlusIconColor com.l3cache.snapshop:fab_addButtonPlusIconColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #FloatingActionsMenu_fab_expandDirection com.l3cache.snapshop:fab_expandDirection}</code></td><td></td></tr>
+           </table>
+           @see #FloatingActionsMenu_fab_addButtonColorNormal
+           @see #FloatingActionsMenu_fab_addButtonColorPressed
+           @see #FloatingActionsMenu_fab_addButtonPlusIconColor
+           @see #FloatingActionsMenu_fab_expandDirection
+         */
+        public static final int[] FloatingActionsMenu = {
+            0x7f0100ae, 0x7f0100af, 0x7f0100b0, 0x7f0100b1
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_addButtonColorNormal}
+          attribute's value can be found in the {@link #FloatingActionsMenu} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.l3cache.snapshop:fab_addButtonColorNormal
+        */
+        public static final int FloatingActionsMenu_fab_addButtonColorNormal = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_addButtonColorPressed}
+          attribute's value can be found in the {@link #FloatingActionsMenu} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.l3cache.snapshop:fab_addButtonColorPressed
+        */
+        public static final int FloatingActionsMenu_fab_addButtonColorPressed = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_addButtonPlusIconColor}
+          attribute's value can be found in the {@link #FloatingActionsMenu} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.l3cache.snapshop:fab_addButtonPlusIconColor
+        */
+        public static final int FloatingActionsMenu_fab_addButtonPlusIconColor = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.l3cache.snapshop.R.attr#fab_expandDirection}
+          attribute's value can be found in the {@link #FloatingActionsMenu} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>up</code></td><td>0</td><td></td></tr>
+<tr><td><code>down</code></td><td>1</td><td></td></tr>
+<tr><td><code>left</code></td><td>2</td><td></td></tr>
+<tr><td><code>right</code></td><td>3</td><td></td></tr>
+</table>
+          @attr name com.l3cache.snapshop:fab_expandDirection
+        */
+        public static final int FloatingActionsMenu_fab_expandDirection = 3;
         /** Attributes that can be used with a LinearLayoutCompat.
            <p>Includes the following attributes:</p>
            <table>

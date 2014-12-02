@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/sign_in_email_margin_left_right"
+    android:layout_marginRight="@dimen/sign_in_email_margin_left_right"
+    android:background="@color/white"
+    android:minHeight="250dp"
+    android:minWidth="1000dp"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/sign_in_email_padding_top_bottom"
+    android:paddingLeft="@dimen/sign_in_email_padding_left_right"
+    android:paddingRight="@dimen/sign_in_email_padding_left_right"
+    android:paddingTop="@dimen/sign_in_email_padding_top_bottom" >
+
+    <EditText
+        android:id="@+id/editText_email"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hintColorGray" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/editText_password"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hintColorGray" />
+
+    <EditText
+        android:id="@+id/editText_password_again"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="Password Again"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hintColorGray" />
+
+    <Button
+        android:id="@+id/button_sign_up"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/naver_green"
+        android:text="Sign In"
+        android:textColor="@color/white" />
+
+</LinearLayout>

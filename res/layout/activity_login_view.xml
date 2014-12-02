@@ -92,7 +92,7 @@
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/login_view_create_account_button"
+            android:id="@+id/login_view_sign_up_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

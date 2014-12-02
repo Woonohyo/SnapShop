@@ -1,24 +1,65 @@
 package com.l3cache.snapshop.data;
 
-public class NewsfeedData {
-	private String image;
-	private String name;
-	private String title;
-	private String price;
-	private String url;
-	private String timeStamp;
-	private String status;
-	private String profilePic;
-	private String writer;
+import io.realm.RealmObject;
+import io.realm.annotations.RealmClass;
 
-	public NewsfeedData(String imgName, String name, String price) {
-		this.image = imgName;
-		this.name = name;
-		this.price = price;
+@RealmClass
+public class NewsfeedData extends RealmObject {
+	private int pid;
+	private String title;
+	private String shopUrl;
+	private String contents;
+	private String imageUrl;
+	private int numLike;
+	private String price;
+	private String timeStamp;
+	private String writer;
+	private int isLike;
+	private int read;
+
+	public int getPid() {
+		return pid;
 	}
 
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+	public int getNumLike() {
+		return numLike;
+	}
+
+	public void setNumLike(int numLike) {
+		this.numLike = numLike;
+	}
+
+	public int getIsLike() {
+		return isLike;
+	}
+
+	public void setIsLike(int isLike) {
+		this.isLike = isLike;
+	}
+
+	public int getRead() {
+		return read;
+	}
+
+	public void setRead(int read) {
+		this.read = read;
+	}
+
+	private String name;
+
 	public NewsfeedData() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getName() {
@@ -37,20 +78,20 @@ public class NewsfeedData {
 		this.price = price;
 	}
 
-	public String getImage() {
-		return image;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setImage(String imgName) {
-		this.image = imgName;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getShopUrl() {
+		return shopUrl;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setShopUrl(String url) {
+		this.shopUrl = url;
 	}
 
 	public String getTimeStamp() {
@@ -59,22 +100,6 @@ public class NewsfeedData {
 
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getProfilePic() {
-		return profilePic;
-	}
-
-	public void setProfilePic(String profilePic) {
-		this.profilePic = profilePic;
 	}
 
 	public String getTitle() {

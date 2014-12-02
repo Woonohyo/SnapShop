@@ -1,9 +1,5 @@
 package com.l3cache.snapshop.upload;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;

@@ -54,7 +54,7 @@ public class NewsfeedViewAdapter extends ArrayAdapter<NewsfeedData> {
 
 		try {
 			AsyncHttpClient client = new AsyncHttpClient();
-			client.get(mListData.get(position).getImage(), new FileAsyncHttpResponseHandler(mContext) {
+			client.get(mListData.get(position).getImageUrl(), new FileAsyncHttpResponseHandler(mContext) {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers, Throwable throwable, File response) {

@@ -3,6 +3,7 @@ package com.l3cache.snapshop.newsfeed;
 import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -63,40 +64,26 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		if (imageLoader == null)
 			imageLoader = AppController.getInstance().getImageLoader();
 
-		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.feedImage1);
-		// NetworkImageView profilePic = (NetworkImageView)
-		// convertView.findViewById(R.id.profilePic);
-		TextView statusView = (TextView) convertView.findViewById(R.id.txtStatusMsg);
 		NewsfeedData item = newsfeedDatas.get(position);
 
-		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.snapButton);
-		// likeButton의 체크 여부를 item에서 가져와서 세팅하자
-		likeButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.newsfeed_item_image_view);
+		TextView writerTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_writer_text_view);
+		TextView contentsTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_contents_text_view);
+		TextView timestampView = (TextView) convertView.findViewById(R.id.newsfeed_item_timestamp_text_view);
+		Button priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
+		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_like_toggle_button);
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					buttonView.setTextColor(Color.parseColor("#2DB400"));
-				} else {
-					buttonView.setTextColor(Color.parseColor("#a0a3a7"));
-				}
-
-			}
-		});
-
-		Button priceButton = (Button) convertView.findViewById(R.id.priceTextView);
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
 		format.setParseIntegerOnly(true);
 		String formattedLowPrice = format.format(Integer.parseInt(item.getPrice()));
 		priceButton.setText(formattedLowPrice);
-
-		// profilePic.setImageUrl("http://i.imgur.com/n3DP2to.png",
-		// imageLoader);
-		statusView.setText(item.getTitle());
-
+		writerTextView.setText(item.getWriter());
+		contentsTextView.setText(item.getContents());
+		timestampView.setText("18 hours ago");
+		
 		// Feed image
-		if (item.getImage() != null) {
-			feedImageView.setImageUrl(item.getImage(), imageLoader);
+		if (item.getImageUrl() != null) {
+			feedImageView.setImageUrl(item.getImageUrl(), imageLoader);
 			feedImageView.setVisibility(View.VISIBLE);
 			feedImageView.setResponseObserver(new FeedImageView.ResponseObserver() {
 				@Override
@@ -110,6 +97,20 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		} else {
 			feedImageView.setVisibility(View.GONE);
 		}
+
+		// likeButton의 체크 여부를 item에서 가져와서 세팅하자
+		likeButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					buttonView.setTextColor(Color.parseColor("#2DB400"));
+				} else {
+					buttonView.setTextColor(Color.parseColor("#a0a3a7"));
+				}
+
+			}
+		});
 
 		return convertView;
 	}
