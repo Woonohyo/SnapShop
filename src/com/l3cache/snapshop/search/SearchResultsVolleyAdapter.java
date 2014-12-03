@@ -18,7 +18,7 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.data.SearchResultsItem;
-import com.l3cache.snapshop.newsfeed.FeedImageView;
+import com.l3cache.snapshop.volley.FeedImageView;
 
 public class SearchResultsVolleyAdapter extends BaseAdapter {
 	private Activity activity;

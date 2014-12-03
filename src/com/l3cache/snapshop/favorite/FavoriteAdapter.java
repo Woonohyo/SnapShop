@@ -18,7 +18,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
-import com.l3cache.snapshop.newsfeed.FeedImageView;
+import com.l3cache.snapshop.volley.FeedImageView;
 
 public class FavoriteAdapter extends BaseAdapter {
 	private Activity activity;

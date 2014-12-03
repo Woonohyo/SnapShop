@@ -21,21 +21,23 @@
             android:paddingLeft="@dimen/feed_item_padding_left_right"
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
-            <com.l3cache.snapshop.newsfeed.FeedImageView
-                android:id="@+id/searchresults_list_row_image_view"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:contentDescription="ItemPhoto"
-                android:scaleType="fitXY"
-                android:paddingLeft="1dp"
-                android:paddingRight="1dp"
-                android:src="@android:drawable/ic_menu_gallery" />
+                <com.l3cache.snapshop.volley.FeedImageView
+                    android:id="@+id/searchresults_list_row_image_view"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:contentDescription="ItemPhoto"
+                    android:paddingLeft="1dp"
+                    android:paddingRight="1dp"
+                    android:scaleType="fitXY"
+                    android:src="@android:drawable/ic_menu_gallery" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/feed_item_padding_left_right"
+                android:paddingStart="@dimen/feed_item_padding_left_right" >
 
                 <TextView
                     android:id="@+id/searchresults_list_row_item_name_text_view"

@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
-
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
@@ -76,6 +74,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
+			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -196,7 +195,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.i("Snap", "HI MAIN! Requesting: " + requestCode + " and Result:" + resultCode);
+		Log.i("Snap", "HI NEWS! Requesting: " + requestCode + " and Result:" + resultCode);
 		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();

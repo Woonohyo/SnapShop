@@ -55,6 +55,7 @@ public class EmailSignInFragment extends DialogFragment {
 
 	protected void intentTabHostActivity() {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 
 	}

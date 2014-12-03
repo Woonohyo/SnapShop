@@ -15,7 +15,7 @@
         android:paddingBottom="@dimen/feed_item_padding_top_bottom" >
  
 
-        <com.l3cache.snapshop.newsfeed.FeedImageView
+        <com.l3cache.snapshop.volley.FeedImageView
             android:id="@+id/newsfeed_item_image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,7 +1,10 @@
 package com.l3cache.snapshop.upload;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import retrofit.Callback;
@@ -11,10 +14,12 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedFile;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -33,8 +38,9 @@ import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.newsfeed.FeedImageView;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.util.ExifUtils;
+import com.l3cache.snapshop.volley.FeedImageView;
 
 public class UploadSnapView extends Activity {
 	private Bitmap bitmap;
@@ -47,6 +53,7 @@ public class UploadSnapView extends Activity {
 	private EditText priceEditText;
 	private EditText shopUrlEditText;
 	private Button uploadingButton;
+	private final static int MAX_IMAGE_DIMENSION = 400;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +72,29 @@ public class UploadSnapView extends Activity {
 		switch (handlerId) {
 		case SnapConstants.GALLERY_BUTTON: {
 			Intent data = (Intent) getIntent().getExtras().get("data");
-			Uri uri = getRealPathUri(data.getData());
-			filePath = uri.toString();
-			fileName = uri.getLastPathSegment();
-
+			Uri imageUri = getRealPathUri(data.getData());
+			filePath = imageUri.toString();
+			fileName = imageUri.getLastPathSegment();
+			Log.i("Upload", filePath);
+			Log.i("Upload", fileName);
 			bitmap = BitmapFactory.decodeFile(filePath);
-			Bitmap resized = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+			Bitmap resized = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()/2, bitmap.getHeight()/2, true);
+			resized = ExifUtils.rotateBitmap(filePath, resized);
 			uploadingImageView.setImageBitmap(resized);
+			// uploadingImageView.setImageUrl(filePath, imageLoader);
+			uploadingImageView.setVisibility(View.VISIBLE);
+			uploadingImageView.setResponseObserver(new FeedImageView.ResponseObserver() {
 
+				@Override
+				public void onSuccess() {
+					Log.i("Upload", "Image Success");
+				}
+
+				@Override
+				public void onError() {
+					Log.i("Upload", "Image Error");
+				}
+			});
 			break;
 
 		}
@@ -98,6 +120,7 @@ public class UploadSnapView extends Activity {
 					Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
 					File bitmapFile = persistImage(bitmap, "uploading");
 					TypedFile imageFile = new TypedFile("image/jpeg", bitmapFile);
+					Log.i("Upload", imageFile.toString());
 
 					SnapShopService service = restAdapter.create(SnapShopService.class);
 					service.uploadSnap(titleEditText.getText().toString(), shopUrlEditText.getText().toString(),
@@ -116,6 +139,7 @@ public class UploadSnapView extends Activity {
 										Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!",
 												Toast.LENGTH_LONG).show();
 										;
+										finish();
 
 									}
 
