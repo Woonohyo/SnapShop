@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
+import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.util.ExifUtils;
 import com.l3cache.snapshop.volley.FeedImageView;
@@ -115,8 +116,15 @@ public class UploadSnapView extends Activity {
 
 					SnapShopService service = restAdapter.create(SnapShopService.class);
 					if (imageUrl != null) {
+						NewsfeedData newSnap = new NewsfeedData(titleEditText.getText().toString(), shopUrlEditText
+								.getText().toString(), contentsEditText.getText().toString(), imageUrl, priceEditText
+								.getText().toString(), 1);
+
+						Log.i("Upload", "Posting" + titleEditText.getText().toString()
+								+ shopUrlEditText.getText().toString() + contentsEditText.getText().toString()
+								+ imageUrl + priceEditText.getText().toString());
 						service.uploadSnap(titleEditText.getText().toString(), shopUrlEditText.getText().toString(),
-								contentsEditText.getText().toString(), imageUrl, priceEditText.getText().toString(), 0,
+								contentsEditText.getText().toString(), imageUrl, priceEditText.getText().toString(), 1,
 								new Callback<UploadResponse>() {
 
 									@Override
@@ -127,10 +135,11 @@ public class UploadSnapView extends Activity {
 
 									@Override
 									public void success(UploadResponse uploadResponse, Response response) {
+										Log.i("Upload", uploadResponse.getStatus()+"");
 										if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 											Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!",
 													Toast.LENGTH_LONG).show();
-											;
+
 											finish();
 
 										}

@@ -256,7 +256,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				item.setImageUrl(feedObj.getString("imgUrl"));
 				item.setNumLike(feedObj.getInt("numLike"));
 				item.setPrice(feedObj.getString("price"));
-				item.setTimeStamp(feedObj.getString("writeDate"));
+				item.setWriteDate(feedObj.getString("writeDate"));
 				item.setWriter(feedObj.getString("writer"));
 				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));

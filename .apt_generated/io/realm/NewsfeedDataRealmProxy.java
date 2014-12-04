@@ -94,16 +94,6 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     }
 
     @Override
-    public String getTimeStamp() {
-        return (java.lang.String) row.getString(Realm.columnIndices.get("NewsfeedData").get("timeStamp"));
-    }
-
-    @Override
-    public void setTimeStamp(String value) {
-        row.setString(Realm.columnIndices.get("NewsfeedData").get("timeStamp"), (String) value);
-    }
-
-    @Override
     public String getTitle() {
         return (java.lang.String) row.getString(Realm.columnIndices.get("NewsfeedData").get("title"));
     }
@@ -114,6 +104,16 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     }
 
     @Override
+    public int getUserId() {
+        return (int) row.getLong(Realm.columnIndices.get("NewsfeedData").get("userId"));
+    }
+
+    @Override
+    public void setUserId(int value) {
+        row.setLong(Realm.columnIndices.get("NewsfeedData").get("userId"), (long) value);
+    }
+
+    @Override
     public int getUserLike() {
         return (int) row.getLong(Realm.columnIndices.get("NewsfeedData").get("userLike"));
     }
@@ -121,6 +121,16 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     @Override
     public void setUserLike(int value) {
         row.setLong(Realm.columnIndices.get("NewsfeedData").get("userLike"), (long) value);
+    }
+
+    @Override
+    public String getWriteDate() {
+        return (java.lang.String) row.getString(Realm.columnIndices.get("NewsfeedData").get("writeDate"));
+    }
+
+    @Override
+    public void setWriteDate(String value) {
+        row.setString(Realm.columnIndices.get("NewsfeedData").get("writeDate"), (String) value);
     }
 
     @Override
@@ -144,9 +154,10 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
             table.addColumn(ColumnType.STRING, "price");
             table.addColumn(ColumnType.INTEGER, "read");
             table.addColumn(ColumnType.STRING, "shopUrl");
-            table.addColumn(ColumnType.STRING, "timeStamp");
             table.addColumn(ColumnType.STRING, "title");
+            table.addColumn(ColumnType.INTEGER, "userId");
             table.addColumn(ColumnType.INTEGER, "userLike");
+            table.addColumn(ColumnType.STRING, "writeDate");
             table.addColumn(ColumnType.STRING, "writer");
             return table;
         }
@@ -156,11 +167,11 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     public static void validateTable(ImplicitTransaction transaction) {
         if(transaction.hasTable("class_NewsfeedData")) {
             Table table = transaction.getTable("class_NewsfeedData");
-            if(table.getColumnCount() != 12) {
+            if(table.getColumnCount() != 13) {
                 throw new IllegalStateException("Column count does not match");
             }
             Map<String, ColumnType> columnTypes = new HashMap<String, ColumnType>();
-            for(long i = 0; i < 12; i++) {
+            for(long i = 0; i < 13; i++) {
                 columnTypes.put(table.getColumnName(i), table.getColumnType(i));
             }
             if (!columnTypes.containsKey("contents")) {
@@ -211,23 +222,29 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
             if (columnTypes.get("shopUrl") != ColumnType.STRING) {
                 throw new IllegalStateException("Invalid type 'String' for column 'shopUrl'");
             }
-            if (!columnTypes.containsKey("timeStamp")) {
-                throw new IllegalStateException("Missing column 'timeStamp'");
-            }
-            if (columnTypes.get("timeStamp") != ColumnType.STRING) {
-                throw new IllegalStateException("Invalid type 'String' for column 'timeStamp'");
-            }
             if (!columnTypes.containsKey("title")) {
                 throw new IllegalStateException("Missing column 'title'");
             }
             if (columnTypes.get("title") != ColumnType.STRING) {
                 throw new IllegalStateException("Invalid type 'String' for column 'title'");
             }
+            if (!columnTypes.containsKey("userId")) {
+                throw new IllegalStateException("Missing column 'userId'");
+            }
+            if (columnTypes.get("userId") != ColumnType.INTEGER) {
+                throw new IllegalStateException("Invalid type 'int' for column 'userId'");
+            }
             if (!columnTypes.containsKey("userLike")) {
                 throw new IllegalStateException("Missing column 'userLike'");
             }
             if (columnTypes.get("userLike") != ColumnType.INTEGER) {
                 throw new IllegalStateException("Invalid type 'int' for column 'userLike'");
+            }
+            if (!columnTypes.containsKey("writeDate")) {
+                throw new IllegalStateException("Missing column 'writeDate'");
+            }
+            if (columnTypes.get("writeDate") != ColumnType.STRING) {
+                throw new IllegalStateException("Invalid type 'String' for column 'writeDate'");
             }
             if (!columnTypes.containsKey("writer")) {
                 throw new IllegalStateException("Missing column 'writer'");
@@ -239,7 +256,7 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     }
 
     public static List<String> getFieldNames() {
-        return Arrays.asList("contents", "imageUrl", "name", "numLike", "pid", "price", "read", "shopUrl", "timeStamp", "title", "userLike", "writer");
+        return Arrays.asList("contents", "imageUrl", "name", "numLike", "pid", "price", "read", "shopUrl", "title", "userId", "userLike", "writeDate", "writer");
     }
 
     @Override
@@ -269,14 +286,17 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         stringBuilder.append("{shopUrl:");
         stringBuilder.append(getShopUrl());
         stringBuilder.append("} ");
-        stringBuilder.append("{timeStamp:");
-        stringBuilder.append(getTimeStamp());
-        stringBuilder.append("} ");
         stringBuilder.append("{title:");
         stringBuilder.append(getTitle());
         stringBuilder.append("} ");
+        stringBuilder.append("{userId:");
+        stringBuilder.append(getUserId());
+        stringBuilder.append("} ");
         stringBuilder.append("{userLike:");
         stringBuilder.append(getUserLike());
+        stringBuilder.append("} ");
+        stringBuilder.append("{writeDate:");
+        stringBuilder.append(getWriteDate());
         stringBuilder.append("} ");
         stringBuilder.append("{writer:");
         stringBuilder.append(getWriter());
@@ -301,13 +321,14 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         result = 31 * result + getRead();
         String aString_7 = getShopUrl();
         result = 31 * result + (aString_7 != null ? aString_7.hashCode() : 0);
-        String aString_8 = getTimeStamp();
+        String aString_8 = getTitle();
         result = 31 * result + (aString_8 != null ? aString_8.hashCode() : 0);
-        String aString_9 = getTitle();
-        result = 31 * result + (aString_9 != null ? aString_9.hashCode() : 0);
+        result = 31 * result + getUserId();
         result = 31 * result + getUserLike();
-        String aString_11 = getWriter();
+        String aString_11 = getWriteDate();
         result = 31 * result + (aString_11 != null ? aString_11.hashCode() : 0);
+        String aString_12 = getWriter();
+        result = 31 * result + (aString_12 != null ? aString_12.hashCode() : 0);
         return result;
     }
 
@@ -324,9 +345,10 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         if (getPrice() != null ? !getPrice().equals(aNewsfeedData.getPrice()) : aNewsfeedData.getPrice() != null) return false;
         if (getRead() != aNewsfeedData.getRead()) return false;
         if (getShopUrl() != null ? !getShopUrl().equals(aNewsfeedData.getShopUrl()) : aNewsfeedData.getShopUrl() != null) return false;
-        if (getTimeStamp() != null ? !getTimeStamp().equals(aNewsfeedData.getTimeStamp()) : aNewsfeedData.getTimeStamp() != null) return false;
         if (getTitle() != null ? !getTitle().equals(aNewsfeedData.getTitle()) : aNewsfeedData.getTitle() != null) return false;
+        if (getUserId() != aNewsfeedData.getUserId()) return false;
         if (getUserLike() != aNewsfeedData.getUserLike()) return false;
+        if (getWriteDate() != null ? !getWriteDate().equals(aNewsfeedData.getWriteDate()) : aNewsfeedData.getWriteDate() != null) return false;
         if (getWriter() != null ? !getWriter().equals(aNewsfeedData.getWriter()) : aNewsfeedData.getWriter() != null) return false;
         return true;
     }

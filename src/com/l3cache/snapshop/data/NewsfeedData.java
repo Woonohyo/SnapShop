@@ -1,7 +1,6 @@
 package com.l3cache.snapshop.data;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
@@ -13,10 +12,11 @@ public class NewsfeedData extends RealmObject {
 	private String imageUrl;
 	private int numLike;
 	private String price;
-	private String timeStamp;
+	private String writeDate;
 	private String writer;
 	private int userLike;
 	private int read;
+	private int userId;
 
 	public int getPid() {
 		return pid;
@@ -45,7 +45,7 @@ public class NewsfeedData extends RealmObject {
 	public int getUserLike() {
 		return userLike;
 	}
-	
+
 	public void setUserLike(int isLike) {
 		this.userLike = isLike;
 	}
@@ -61,6 +61,15 @@ public class NewsfeedData extends RealmObject {
 	private String name;
 
 	public NewsfeedData() {
+	}
+
+	public NewsfeedData(String title, String shopUrl, String contents, String imageUrl, String price, int userId) {
+		this.title = title;
+		this.shopUrl = shopUrl;
+		this.contents = contents;
+		this.imageUrl = imageUrl;
+		this.price = price;
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -95,14 +104,6 @@ public class NewsfeedData extends RealmObject {
 		this.shopUrl = url;
 	}
 
-	public String getTimeStamp() {
-		return timeStamp;
-	}
-
-	public void setTimeStamp(String timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -117,6 +118,22 @@ public class NewsfeedData extends RealmObject {
 
 	public String getWriter() {
 		return writer;
+	}
+
+	public String getWriteDate() {
+		return writeDate;
+	}
+
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 }
