@@ -58,7 +58,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private static final String TAG = NewsfeedView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
 	private ArrayList<NewsfeedData> newsfeedDatas;
-	private AsyncHttpClient mClient = new AsyncHttpClient();
 	private int resultPageStart = 1;
 	private GridView mListView;
 	private int resultSorting = 0;
@@ -66,7 +65,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
-	protected int numOfTotalResult;
+	protected int numOfTotalResult = 38;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +82,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
@@ -142,7 +140,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		galleryButton.setOnTouchListener(snapButtonTouchListener);
 		internetButton.setOnTouchListener(snapButtonTouchListener);
 
-		mListView = (GridView) getView().findViewById(R.id.newsfeed_main_listView);
+		mListView = (GridView) getView().findViewById(R.id.newsfeed_main_gridView);
 		mListView.setOnScrollListener(new EndlessScrollListener() {
 			private int mLastFirstVisibleItem;
 
@@ -295,8 +293,8 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		} else {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("sort", resultSorting + "");
-			params.put("start", resultPageStart + "");
-			params.put("id", "0");
+			params.put("start", start + "");
+			params.put("id", "1");
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
@@ -312,33 +310,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 					Log.i(TAG, "Error: " + error.getMessage());
 				}
 			});
-			/*
-			 * JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-			 * URL_FEED, null, new Response.Listener<JSONObject>() {
-			 * 
-			 * @Override public void onResponse(JSONObject response) {
-			 * VolleyLog.d(TAG, "Response: " + response.toString()); if
-			 * (response != null) { parseJsonFeed(response); } } }, new
-			 * Response.ErrorListener() {
-			 * 
-			 * @Override public void onErrorResponse(VolleyError error) {
-			 * VolleyLog.d(TAG, "Error: " + error.getMessage()); } });
-			 */
-
-			// Adding request to volley request queue
 			AppController.getInstance().addToRequestQueue(jsonReq);
 		}
-
-		/*
-		 * fetchDataFromServer(POST_START_PAGE, POST_SORT);
-		 * mListView.setOnItemClickListener(this);
-		 */
-	}
-
-	private void setListView() {
-		if (mNewsfeedViewAdapter == null) {
-			mNewsfeedViewAdapter = new NewsfeedViewAdapter(getActivity(), R.layout.newsfeed_list_row, newsfeedDatas);
-		}
-		mListView.setAdapter(mNewsfeedViewAdapter);
 	}
 }

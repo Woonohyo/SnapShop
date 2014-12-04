@@ -174,9 +174,9 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		TextView textView = (TextView) searchView.findViewById(textViewId);
 		textView.setTextColor(Color.WHITE);
 		textView.setHintTextColor(Color.WHITE);
-		
+
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
+
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				Log.i("Search", "Query Submitted: " + query);
@@ -187,15 +187,13 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 				searchView.clearFocus();
 				return false;
 			}
-			
+
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				// TODO Auto-generated method stub
 				return false;
 			}
 		});
-		
-		
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -220,7 +218,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		uploadIntent.putExtra("handler", SnapConstants.INTERNET_BUTTON);
 		uploadIntent.putExtra("shopUrl", item.getLink());
 		uploadIntent.putExtra("price", item.getLprice());
-		
+
 		startActivity(uploadIntent);
 	}
 }

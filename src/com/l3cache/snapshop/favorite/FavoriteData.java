@@ -1,79 +1,113 @@
 package com.l3cache.snapshop.favorite;
 
 public class FavoriteData {
-	private int id;
-	private String name, status, image, profilePic, timeStamp, url;
+	private int pid;
+	private String title;
+	private String shopUrl;
+	private String contents;
+	private String imageUrl;
+	private int numLike;
+	private String price;
+	private String writeDate;
+	private String writer;
+	private int userLike;
+	private int read;
+	private int userId;
 
-	public int getId() {
-		return id;
+	public int getPid() {
+		return pid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPid(int pid) {
+		this.pid = pid;
 	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getShopUrl() {
+		return shopUrl;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setShopUrl(String shopUrl) {
+		this.shopUrl = shopUrl;
 	}
 
-	public String getImage() {
-		return image;
+	public String getContents() {
+		return contents;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setContents(String contents) {
+		this.contents = contents;
 	}
 
-	public String getProfilePic() {
-		return profilePic;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setProfilePic(String profilePic) {
-		this.profilePic = profilePic;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
-	public String getTimeStamp() {
-		return timeStamp;
+	public int getNumLike() {
+		return numLike;
 	}
 
-	public void setTimeStamp(String timeStamp) {
-		this.timeStamp = timeStamp;
+	public void setNumLike(int numLike) {
+		this.numLike = numLike;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getPrice() {
+		return price;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setPrice(String price) {
+		this.price = price;
 	}
 
-	public FavoriteData() {
-		// TODO Auto-generated constructor stub
+	public String getWriteDate() {
+		return writeDate;
 	}
 
-	public FavoriteData(int id, String name, String status, String image, String profilePic, String timeStamp,
-			String url) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.status = status;
-		this.image = image;
-		this.profilePic = profilePic;
-		this.timeStamp = timeStamp;
-		this.url = url;
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+
+	public String getWriter() {
+		return writer;
+	}
+
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+
+	public int getUserLike() {
+		return userLike;
+	}
+
+	public void setUserLike(int userLike) {
+		this.userLike = userLike;
+	}
+
+	public int getRead() {
+		return read;
+	}
+
+	public void setRead(int read) {
+		this.read = read;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 }

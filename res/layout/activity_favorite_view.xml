@@ -3,10 +3,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/favorite_main_list_view"
+    <GridView
+        android:id="@+id/favorite_main_grid_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent" >
+    </GridView>
 
 </LinearLayout>
