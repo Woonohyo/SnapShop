@@ -9,6 +9,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.retrofit.SnapShopService;
@@ -51,6 +53,8 @@ public class EmailSignUpFragment extends DialogFragment {
 						Toast.makeText(getActivity(), "What's your Email Address?", Toast.LENGTH_LONG).show();
 						return true;
 					}
+					
+					Log.i("Login", emailField.getText().toString());
 
 					if (isEmailValid(emailField.getText().toString()) == false) {
 						Toast.makeText(getActivity(), "Invalid Email Address", Toast.LENGTH_LONG).show();
@@ -96,7 +100,7 @@ public class EmailSignUpFragment extends DialogFragment {
 
 						switch (status) {
 						case SnapConstants.SUCCESS: {
-							Toast.makeText(getActivity(), "Welcome!", Toast.LENGTH_LONG).show();
+							authorizeSignin();
 							break;
 
 						}
@@ -118,6 +122,66 @@ public class EmailSignUpFragment extends DialogFragment {
 					}
 				});
 	}
+	
+	private void intentTabHostActivity() {
+		Intent intent = new Intent(getActivity(), MainTabHostView.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		startActivity(intent);
+
+	}
+
+	private void authorizeSignin() {
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+				.setConverter(new GsonConverter(new Gson())).build();
+
+		SnapShopService service = restAdapter.create(SnapShopService.class);
+		service.login(emailField.getText().toString(), passwordField.getText().toString(),
+				new Callback<LoginResponse>() {
+
+					@Override
+					public void failure(RetrofitError error) {
+						Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
+						Log.i("Login", error.toString());
+					}
+
+					@Override
+					public void success(LoginResponse loginResponse, Response response) {
+						int status = loginResponse.getStatus();
+
+						switch (status) {
+						case SnapConstants.SUCCESS: {
+							Toast.makeText(getActivity(), "Welcome user " + loginResponse.getId(), Toast.LENGTH_LONG)
+									.show();
+							intentTabHostActivity();
+							break;
+						}
+						case SnapConstants.EMAIL_ERROR: {
+							Toast.makeText(getActivity(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG)
+									.show();
+							break;
+						}
+						case SnapConstants.PASSWORD_ERROR: {
+							Toast.makeText(getActivity(), "Password Error " + loginResponse.getId(), Toast.LENGTH_LONG)
+									.show();
+							break;
+						}
+
+						case SnapConstants.ERROR: {
+							Toast.makeText(getActivity(), "Unrecognized Server Error!" + loginResponse.getId(),
+									Toast.LENGTH_LONG).show();
+							break;
+						}
+
+						default:
+							break;
+						}
+
+					}
+				});
+
+	}
+	
+	
 
 	/**
 	 * method is used for checking valid email id format.

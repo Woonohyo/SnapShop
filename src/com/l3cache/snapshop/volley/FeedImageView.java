@@ -214,7 +214,7 @@ public class FeedImageView extends ImageView {
 		if (mDefaultImageId != 0) {
 			setImageResource(mDefaultImageId);
 		} else {
-//			setImageBitmap(null);
+			setImageBitmap(null);
 		}
 	}
 

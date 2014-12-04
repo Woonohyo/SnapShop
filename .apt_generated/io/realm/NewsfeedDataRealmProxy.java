@@ -34,16 +34,6 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     }
 
     @Override
-    public int getIsLike() {
-        return (int) row.getLong(Realm.columnIndices.get("NewsfeedData").get("isLike"));
-    }
-
-    @Override
-    public void setIsLike(int value) {
-        row.setLong(Realm.columnIndices.get("NewsfeedData").get("isLike"), (long) value);
-    }
-
-    @Override
     public String getName() {
         return (java.lang.String) row.getString(Realm.columnIndices.get("NewsfeedData").get("name"));
     }
@@ -124,6 +114,16 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     }
 
     @Override
+    public int getUserLike() {
+        return (int) row.getLong(Realm.columnIndices.get("NewsfeedData").get("userLike"));
+    }
+
+    @Override
+    public void setUserLike(int value) {
+        row.setLong(Realm.columnIndices.get("NewsfeedData").get("userLike"), (long) value);
+    }
+
+    @Override
     public String getWriter() {
         return (java.lang.String) row.getString(Realm.columnIndices.get("NewsfeedData").get("writer"));
     }
@@ -138,7 +138,6 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
             Table table = transaction.getTable("class_NewsfeedData");
             table.addColumn(ColumnType.STRING, "contents");
             table.addColumn(ColumnType.STRING, "imageUrl");
-            table.addColumn(ColumnType.INTEGER, "isLike");
             table.addColumn(ColumnType.STRING, "name");
             table.addColumn(ColumnType.INTEGER, "numLike");
             table.addColumn(ColumnType.INTEGER, "pid");
@@ -147,6 +146,7 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
             table.addColumn(ColumnType.STRING, "shopUrl");
             table.addColumn(ColumnType.STRING, "timeStamp");
             table.addColumn(ColumnType.STRING, "title");
+            table.addColumn(ColumnType.INTEGER, "userLike");
             table.addColumn(ColumnType.STRING, "writer");
             return table;
         }
@@ -174,12 +174,6 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
             }
             if (columnTypes.get("imageUrl") != ColumnType.STRING) {
                 throw new IllegalStateException("Invalid type 'String' for column 'imageUrl'");
-            }
-            if (!columnTypes.containsKey("isLike")) {
-                throw new IllegalStateException("Missing column 'isLike'");
-            }
-            if (columnTypes.get("isLike") != ColumnType.INTEGER) {
-                throw new IllegalStateException("Invalid type 'int' for column 'isLike'");
             }
             if (!columnTypes.containsKey("name")) {
                 throw new IllegalStateException("Missing column 'name'");
@@ -229,6 +223,12 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
             if (columnTypes.get("title") != ColumnType.STRING) {
                 throw new IllegalStateException("Invalid type 'String' for column 'title'");
             }
+            if (!columnTypes.containsKey("userLike")) {
+                throw new IllegalStateException("Missing column 'userLike'");
+            }
+            if (columnTypes.get("userLike") != ColumnType.INTEGER) {
+                throw new IllegalStateException("Invalid type 'int' for column 'userLike'");
+            }
             if (!columnTypes.containsKey("writer")) {
                 throw new IllegalStateException("Missing column 'writer'");
             }
@@ -239,7 +239,7 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
     }
 
     public static List<String> getFieldNames() {
-        return Arrays.asList("contents", "imageUrl", "isLike", "name", "numLike", "pid", "price", "read", "shopUrl", "timeStamp", "title", "writer");
+        return Arrays.asList("contents", "imageUrl", "name", "numLike", "pid", "price", "read", "shopUrl", "timeStamp", "title", "userLike", "writer");
     }
 
     @Override
@@ -250,9 +250,6 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         stringBuilder.append("} ");
         stringBuilder.append("{imageUrl:");
         stringBuilder.append(getImageUrl());
-        stringBuilder.append("} ");
-        stringBuilder.append("{isLike:");
-        stringBuilder.append(getIsLike());
         stringBuilder.append("} ");
         stringBuilder.append("{name:");
         stringBuilder.append(getName());
@@ -278,6 +275,9 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         stringBuilder.append("{title:");
         stringBuilder.append(getTitle());
         stringBuilder.append("} ");
+        stringBuilder.append("{userLike:");
+        stringBuilder.append(getUserLike());
+        stringBuilder.append("} ");
         stringBuilder.append("{writer:");
         stringBuilder.append(getWriter());
         stringBuilder.append("} ");
@@ -292,20 +292,20 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         result = 31 * result + (aString_0 != null ? aString_0.hashCode() : 0);
         String aString_1 = getImageUrl();
         result = 31 * result + (aString_1 != null ? aString_1.hashCode() : 0);
-        result = 31 * result + getIsLike();
-        String aString_3 = getName();
-        result = 31 * result + (aString_3 != null ? aString_3.hashCode() : 0);
+        String aString_2 = getName();
+        result = 31 * result + (aString_2 != null ? aString_2.hashCode() : 0);
         result = 31 * result + getNumLike();
         result = 31 * result + getPid();
-        String aString_6 = getPrice();
-        result = 31 * result + (aString_6 != null ? aString_6.hashCode() : 0);
+        String aString_5 = getPrice();
+        result = 31 * result + (aString_5 != null ? aString_5.hashCode() : 0);
         result = 31 * result + getRead();
-        String aString_8 = getShopUrl();
+        String aString_7 = getShopUrl();
+        result = 31 * result + (aString_7 != null ? aString_7.hashCode() : 0);
+        String aString_8 = getTimeStamp();
         result = 31 * result + (aString_8 != null ? aString_8.hashCode() : 0);
-        String aString_9 = getTimeStamp();
+        String aString_9 = getTitle();
         result = 31 * result + (aString_9 != null ? aString_9.hashCode() : 0);
-        String aString_10 = getTitle();
-        result = 31 * result + (aString_10 != null ? aString_10.hashCode() : 0);
+        result = 31 * result + getUserLike();
         String aString_11 = getWriter();
         result = 31 * result + (aString_11 != null ? aString_11.hashCode() : 0);
         return result;
@@ -318,7 +318,6 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         NewsfeedDataRealmProxy aNewsfeedData = (NewsfeedDataRealmProxy)o;
         if (getContents() != null ? !getContents().equals(aNewsfeedData.getContents()) : aNewsfeedData.getContents() != null) return false;
         if (getImageUrl() != null ? !getImageUrl().equals(aNewsfeedData.getImageUrl()) : aNewsfeedData.getImageUrl() != null) return false;
-        if (getIsLike() != aNewsfeedData.getIsLike()) return false;
         if (getName() != null ? !getName().equals(aNewsfeedData.getName()) : aNewsfeedData.getName() != null) return false;
         if (getNumLike() != aNewsfeedData.getNumLike()) return false;
         if (getPid() != aNewsfeedData.getPid()) return false;
@@ -327,6 +326,7 @@ public class NewsfeedDataRealmProxy extends NewsfeedData {
         if (getShopUrl() != null ? !getShopUrl().equals(aNewsfeedData.getShopUrl()) : aNewsfeedData.getShopUrl() != null) return false;
         if (getTimeStamp() != null ? !getTimeStamp().equals(aNewsfeedData.getTimeStamp()) : aNewsfeedData.getTimeStamp() != null) return false;
         if (getTitle() != null ? !getTitle().equals(aNewsfeedData.getTitle()) : aNewsfeedData.getTitle() != null) return false;
+        if (getUserLike() != aNewsfeedData.getUserLike()) return false;
         if (getWriter() != null ? !getWriter().equals(aNewsfeedData.getWriter()) : aNewsfeedData.getWriter() != null) return false;
         return true;
     }

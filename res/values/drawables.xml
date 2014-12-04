@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <drawable name="actionbar_background">#6DC094</drawable>
+    <drawable name="actionbar_background">@color/naver_green</drawable>
     <drawable name="actionbar_textColor">#000000</drawable>
 
 </resources>

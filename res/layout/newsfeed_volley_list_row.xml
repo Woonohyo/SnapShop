@@ -30,47 +30,27 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/feed_item_margin"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/feed_item_padding_left_right"
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/newsfeed_item_title_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd"
-                android:paddingRight="@dimen/feed_item_profile_info_padd" >
- 
+                android:text="title of item"
+                android:textSize="@dimen/feed_item_profile_name"
+                android:textStyle="normal" />
 
-                <TextView
-                    android:id="@+id/newsfeed_item_writer_text_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="name textview"
-                    android:textSize="@dimen/feed_item_profile_name"
-                    android:textStyle="bold" />
- 
-
-                <TextView
-                    android:id="@+id/newsfeed_item_timestamp_text_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="timestmap textview"
-                    android:textColor="@color/timestamp"
-                    android:textSize="@dimen/feed_item_timestamp" />
-            
-            </LinearLayout>
+            <TextView
+                android:id="@+id/newsfeed_item_writer_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="writer"
+                android:textColor="@color/timestamp"
+                android:textSize="@dimen/feed_item_timestamp" />
         
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/newsfeed_item_contents_text_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right"
-            android:paddingTop="@dimen/feed_item_status_pad_top" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,8 +65,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/newsfeed_volley_list_row_buttonshape"
-                android:textOff="LIKE"
-                android:textOn="LIKED"
+                android:textOff="Snap"
+                android:textOn="Snaped"
                 android:textSize="13sp"
                 android:textStyle="bold" >
             </ToggleButton>

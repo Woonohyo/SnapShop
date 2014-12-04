@@ -19,8 +19,8 @@ public interface SnapShopService {
 	@POST("/app/users/new")
 	void signUp(@Query("email") String email, @Query("password") String password, Callback<SignUpResponse> cb);
 
-	@Multipart
-	@POST("/app/posts/new")
-	void uploadSnap(@Part("title") String title, @Part("shopUrl") String shopUrl, @Part("contents") String contents,
-			@Part("image") TypedFile image, @Part("price") String price, @Part("id") int id, Callback<UploadResponse> cb);
+	@POST("/app/posts/newurl")
+	void uploadSnap(@Query("title") String title, @Query("shopUrl") String shopUrl, @Query("contents") String contents,
+			@Query("image") String imageUrl, @Query("price") String price, @Query("id") int id, Callback<UploadResponse> cb);
+	
 }

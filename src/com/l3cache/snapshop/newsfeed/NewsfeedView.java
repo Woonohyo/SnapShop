@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,10 +28,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
+
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
@@ -40,21 +45,28 @@ import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.fab.FloatingActionButton;
+import com.l3cache.snapshop.fab.FloatingActionsMenu;
+import com.l3cache.snapshop.search.EndlessScrollListener;
 import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.upload.UploadSnapView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+@SuppressLint("ClickableViewAccessibility")
 public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private static final String TAG = NewsfeedView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private AsyncHttpClient mClient = new AsyncHttpClient();
+	private int resultPageStart = 1;
 	private GridView mListView;
+	private int resultSorting = 0;
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 	private Uri fileUri;
+	private FloatingActionsMenu menuButton;
+	protected int numOfTotalResult;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,6 +127,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			}
 		};
 
+		menuButton = (FloatingActionsMenu) getView().findViewById(R.id.multiple_actions);
 		FloatingActionButton cameraButton = (FloatingActionButton) getView().findViewById(R.id.newsfeed_camera_button);
 		FloatingActionButton galleryButton = (FloatingActionButton) getView()
 				.findViewById(R.id.newsfeed_gallery_button);
@@ -130,66 +143,36 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		internetButton.setOnTouchListener(snapButtonTouchListener);
 
 		mListView = (GridView) getView().findViewById(R.id.newsfeed_main_listView);
+		mListView.setOnScrollListener(new EndlessScrollListener() {
+			private int mLastFirstVisibleItem;
+
+			@Override
+			public void onLoadMore(int page, int totalItemsCount) {
+				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
+					return;
+				}
+
+				fetchDataFromServer(page);
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+				if (mLastFirstVisibleItem < firstVisibleItem) {
+					menuButton.setVisibility(View.INVISIBLE);
+				}
+				if (mLastFirstVisibleItem > firstVisibleItem) {
+					menuButton.setVisibility(View.VISIBLE);
+				}
+				mLastFirstVisibleItem = firstVisibleItem;
+			}
+
+		});
 
 		newsfeedDatas = new ArrayList<NewsfeedData>();
 		newsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
 		mListView.setAdapter(newsfeedVolleyAdapter);
-
-		Cache cache = AppController.getInstance().getRequestQueue().getCache();
-		Entry entry = cache.get(URL_FEED);
-		if (entry != null) {
-			try {
-				String data = new String(entry.data, "UTF-8");
-				try {
-					parseJsonFeed(new JSONObject(data));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		} else {
-			Map<String, String> params = new HashMap<String, String>();
-			params.put("sort", "0");
-			params.put("start", "1");
-			params.put("id", "0");
-			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
-				@Override
-				public void onResponse(JSONObject response) {
-					Log.i(TAG, "Response: " + response.toString());
-					if (response != null) {
-						parseJsonFeed(response);
-					}
-				}
-			}, new Response.ErrorListener() {
-
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					Log.i(TAG, "Error: " + error.getMessage());
-				}
-			});
-			/*
-			 * JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
-			 * URL_FEED, null, new Response.Listener<JSONObject>() {
-			 * 
-			 * @Override public void onResponse(JSONObject response) {
-			 * VolleyLog.d(TAG, "Response: " + response.toString()); if
-			 * (response != null) { parseJsonFeed(response); } } }, new
-			 * Response.ErrorListener() {
-			 * 
-			 * @Override public void onErrorResponse(VolleyError error) {
-			 * VolleyLog.d(TAG, "Error: " + error.getMessage()); } });
-			 */
-
-			// Adding request to volley request queue
-			AppController.getInstance().addToRequestQueue(jsonReq);
-		}
-
-		/*
-		 * fetchDataFromServer(POST_START_PAGE, POST_SORT);
-		 * mListView.setOnItemClickListener(this);
-		 */
+		fetchDataFromServer(resultPageStart);
 	}
 
 	@Override
@@ -275,7 +258,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				item.setPrice(feedObj.getString("price"));
 				item.setTimeStamp(feedObj.getString("writeDate"));
 				item.setWriter(feedObj.getString("writer"));
-				item.setIsLike(feedObj.getInt("like"));
+				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));
 
 				newsfeedDatas.add(item);
@@ -294,35 +277,62 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		Log.i("Newsfeed", position + "번 포스트 선택");
 	}
 
-	private void fetchDataFromServer(int start, final int sort) {
-		RequestParams params = new RequestParams();
-		params.put("sort", sort);
-		params.put("start", start);
-		params.put("email", "abc");
-
-		mClient.get(URL_FEED, new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+	private void fetchDataFromServer(int start) {
+		Cache cache = AppController.getInstance().getRequestQueue().getCache();
+		Entry entry = cache.get(URL_FEED);
+		if (entry != null) {
+			try {
+				String data = new String(entry.data, "UTF-8");
 				try {
-					JSONObject data = response.getJSONObject("response");
-					data = data.getJSONObject("data");
-					JSONArray itemList = data.getJSONArray("list");
-					for (int index = 0; index < itemList.length(); ++index) {
-						NewsfeedData newsfeedData = new NewsfeedData();
-						newsfeedData.setName(itemList.getJSONObject(index).getString("title"));
-						newsfeedData.setImageUrl(itemList.getJSONObject(index).getString("imgUrl"));
-						newsfeedData.setPrice(itemList.getJSONObject(index).getString("price"));
-						newsfeedDatas.add(newsfeedData);
-					}
-
-					setListView();
-
-				} catch (Exception e) {
-					// TODO: handle exception
+					parseJsonFeed(new JSONObject(data));
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-			}
 
-		});
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("sort", resultSorting + "");
+			params.put("start", resultPageStart + "");
+			params.put("id", "0");
+			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
+				@Override
+				public void onResponse(JSONObject response) {
+					Log.i(TAG, "Response: " + response.toString());
+					if (response != null) {
+						parseJsonFeed(response);
+					}
+				}
+			}, new Response.ErrorListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					Log.i(TAG, "Error: " + error.getMessage());
+				}
+			});
+			/*
+			 * JsonObjectRequest jsonReq = new JsonObjectRequest(Method.POST,
+			 * URL_FEED, null, new Response.Listener<JSONObject>() {
+			 * 
+			 * @Override public void onResponse(JSONObject response) {
+			 * VolleyLog.d(TAG, "Response: " + response.toString()); if
+			 * (response != null) { parseJsonFeed(response); } } }, new
+			 * Response.ErrorListener() {
+			 * 
+			 * @Override public void onErrorResponse(VolleyError error) {
+			 * VolleyLog.d(TAG, "Error: " + error.getMessage()); } });
+			 */
+
+			// Adding request to volley request queue
+			AppController.getInstance().addToRequestQueue(jsonReq);
+		}
+
+		/*
+		 * fetchDataFromServer(POST_START_PAGE, POST_SORT);
+		 * mListView.setOnItemClickListener(this);
+		 */
 	}
 
 	private void setListView() {

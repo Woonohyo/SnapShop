@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">SnapShop</string>
+    <string name="app_description">SnapShop helps you discover, buy and share\namazing things all in one place</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">SnapShop</string>
     <string name="like">Like!</string>

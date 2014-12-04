@@ -63,9 +63,8 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 
 		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.newsfeed_item_image_view);
 		TextView writerTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_writer_text_view);
-		TextView contentsTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_contents_text_view);
-		TextView timestampView = (TextView) convertView.findViewById(R.id.newsfeed_item_timestamp_text_view);
 		Button priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
+		TextView titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
 		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_like_toggle_button);
 
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
@@ -73,8 +72,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		String formattedLowPrice = format.format(Integer.parseInt(item.getPrice()));
 		priceButton.setText(formattedLowPrice);
 		writerTextView.setText(item.getWriter());
-		contentsTextView.setText(item.getContents());
-		timestampView.setText("18 hours ago");
+		titleTextView.setText(item.getTitle());
 		
 		// Feed image
 		if (item.getImageUrl() != null) {
@@ -106,6 +104,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 
 			}
 		});
+		likeButton.setChecked((item.getUserLike() == 1 ? true : false));
 
 		return convertView;
 	}

@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.data;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
@@ -14,7 +15,7 @@ public class NewsfeedData extends RealmObject {
 	private String price;
 	private String timeStamp;
 	private String writer;
-	private int isLike;
+	private int userLike;
 	private int read;
 
 	public int getPid() {
@@ -41,12 +42,12 @@ public class NewsfeedData extends RealmObject {
 		this.numLike = numLike;
 	}
 
-	public int getIsLike() {
-		return isLike;
+	public int getUserLike() {
+		return userLike;
 	}
-
-	public void setIsLike(int isLike) {
-		this.isLike = isLike;
+	
+	public void setUserLike(int isLike) {
+		this.userLike = isLike;
 	}
 
 	public int getRead() {
