@@ -32,7 +32,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -63,6 +65,8 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
 	protected int numOfTotalResult = 41;
+	private Realm realm;
+	private Spinner mSortSpinner;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,13 +84,18 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-//		removeAllNewsfeedDatas();
+
+		// removeAllNewsfeedDatas();
 
 		// 서버로부터 데이터를 동기화하는 서비스 시작
 		Intent syncServiceIntent = new Intent();
 		syncServiceIntent.setAction(".service.SyncDataService");
 		getActivity().startService(syncServiceIntent);
+		
+		// 화면 상단 스피너 설정
+		mSortSpinner = (Spinner) getActivity().findViewById(R.id.newsfeed_spinner_sort);
+		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.snaps_sort_array, android.R.layout.simple_spinner_item);
+		mSortSpinner.setAdapter(spinnerAdapter);
 
 		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
@@ -245,44 +254,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		return mediaFile;
 	}
 
-	private void parseJsonFeed(JSONObject response) {
-		Realm realm = Realm.getInstance(getActivity());
-		realm.beginTransaction();
-		try {
-			JSONObject jsonData = response.getJSONObject("response");
-			JSONArray feedArray = jsonData.getJSONArray("data");
-
-			for (int i = 0; i < feedArray.length(); i++) {
-				JSONObject feedObj = (JSONObject) feedArray.get(i);
-
-				NewsfeedData item = realm.createObject(NewsfeedData.class);
-				item.setPid(feedObj.getInt("pid"));
-				item.setTitle(feedObj.getString("title"));
-				// url might be null sometimes
-				String feedUrl = feedObj.isNull("shopUrl") ? null : feedObj.getString("shopUrl");
-				item.setShopUrl(feedUrl);
-				item.setContents(feedObj.getString("contents"));
-				item.setImageUrl(feedObj.getString("imgUrl"));
-				item.setNumLike(feedObj.getInt("numLike"));
-				item.setPrice(feedObj.getString("price"));
-				item.setWriteDate(feedObj.getString("writeDate"));
-				item.setWriter(feedObj.getString("writer"));
-				item.setUserLike(feedObj.getInt("like"));
-				item.setRead(feedObj.getInt("read"));
-			}
-			
-			// notify data changes to list adapater
-			newsfeedVolleyAdapter.notifyDataSetChanged();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			realm.commitTransaction();
-		}
-
-		realm.commitTransaction();
-		newsfeedDatas.addAll(realm.allObjects(NewsfeedData.class));
-		Log.i(TAG, newsfeedDatas.size()+"");
-	}
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Log.i("Newsfeed", position + "번 포스트 선택");
@@ -320,9 +291,57 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					Log.i(TAG, "Error: " + error.getMessage());
+					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
+					parseJsonFeed(null);
+
 				}
 			});
 			AppController.getInstance().addToRequestQueue(jsonReq);
 		}
+	}
+
+	private void parseJsonFeed(JSONObject response) {
+		Realm realm = Realm.getInstance(getActivity());
+		realm.beginTransaction();
+		if (response != null) {
+			try {
+				JSONObject jsonData = response.getJSONObject("response");
+				JSONArray feedArray = jsonData.getJSONArray("data");
+
+				for (int i = 0; i < feedArray.length(); i++) {
+					JSONObject feedObj = (JSONObject) feedArray.get(i);
+					if (realm.where(NewsfeedData.class).equalTo("pid", feedObj.getInt("pid")).findFirst() != null) {
+						Log.i(TAG, "Post having id " + feedObj.getInt("pid") + " alreay exists - ");
+						continue;
+					}
+
+					NewsfeedData item = realm.createObject(NewsfeedData.class);
+					item.setPid(feedObj.getInt("pid"));
+					item.setTitle(feedObj.getString("title"));
+					// url might be null sometimes
+					String feedUrl = feedObj.isNull("shopUrl") ? null : feedObj.getString("shopUrl");
+					item.setShopUrl(feedUrl);
+					item.setContents(feedObj.getString("contents"));
+					item.setImageUrl(feedObj.getString("imgUrl"));
+					item.setNumLike(feedObj.getInt("numLike"));
+					item.setPrice(feedObj.getString("price"));
+					item.setWriteDate(feedObj.getString("writeDate"));
+					item.setWriter(feedObj.getString("writer"));
+					item.setUserLike(feedObj.getInt("like"));
+					item.setRead(feedObj.getInt("read"));
+				}
+
+				// notify data changes to list adapater
+				newsfeedVolleyAdapter.notifyDataSetChanged();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				realm.commitTransaction();
+			}
+		}
+
+		realm.commitTransaction();
+		newsfeedDatas.addAll(realm.allObjects(NewsfeedData.class).sort("pid", false));
+
+		Log.i(TAG, newsfeedDatas.size() + "");
 	}
 }

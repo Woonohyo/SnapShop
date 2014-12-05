@@ -1,10 +1,12 @@
 package com.l3cache.snapshop.data;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
 public class NewsfeedData extends RealmObject {
+	@Index
 	private int pid;
 	private String title;
 	private String shopUrl;
