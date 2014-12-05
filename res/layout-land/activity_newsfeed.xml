@@ -7,7 +7,7 @@
     android:paddingRight="15dp" >
 
     <GridView
-        android:id="@+id/newsfeed_main_listView"
+        android:id="@+id/newsfeed_main_gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:horizontalSpacing="15dp"

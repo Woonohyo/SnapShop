@@ -1,5 +1,7 @@
 package com.l3cache.snapshop.newsfeed;
 
+import io.realm.Realm;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -8,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -49,9 +49,6 @@ import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.search.EndlessScrollListener;
 import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.upload.UploadSnapView;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 @SuppressLint("ClickableViewAccessibility")
 public class NewsfeedView extends Fragment implements OnItemClickListener {
@@ -65,7 +62,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
-	protected int numOfTotalResult = 38;
+	protected int numOfTotalResult = 41;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +80,14 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+//		removeAllNewsfeedDatas();
+
+		// 서버로부터 데이터를 동기화하는 서비스 시작
+		Intent syncServiceIntent = new Intent();
+		syncServiceIntent.setAction(".service.SyncDataService");
+		getActivity().startService(syncServiceIntent);
+
 		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
 			@Override
@@ -173,6 +178,13 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		fetchDataFromServer(resultPageStart);
 	}
 
+	private void removeAllNewsfeedDatas() {
+		Realm realm = Realm.getInstance(getActivity());
+		realm.beginTransaction();
+		realm.clear(NewsfeedData.class);
+		realm.commitTransaction();
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -234,8 +246,8 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	}
 
 	private void parseJsonFeed(JSONObject response) {
-		// Realm realm = Realm.getInstance(getActivity());
-		// realm.beginTransaction();
+		Realm realm = Realm.getInstance(getActivity());
+		realm.beginTransaction();
 		try {
 			JSONObject jsonData = response.getJSONObject("response");
 			JSONArray feedArray = jsonData.getJSONArray("data");
@@ -243,8 +255,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-				NewsfeedData item = new NewsfeedData();
-				// NewsfeedData item = realm.createObject(NewsfeedData.class);
+				NewsfeedData item = realm.createObject(NewsfeedData.class);
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
 				// url might be null sometimes
@@ -258,16 +269,18 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				item.setWriter(feedObj.getString("writer"));
 				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));
-
-				newsfeedDatas.add(item);
 			}
-			// realm.commitTransaction();
+			
 			// notify data changes to list adapater
 			newsfeedVolleyAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
-			// realm.commitTransaction();
+			realm.commitTransaction();
 		}
+
+		realm.commitTransaction();
+		newsfeedDatas.addAll(realm.allObjects(NewsfeedData.class));
+		Log.i(TAG, newsfeedDatas.size()+"");
 	}
 
 	@Override
@@ -298,7 +311,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
-					Log.i(TAG, "Response: " + response.toString());
 					if (response != null) {
 						parseJsonFeed(response);
 					}
