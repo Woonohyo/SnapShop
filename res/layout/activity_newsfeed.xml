@@ -4,25 +4,20 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/newsfeed_spinner_frame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <Spinner
-            android:id="@+id/newsfeed_spinner_sort"
-            android:layout_width="match_parent"
-            android:dropDownSelector="@color/white"
-            android:layout_height="40dp" />
-    </FrameLayout>
-
     <GridView
         android:id="@+id/newsfeed_main_gridView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/newsfeed_spinner_frame"
-        android:layout_marginTop="40dp" >
+        android:layout_height="wrap_content" >
     </GridView>
+
+    <Spinner
+        android:id="@+id/newsfeed_spinner_sort"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:dropDownSelector="@color/white"
+        android:spinnerMode="dialog" />
 
     <com.l3cache.snapshop.fab.FloatingActionsMenu
         android:id="@+id/multiple_actions"

@@ -65,7 +65,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
 	protected int numOfTotalResult = 41;
-	private Realm realm;
 	private Spinner mSortSpinner;
 
 	@Override
@@ -85,7 +84,7 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// removeAllNewsfeedDatas();
+		 removeAllNewsfeedDatas();
 
 		// 서버로부터 데이터를 동기화하는 서비스 시작
 		Intent syncServiceIntent = new Intent();
@@ -172,8 +171,10 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 				if (mLastFirstVisibleItem < firstVisibleItem) {
 					menuButton.setVisibility(View.INVISIBLE);
+					mSortSpinner.setVisibility(View.INVISIBLE);
 				}
 				if (mLastFirstVisibleItem > firstVisibleItem) {
+					mSortSpinner.setVisibility(View.VISIBLE);
 					menuButton.setVisibility(View.VISIBLE);
 				}
 				mLastFirstVisibleItem = firstVisibleItem;
