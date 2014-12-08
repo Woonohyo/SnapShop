@@ -77,7 +77,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		removeAllNewsfeedDatas();
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 
-		mGridView.setOnScrollListener(new EndlessScrollListener() {
+		mGridView.setOnScrollListener(new EndlessScrollListener(5, resultPageStart) {
 			private int mLastFirstVisibleItem;
 
 			@Override
@@ -114,12 +114,11 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				Intent intent = new Intent(getActivity(), PostViewer.class);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
-				
+
 			}
 		});
-		
+
 		mGridView.setAdapter(newsfeedVolleyAdapter);
-		
 
 		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
