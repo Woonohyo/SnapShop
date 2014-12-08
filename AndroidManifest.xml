@@ -90,8 +90,7 @@
         </activity>
         <activity
             android:name="com.l3cache.snapshop.postViewer.PostViewer"
-            android:label="@string/title_activity_post_viewer"
-            android:launchMode="singleInstance" >
+            android:label="@string/title_activity_post_viewer" >
         </activity>
     </application>
 

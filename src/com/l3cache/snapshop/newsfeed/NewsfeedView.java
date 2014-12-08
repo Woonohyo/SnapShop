@@ -67,7 +67,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
-	protected int numOfTotalResult = 0;
+	protected int totalResults = 0;
 	private Spinner mSortSpinner;
 	private View firstGrid;
 
@@ -82,10 +82,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
-					Log.i(TAG, "Loading end. page: " + page + " total: " + numOfTotalResult);
+
+				if (totalResults < 10 || ((page-1) * 20) > totalResults) {
+					Log.i(TAG, "Loading end. page: " + page + " total: " + totalResults);
 					return;
 				}
+
+				Log.i(TAG, "Page: " + page + "  total: " + totalItemsCount);
 
 				fetchDataFromServer(page);
 			}
@@ -112,6 +115,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getActivity(), PostViewer.class);
+				Realm realm = Realm.getInstance(getActivity());
+				intent.putExtra("pid", id);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
 
@@ -272,7 +277,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		return mediaFile;
 	}
 
-	private void fetchDataFromServer(int start) {
+	private void fetchDataFromServer(int offset) {
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
 		Entry entry = cache.get(URL_FEED);
 		if (entry != null) {
@@ -290,13 +295,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		} else {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("sort", sortInto + "");
-			params.put("start", start + "");
+			params.put("start", offset + "");
 			params.put("id", "1");
+			Log.i(TAG, "Parameters: " + params.toString());
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					if (response != null) {
-						Log.i(TAG, "Receiving page:" + resultPageStart);
 						parseJsonFeed(response);
 					}
 				}
@@ -324,11 +329,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		if (response != null) {
 			try {
 				JSONObject jsonData = response.getJSONObject("response");
-				if (numOfTotalResult == 0) {
-					numOfTotalResult = jsonData.getInt("total");
-				}
+				totalResults = jsonData.getInt("total");
 				JSONArray feedArray = jsonData.getJSONArray("data");
-				Log.i(TAG, "Total: " + numOfTotalResult);
+				Log.i(TAG, "Total: " + totalResults);
 
 				for (int i = 0; i < feedArray.length(); i++) {
 					JSONObject feedObj = (JSONObject) feedArray.get(i);
@@ -351,6 +354,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					item.setWriter(feedObj.getString("writer"));
 					item.setUserLike(feedObj.getInt("like"));
 					item.setRead(feedObj.getInt("read"));
+					newsfeedDatas.add(item);
 				}
 
 				// notify data changes to list adapater
@@ -362,7 +366,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		realm.commitTransaction();
-		newsfeedDatas.addAll(realm.allObjects(NewsfeedData.class));
 
 		Log.i(TAG, newsfeedDatas.size() + "");
 	}
@@ -370,21 +373,21 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		Log.i(TAG, parent.getItemAtPosition(position).toString());
-		String sortInto = parent.getItemAtPosition(position).toString();
-		if (sortInto.equals("Recommended")) {
+		String sortBy = parent.getItemAtPosition(position).toString();
+		if (sortBy.equals("Recommended")) {
 			this.sortInto = SORT_RECOMMENDED;
 
-		} else if (sortInto.equals("Recent")) {
+		} else if (sortBy.equals("Recent")) {
 			this.sortInto = SORT_RECENT;
+			
 
-		} else if (sortInto.equals("Popular")) {
+		} else if (sortBy.equals("Popular")) {
 			this.sortInto = SORT_POPULAR;
 		}
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
-		// TODO Auto-generated method stub
 
 	}
 

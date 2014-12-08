@@ -25,11 +25,6 @@ public class MainTabHostView extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_tab_host);
 
-		// Status Bar 없는 상태로 만들기. XML은 TitleBar까지 없애므로 코드로 처리
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// Status Bar에서 App Icon 제거하기
-		// getActionBar().setDisplayShowHomeEnabled(false);
-
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);

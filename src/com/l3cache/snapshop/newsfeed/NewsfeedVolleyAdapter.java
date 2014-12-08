@@ -46,7 +46,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return position;
+		return newsfeedDatas.get(position).getPid();
 	}
 
 	@Override

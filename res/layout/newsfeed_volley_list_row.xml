@@ -22,8 +22,7 @@
             android:background="@drawable/newsfeed_feedimage"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
-            android:scaleType="fitXY"
-            android:visibility="visible" />
+            android:scaleType="fitXY" />
         
 
         <LinearLayout

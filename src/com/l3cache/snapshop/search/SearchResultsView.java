@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.search;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,16 +47,24 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private final String TAG = SearchResultsView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.SEARCH_REQUEST();
+	private final String SORT_SIMILARITY = "sim";
+	private final String SORT_ASC = "asc";
+	private final String SORT_DESC = "dsc";
+	private final String SORT_RECENT = "date";
 	private ArrayList<SearchResultsItem> resultItems = new ArrayList<SearchResultsItem>();
 	private int resultPageStart = 1;
 	private int numOfTotalResult;
 	private int numOfResultDisplay = 20;
-	private String resultSorting = "sim";
+	private String sortingBy = SORT_SIMILARITY;
 	private ListView listView;
 	private static String query;
 	private SearchResultsVolleyAdapter searchResultsViewVolleyAdapter;
 	private Map<String, String> params;
 	private SearchView searchView;
+	private Spinner mSortSpinner;
+	private TextView totalResultTextView;
+	private LinearLayout mToolBar;
+	private TextView mallNameTextView;
 	Handler handler = new Handler();
 
 	@Override
@@ -59,20 +72,59 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_results);
 		setTitle("SnapShop Search");
+		mToolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
+
 		listView = (ListView) findViewById(R.id.search_results_listView);
 		listView.setOnItemClickListener(this);
 		searchResultsViewVolleyAdapter = new SearchResultsVolleyAdapter(this, resultItems);
 		listView.setAdapter(searchResultsViewVolleyAdapter);
-		listView.setOnScrollListener(new EndlessScrollListener() {
+		listView.setOnScrollListener(new EndlessScrollListener(5, 1) {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
+				if (numOfTotalResult < 10 || ((page-1) * 20) > numOfTotalResult) {
 					return;
 				}
 				Log.i(TAG, "Loading page " + page);
 				fetchDataFromServer(page);
 			}
 		});
+
+		mSortSpinner = (Spinner) findViewById(R.id.search_results_sort_spinner);
+		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.search_sort_array,
+				android.R.layout.simple_spinner_dropdown_item);
+		mSortSpinner.setAdapter(spinnerAdapter);
+		mSortSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				switch (position) {
+				case 0: {
+					break;
+				}
+
+				case 1: {
+					break;
+				}
+
+				case 2: {
+					break;
+
+				}
+
+				case 3: {
+					break;
+
+				}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
+
+		totalResultTextView = (TextView) findViewById(R.id.search_results_totalNumber_textView);
 	}
 
 	private void fetchDataFromServer(int offset) {
@@ -98,7 +150,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			params.put("query", query);
 			params.put("display", numOfResultDisplay + "");
 			params.put("start", offset + "");
-			params.put("sort", resultSorting);
+			params.put("sort", sortingBy);
 
 			SearchRequest searchReq = new SearchRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
@@ -127,6 +179,8 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			JSONObject jsonData = response.getJSONObject("response");
 			jsonData = jsonData.getJSONObject("data");
 			numOfTotalResult = jsonData.getInt("total");
+			DecimalFormat formatter = new DecimalFormat("#,###,###");
+			totalResultTextView.setText(formatter.format(numOfTotalResult) + "건");
 			JSONArray feedArray = jsonData.getJSONArray("list");
 
 			for (int i = 0; i < feedArray.length(); i++) {
@@ -209,6 +263,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		uploadIntent.putExtra("handler", SnapConstants.INTERNET_BUTTON);
 		uploadIntent.putExtra("shopUrl", item.getLink());
 		uploadIntent.putExtra("price", item.getLprice());
+		uploadIntent.putExtra("title", query);
 
 		startActivity(uploadIntent);
 	}

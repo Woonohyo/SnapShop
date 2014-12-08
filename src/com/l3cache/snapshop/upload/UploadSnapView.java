@@ -97,6 +97,7 @@ public class UploadSnapView extends Activity {
 		case SnapConstants.INTERNET_BUTTON: {
 			Log.i("Upload", "INTERNET!");
 			Bundle extras = getIntent().getExtras();
+			titleEditText.setText(extras.getString("title"));
 			imageUrl = extras.getString("image");
 			uploadingImageView.setImageUrl(imageUrl, imageLoader);
 			priceEditText.setText(extras.getInt("price") + "");
@@ -135,7 +136,7 @@ public class UploadSnapView extends Activity {
 
 									@Override
 									public void success(UploadResponse uploadResponse, Response response) {
-										Log.i("Upload", uploadResponse.getStatus()+"");
+										Log.i("Upload", uploadResponse.getStatus() + "");
 										if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 											Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!",
 													Toast.LENGTH_LONG).show();
