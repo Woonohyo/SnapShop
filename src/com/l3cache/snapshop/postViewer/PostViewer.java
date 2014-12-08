@@ -1,11 +1,15 @@
 package com.l3cache.snapshop.postViewer;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import io.realm.Realm;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -19,6 +23,7 @@ public class PostViewer extends Activity {
 	private FeedImageView feedImageView;
 	private TextView titleTextView;
 	private TextView userNameTextView;
+	private Button priceButton;
 
 	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
@@ -38,6 +43,12 @@ public class PostViewer extends Activity {
 
 		userNameTextView = (TextView) findViewById(R.id.post_viewer_item_user_text_view);
 		userNameTextView.setText(currentData.getWriter());
+		
+		priceButton = (Button) findViewById(R.id.postviewer_price_button);
+		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
+		format.setParseIntegerOnly(true);
+		String formattedPrice = format.format(Integer.parseInt(currentData.getPrice()));
+		priceButton.setText(formattedPrice);
 	}
 
 	@Override
