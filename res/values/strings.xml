@@ -25,8 +25,7 @@
         <item>앨범</item>
         <item>웹</item>
     </string-array>
-    
-     <string-array name="snaps_sort_array">
+    <string-array name="snaps_sort_array">
         <item>Recommended</item>
         <item>Recent</item>
         <item>Popular</item>
@@ -36,5 +35,6 @@
     <string name="title_activity_info">User Info</string>
     <string name="title_activity_upload_snap_view">Upload Snap</string>
     <string name="title_activity_login_view">Login</string>
+    <string name="title_activity_post_viewer">PostViewer</string>
 
 </resources>

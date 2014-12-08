@@ -73,7 +73,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		priceButton.setText(formattedLowPrice);
 		writerTextView.setText(item.getWriter());
 		titleTextView.setText(item.getTitle());
-		
+
 		// Feed image
 		if (item.getImageUrl() != null) {
 			feedImageView.setImageUrl(item.getImageUrl(), imageLoader);

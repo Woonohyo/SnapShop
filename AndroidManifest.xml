@@ -46,7 +46,7 @@
         </service>
 
         <activity
-            android:name="com.l3cache.snapshop.login.LoginView"
+            android:name=".login.LoginView"
             android:label="@string/app_name"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat"
@@ -87,6 +87,10 @@
         <activity
             android:name=".upload.UploadSnapView"
             android:label="@string/title_activity_upload_snap_view" >
+        </activity>
+        <activity
+            android:name="com.l3cache.snapshop.postViewer.PostViewer"
+            android:label="@string/title_activity_post_viewer" >
         </activity>
     </application>
 

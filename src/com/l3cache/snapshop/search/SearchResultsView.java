@@ -69,6 +69,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
 					return;
 				}
+				Log.i(TAG, "Loading page " + page);
 				fetchDataFromServer(page);
 			}
 		});
@@ -102,7 +103,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			SearchRequest searchReq = new SearchRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
-					Log.i(TAG, "Response: " + response.toString());
 					if (response != null) {
 						parseJsonFeed(response);
 					}

@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
@@ -48,56 +48,86 @@ import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
+import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.EndlessScrollListener;
 import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.upload.UploadSnapView;
 
-@SuppressLint("ClickableViewAccessibility")
-public class NewsfeedView extends Fragment implements OnItemClickListener {
+public class NewsfeedView extends Fragment implements OnItemSelectedListener {
+	private final int SORT_RECOMMENDED = 0;
+	private final int SORT_RECENT = 1;
+	private final int SORT_POPULAR = 2;
 	private static final String TAG = NewsfeedView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private int resultPageStart = 1;
-	private GridView mListView;
-	private int resultSorting = 0;
+	private GridView mGridView;
+	private int sortInto = SORT_RECOMMENDED;
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
 	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
-	protected int numOfTotalResult = 41;
+	protected int numOfTotalResult = 0;
 	private Spinner mSortSpinner;
+	private View firstGrid;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.activity_newsfeed, container, false);
-	}
+		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
+		removeAllNewsfeedDatas();
+		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 
-	@Override
-	public void onViewStateRestored(Bundle savedInstanceState) {
-		super.onViewStateRestored(savedInstanceState);
-		if (mNewsfeedViewAdapter != null) {
-			mNewsfeedViewAdapter.notifyDataSetChanged();
-		}
-	}
+		mGridView.setOnScrollListener(new EndlessScrollListener() {
+			private int mLastFirstVisibleItem;
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+			@Override
+			public void onLoadMore(int page, int totalItemsCount) {
+				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
+					Log.i(TAG, "Loading end. page: " + page + " total: " + numOfTotalResult);
+					return;
+				}
 
-		 removeAllNewsfeedDatas();
+				fetchDataFromServer(page);
+			}
 
-		// 서버로부터 데이터를 동기화하는 서비스 시작
-		Intent syncServiceIntent = new Intent();
-		syncServiceIntent.setAction(".service.SyncDataService");
-		getActivity().startService(syncServiceIntent);
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+				if (mLastFirstVisibleItem < firstVisibleItem) {
+					menuButton.setVisibility(View.INVISIBLE);
+					mSortSpinner.setVisibility(View.INVISIBLE);
+				}
+				if (mLastFirstVisibleItem > firstVisibleItem) {
+					mSortSpinner.setVisibility(View.VISIBLE);
+					menuButton.setVisibility(View.VISIBLE);
+				}
+				mLastFirstVisibleItem = firstVisibleItem;
+			}
+
+		});
+
+		newsfeedDatas = new ArrayList<NewsfeedData>();
+		newsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
+		mGridView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getActivity(), PostViewer.class);
+				startActivity(intent);
+				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
+				
+			}
+		});
 		
-		// 화면 상단 스피너 설정
-		mSortSpinner = (Spinner) getActivity().findViewById(R.id.newsfeed_spinner_sort);
-		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.snaps_sort_array, android.R.layout.simple_spinner_item);
+		mGridView.setAdapter(newsfeedVolleyAdapter);
+		
+
+		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
+		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+				R.array.snaps_sort_array, android.R.layout.simple_spinner_dropdown_item);
 		mSortSpinner.setAdapter(spinnerAdapter);
+		mSortSpinner.setOnItemSelectedListener(this);
 
 		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
-			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -138,12 +168,10 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			}
 		};
 
-		menuButton = (FloatingActionsMenu) getView().findViewById(R.id.multiple_actions);
-		FloatingActionButton cameraButton = (FloatingActionButton) getView().findViewById(R.id.newsfeed_camera_button);
-		FloatingActionButton galleryButton = (FloatingActionButton) getView()
-				.findViewById(R.id.newsfeed_gallery_button);
-		FloatingActionButton internetButton = (FloatingActionButton) getView().findViewById(
-				R.id.newsfeed_internet_button);
+		menuButton = (FloatingActionsMenu) view.findViewById(R.id.multiple_actions);
+		FloatingActionButton cameraButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_camera_button);
+		FloatingActionButton galleryButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_gallery_button);
+		FloatingActionButton internetButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_internet_button);
 
 		cameraButton.setId(SnapConstants.CAMERA_BUTTON);
 		galleryButton.setId(SnapConstants.GALLERY_BUTTON);
@@ -153,38 +181,28 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		galleryButton.setOnTouchListener(snapButtonTouchListener);
 		internetButton.setOnTouchListener(snapButtonTouchListener);
 
-		mListView = (GridView) getView().findViewById(R.id.newsfeed_main_gridView);
-		mListView.setOnScrollListener(new EndlessScrollListener() {
-			private int mLastFirstVisibleItem;
+		return view;
+	}
 
-			@Override
-			public void onLoadMore(int page, int totalItemsCount) {
-				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
-					return;
-				}
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (mNewsfeedViewAdapter != null) {
+			mNewsfeedViewAdapter.notifyDataSetChanged();
+		}
+	}
 
-				fetchDataFromServer(page);
-			}
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-				if (mLastFirstVisibleItem < firstVisibleItem) {
-					menuButton.setVisibility(View.INVISIBLE);
-					mSortSpinner.setVisibility(View.INVISIBLE);
-				}
-				if (mLastFirstVisibleItem > firstVisibleItem) {
-					mSortSpinner.setVisibility(View.VISIBLE);
-					menuButton.setVisibility(View.VISIBLE);
-				}
-				mLastFirstVisibleItem = firstVisibleItem;
-			}
+		// 서버로부터 데이터를 동기화하는 서비스 시작
+		Intent syncServiceIntent = new Intent();
+		syncServiceIntent.setAction(".service.SyncDataService");
+		getActivity().startService(syncServiceIntent);
 
-		});
+		// 화면 상단 스피너 설정
 
-		newsfeedDatas = new ArrayList<NewsfeedData>();
-		newsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
-		mListView.setAdapter(newsfeedVolleyAdapter);
 		fetchDataFromServer(resultPageStart);
 	}
 
@@ -255,11 +273,6 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		return mediaFile;
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Log.i("Newsfeed", position + "번 포스트 선택");
-	}
-
 	private void fetchDataFromServer(int start) {
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
 		Entry entry = cache.get(URL_FEED);
@@ -277,13 +290,14 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 			}
 		} else {
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("sort", resultSorting + "");
+			params.put("sort", sortInto + "");
 			params.put("start", start + "");
 			params.put("id", "1");
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					if (response != null) {
+						Log.i(TAG, "Receiving page:" + resultPageStart);
 						parseJsonFeed(response);
 					}
 				}
@@ -301,13 +315,21 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		}
 	}
 
+	/* 
+	 * 
+	 */
+
 	private void parseJsonFeed(JSONObject response) {
 		Realm realm = Realm.getInstance(getActivity());
 		realm.beginTransaction();
 		if (response != null) {
 			try {
 				JSONObject jsonData = response.getJSONObject("response");
+				if (numOfTotalResult == 0) {
+					numOfTotalResult = jsonData.getInt("total");
+				}
 				JSONArray feedArray = jsonData.getJSONArray("data");
+				Log.i(TAG, "Total: " + numOfTotalResult);
 
 				for (int i = 0; i < feedArray.length(); i++) {
 					JSONObject feedObj = (JSONObject) feedArray.get(i);
@@ -341,8 +363,30 @@ public class NewsfeedView extends Fragment implements OnItemClickListener {
 		}
 
 		realm.commitTransaction();
-		newsfeedDatas.addAll(realm.allObjects(NewsfeedData.class).sort("pid", false));
+		newsfeedDatas.addAll(realm.allObjects(NewsfeedData.class));
 
 		Log.i(TAG, newsfeedDatas.size() + "");
 	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		Log.i(TAG, parent.getItemAtPosition(position).toString());
+		String sortInto = parent.getItemAtPosition(position).toString();
+		if (sortInto.equals("Recommended")) {
+			this.sortInto = SORT_RECOMMENDED;
+
+		} else if (sortInto.equals("Recent")) {
+			this.sortInto = SORT_RECENT;
+
+		} else if (sortInto.equals("Popular")) {
+			this.sortInto = SORT_POPULAR;
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

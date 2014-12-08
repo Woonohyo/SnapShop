@@ -33,6 +33,8 @@ public class EmailSignUpFragment extends DialogFragment {
 	private EditText passwordField;
 	private Button signupButton;
 	private EditText passwordAgainField;
+	private static String email;
+	private static String password;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,8 +55,6 @@ public class EmailSignUpFragment extends DialogFragment {
 						Toast.makeText(getActivity(), "What's your Email Address?", Toast.LENGTH_LONG).show();
 						return true;
 					}
-					
-					Log.i("Login", emailField.getText().toString());
 
 					if (isEmailValid(emailField.getText().toString()) == false) {
 						Toast.makeText(getActivity(), "Invalid Email Address", Toast.LENGTH_LONG).show();
@@ -66,10 +66,13 @@ public class EmailSignUpFragment extends DialogFragment {
 						return true;
 					}
 					if (passwordField.getText().toString().equals(passwordAgainField.getText().toString()) == false) {
-						Toast.makeText(getActivity(), "Password do not match", Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity(), "Password does not match", Toast.LENGTH_LONG).show();
 						return true;
 					}
 
+					// 이메일 및 비밀번호 조건 만족 후 실제 회원가입 진행
+					email = emailField.getText().toString();
+					password = passwordField.getText().toString();
 					authorizeSignup();
 					return true;
 				}
@@ -86,102 +89,48 @@ public class EmailSignUpFragment extends DialogFragment {
 				.setConverter(new GsonConverter(new Gson())).build();
 
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.signUp(emailField.getText().toString(), passwordField.getText().toString(),
-				new Callback<SignUpResponse>() {
+		service.signUp(email, password, new Callback<SignUpResponse>() {
+			@Override
+			public void failure(RetrofitError error) {
+				Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
+			}
 
-					@Override
-					public void failure(RetrofitError error) {
-						Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
-					}
+			@Override
+			public void success(SignUpResponse signupResponse, Response response) {
+				int status = signupResponse.getStatus();
 
-					@Override
-					public void success(SignUpResponse signupResponse, Response response) {
-						int status = signupResponse.getStatus();
+				switch (status) {
+				case SnapConstants.SUCCESS: {
+					EmailSignInFragment signinFragment = new EmailSignInFragment();
+					signinFragment.authorizeSignin(email, password);
+					break;
 
-						switch (status) {
-						case SnapConstants.SUCCESS: {
-							authorizeSignin();
-							break;
+				}
 
-						}
+				case SnapConstants.EMAIL_DUPLICATION: {
+					Toast.makeText(getActivity(), "Email Already Exists", Toast.LENGTH_LONG).show();
+					break;
+				}
 
-						case SnapConstants.EMAIL_DUPLICATION: {
-							Toast.makeText(getActivity(), "Email Already Exists", Toast.LENGTH_LONG).show();
-							break;
-						}
+				case SnapConstants.ERROR: {
+					Toast.makeText(getActivity(), "Unrecognized Server Error!", Toast.LENGTH_LONG).show();
+					break;
+				}
 
-						case SnapConstants.ERROR: {
-							Toast.makeText(getActivity(), "Unrecognized Server Error!", Toast.LENGTH_LONG).show();
-							break;
-						}
+				default:
+					break;
+				}
 
-						default:
-							break;
-						}
-
-					}
-				});
+			}
+		});
 	}
-	
+
 	private void intentTabHostActivity() {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 
 	}
-
-	private void authorizeSignin() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
-				.setConverter(new GsonConverter(new Gson())).build();
-
-		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(emailField.getText().toString(), passwordField.getText().toString(),
-				new Callback<LoginResponse>() {
-
-					@Override
-					public void failure(RetrofitError error) {
-						Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
-						Log.i("Login", error.toString());
-					}
-
-					@Override
-					public void success(LoginResponse loginResponse, Response response) {
-						int status = loginResponse.getStatus();
-
-						switch (status) {
-						case SnapConstants.SUCCESS: {
-							Toast.makeText(getActivity(), "Welcome user " + loginResponse.getId(), Toast.LENGTH_LONG)
-									.show();
-							intentTabHostActivity();
-							break;
-						}
-						case SnapConstants.EMAIL_ERROR: {
-							Toast.makeText(getActivity(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG)
-									.show();
-							break;
-						}
-						case SnapConstants.PASSWORD_ERROR: {
-							Toast.makeText(getActivity(), "Password Error " + loginResponse.getId(), Toast.LENGTH_LONG)
-									.show();
-							break;
-						}
-
-						case SnapConstants.ERROR: {
-							Toast.makeText(getActivity(), "Unrecognized Server Error!" + loginResponse.getId(),
-									Toast.LENGTH_LONG).show();
-							break;
-						}
-
-						default:
-							break;
-						}
-
-					}
-				});
-
-	}
-	
-	
 
 	/**
 	 * method is used for checking valid email id format.

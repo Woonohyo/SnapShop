@@ -42,7 +42,7 @@ public class EmailSignInFragment extends DialogFragment {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					authorizeSignin();
+					authorizeSignin(emailField.getText().toString(), passwordField.getText().toString());
 				}
 
 				return true;
@@ -60,12 +60,12 @@ public class EmailSignInFragment extends DialogFragment {
 
 	}
 
-	private void authorizeSignin() {
+	public void authorizeSignin(String email, String password) {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
 				.setConverter(new GsonConverter(new Gson())).build();
 
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(emailField.getText().toString(), passwordField.getText().toString(),
+		service.login(email, password,
 				new Callback<LoginResponse>() {
 
 					@Override
