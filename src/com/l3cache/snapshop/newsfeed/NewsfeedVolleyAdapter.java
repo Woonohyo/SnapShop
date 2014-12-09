@@ -8,7 +8,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -67,10 +69,18 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		TextView titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
 		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_like_toggle_button);
 
-		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
-		format.setParseIntegerOnly(true);
-		String formattedLowPrice = format.format(Integer.parseInt(item.getPrice()));
-		priceButton.setText(formattedLowPrice);
+		if (item.getPrice().contains("원")) {
+			priceButton.setText(item.getPrice());
+		} else if (item.getPrice().length() == 0) {
+			priceButton.setText("0");
+
+		} else {
+			NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
+			format.setParseIntegerOnly(true);
+			String formattedLowPrice = format.format(Integer.parseInt(item.getPrice()));
+			priceButton.setText(formattedLowPrice);
+		}
+
 		writerTextView.setText(item.getWriter());
 		titleTextView.setText(item.getTitle());
 
@@ -99,12 +109,21 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 				if (isChecked) {
 					buttonView.setTextColor(Color.parseColor("#2DB400"));
 				} else {
-					buttonView.setTextColor(Color.parseColor("#a0a3a7"));
+					buttonView.setTextColor(Color.parseColor("#000000"));
 				}
 
 			}
 		});
 		likeButton.setChecked((item.getUserLike() == 1 ? true : false));
+
+		likeButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+
+				return false;
+			}
+		});
 
 		return convertView;
 	}

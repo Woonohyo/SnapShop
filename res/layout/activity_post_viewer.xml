@@ -13,8 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/feed_bg"
-            android:orientation="vertical"
-            android:paddingBottom="15dp" >
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/post_viewer_image_linear_layout"

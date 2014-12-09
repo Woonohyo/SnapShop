@@ -41,7 +41,7 @@ public class FavoriteView extends Fragment implements OnItemClickListener {
 	private ArrayList<FavoriteData> feedItems;
 	private int resultSorting = 0;
 	private int resultPageStart = 1;
-	protected int numOfTotalResult = 38;
+	protected int numOfTotalResult = 20;
 	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
 
 	@Override

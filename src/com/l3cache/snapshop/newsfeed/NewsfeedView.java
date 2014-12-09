@@ -131,7 +131,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mSortSpinner.setAdapter(spinnerAdapter);
 		mSortSpinner.setOnItemSelectedListener(this);
 
-		OnTouchListener snapButtonTouchListener = new OnTouchListener() {
+		OnTouchListener newPostButtonTouchListener = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -181,9 +181,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		galleryButton.setId(SnapConstants.GALLERY_BUTTON);
 		internetButton.setId(SnapConstants.INTERNET_BUTTON);
 
-		cameraButton.setOnTouchListener(snapButtonTouchListener);
-		galleryButton.setOnTouchListener(snapButtonTouchListener);
-		internetButton.setOnTouchListener(snapButtonTouchListener);
+		cameraButton.setOnTouchListener(newPostButtonTouchListener);
+		galleryButton.setOnTouchListener(newPostButtonTouchListener);
+		internetButton.setOnTouchListener(newPostButtonTouchListener);
 
 		return view;
 	}
