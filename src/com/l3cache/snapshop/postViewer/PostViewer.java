@@ -25,6 +25,7 @@ public class PostViewer extends Activity {
 	private TextView titleTextView;
 	private TextView userNameTextView;
 	private Button priceButton;
+	private TextView descTextView;
 
 	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
@@ -44,12 +45,15 @@ public class PostViewer extends Activity {
 
 		userNameTextView = (TextView) findViewById(R.id.post_viewer_item_user_text_view);
 		userNameTextView.setText(currentData.getWriter());
-		
+
 		priceButton = (Button) findViewById(R.id.postviewer_price_button);
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
 		format.setParseIntegerOnly(true);
 		String formattedPrice = format.format(Integer.parseInt(currentData.getPrice()));
 		priceButton.setText(formattedPrice);
+
+		descTextView = (TextView) findViewById(R.id.post_viewer_description_text_view);
+		descTextView.setText((currentData.getContents().length() > 0 ? currentData.getContents() : "No Description"));
 	}
 
 	@Override
