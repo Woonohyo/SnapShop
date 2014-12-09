@@ -5,13 +5,15 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="55dp"
         android:background="@color/feed_item_bg" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:background="@color/feed_bg"
+            android:orientation="vertical"
+            android:paddingBottom="15dp" >
 
             <LinearLayout
                 android:id="@+id/post_viewer_image_linear_layout"
@@ -30,9 +32,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/post_viewer_title_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/post_viewer_image_linear_layout"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingLeft="@dimen/feed_item_padding_left_right"
@@ -57,12 +61,35 @@
                     android:textColor="@color/textLightGray"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/post_viewer_title_container"
+                android:layout_margin="15dp"
+                android:background="@drawable/bg_parent_rounded_corner"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="10dp"
+                    android:paddingTop="10dp"
+                    android:text="This is a description of a item" />
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_postviewer_tool_bar"
         android:orientation="horizontal"
