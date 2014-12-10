@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -48,6 +49,7 @@ import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
+import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.EndlessScrollListener;
 import com.l3cache.snapshop.search.SearchResultsView;
@@ -82,7 +84,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
 
-				if (totalResults < 10 || ((page-1) * 20) > totalResults) {
+				if (totalResults < 10 || ((page - 1) * 20) > totalResults) {
 					Log.i(TAG, "Loading end. page: " + page + " total: " + totalResults);
 					return;
 				}
@@ -114,7 +116,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getActivity(), PostViewer.class);
-				Realm realm = Realm.getInstance(getActivity());
 				intent.putExtra("pid", id);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
@@ -130,6 +131,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mSortSpinner.setAdapter(spinnerAdapter);
 		mSortSpinner.setOnItemSelectedListener(this);
 
+		// 새로운 포스트를 작성하기 위한 버튼에 대한 TouchListener
 		OnTouchListener newPostButtonTouchListener = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -146,16 +148,22 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 						fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+						Log.i(TAG, fileUri.toString());
 
 						// start the image capture Intent
-						getActivity().startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//						getActivity().startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+						startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 						break;
 					}
 					case SnapConstants.GALLERY_BUTTON: {
-						Intent intent = new Intent(Intent.ACTION_PICK);
-						intent.setType(Images.Media.CONTENT_TYPE);
-						intent.setData(Images.Media.EXTERNAL_CONTENT_URI);
-						getActivity().startActivityForResult(intent, SnapConstants.RESULT_LOAD_IMAGE);
+						Crop.pickImage(getActivity());
+						/*
+						 * Intent intent = new Intent(Intent.ACTION_PICK);
+						 * intent.setType(Images.Media.CONTENT_TYPE);
+						 * intent.setData(Images.Media.EXTERNAL_CONTENT_URI);
+						 * getActivity().startActivityForResult(intent,
+						 * SnapConstants.RESULT_LOAD_IMAGE);
+						 */
 						break;
 					}
 					case SnapConstants.INTERNET_BUTTON: {
@@ -185,6 +193,29 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		internetButton.setOnTouchListener(newPostButtonTouchListener);
 
 		return view;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(TAG, "HI NEWS! Requesting: " + requestCode + " and Result:" + resultCode);
+		// 카메라 촬영 사진 이용
+		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+				beginCrop(fileUri);
+				Toast.makeText(getActivity(), "OK!", Toast.LENGTH_LONG).show();
+
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Toast.makeText(getActivity(), "Photo Cancelled", Toast.LENGTH_LONG).show();
+
+			} else {
+				Toast.makeText(getActivity(), "Capture Failed", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
+	
+	private void beginCrop(Uri source) {
+		Uri outputUri = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
+		new Crop(source).output(outputUri).asSquare().start(getActivity());
 	}
 
 	@Override
@@ -216,36 +247,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		realm.commitTransaction();
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
-
-			} else if (resultCode == Activity.RESULT_CANCELED) {
-				Toast.makeText(getActivity().getApplicationContext(), "Canceled", Toast.LENGTH_LONG).show();
-
-			} else
-				Toast.makeText(getActivity().getApplicationContext(), "Capture Failed", Toast.LENGTH_LONG).show();
-
-		} else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
-			if (resultCode == Activity.RESULT_OK) {
-				Intent uploadIntent = new Intent(getActivity().getApplicationContext(), UploadSnapView.class);
-				uploadIntent.putExtra("data", data);
-				uploadIntent.putExtra("handler", SnapConstants.GALLERY_BUTTON);
-				startActivity(uploadIntent);
-			} else if (resultCode == Activity.RESULT_CANCELED) {
-				Toast.makeText(getActivity().getApplicationContext(), "Canceled", Toast.LENGTH_LONG).show();
-			}
-		}
-	}
-
 	private Uri getOutputMediaFileUri(int type) {
 		return Uri.fromFile(getOutputMediaFile(type));
 	}
 
-	/** Create a File for saving an image or video */
+	/*
+	 * Create a File for saving an image or video
+	 */
 	private static File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
@@ -377,7 +385,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 		} else if (sortBy.equals("Recent")) {
 			this.sortInto = SORT_RECENT;
-			
 
 		} else if (sortBy.equals("Popular")) {
 			this.sortInto = SORT_POPULAR;

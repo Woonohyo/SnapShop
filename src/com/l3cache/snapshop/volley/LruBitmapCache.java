@@ -3,6 +3,7 @@ package com.l3cache.snapshop.volley;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
 
 public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageCache {
@@ -28,7 +29,11 @@ public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageCac
 
 	@Override
 	public Bitmap getBitmap(String url) {
-		return get(url);
+		if (url.contains("file://")) {
+			return BitmapFactory.decodeFile(url.substring(url.indexOf("file://") + 7));
+		} else {
+			return get(url);
+		}
 	}
 
 	@Override

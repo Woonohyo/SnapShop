@@ -42,4 +42,7 @@
     <dimen name="fab_stroke_width">0.5dp</dimen>
 
     <dimen name="fab_actions_spacing">16dp</dimen>
+    
+    
+    <dimen name="crop__bar_height">48dp</dimen>
 </resources>

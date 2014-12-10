@@ -69,16 +69,14 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		TextView titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
 		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_like_toggle_button);
 
-		if (item.getPrice().contains("원")) {
-			priceButton.setText(item.getPrice());
-		} else if (item.getPrice().length() == 0) {
-			priceButton.setText("0");
-
-		} else {
+		try {
 			NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
 			format.setParseIntegerOnly(true);
 			String formattedLowPrice = format.format(Integer.parseInt(item.getPrice()));
 			priceButton.setText(formattedLowPrice);
+
+		} catch (Exception e) {
+			priceButton.setText("0");
 		}
 
 		writerTextView.setText(item.getWriter());
