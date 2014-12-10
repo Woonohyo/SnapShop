@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 
+import com.facebook.AppEventsLogger;
 import com.l3cache.snapshop.R;
 
 public class LoginView extends FragmentActivity {
@@ -15,7 +16,7 @@ public class LoginView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_view);
-		
+
 		Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
 		signInEmailButton.setOnTouchListener(new OnTouchListener() {
 
@@ -42,5 +43,20 @@ public class LoginView extends FragmentActivity {
 			}
 		});
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		AppEventsLogger.activateApp(this);
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+
+		AppEventsLogger.deactivateApp(this);
 	}
 }

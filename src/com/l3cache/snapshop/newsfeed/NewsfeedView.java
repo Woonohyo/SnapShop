@@ -69,7 +69,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private FloatingActionsMenu menuButton;
 	protected int totalResults = 0;
 	private Spinner mSortSpinner;
-	private View firstGrid;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
