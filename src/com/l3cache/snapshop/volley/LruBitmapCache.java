@@ -4,6 +4,7 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.support.v4.util.LruCache;
 
 public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageCache {
@@ -30,7 +31,11 @@ public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageCac
 	@Override
 	public Bitmap getBitmap(String url) {
 		if (url.contains("file://")) {
-			return BitmapFactory.decodeFile(url.substring(url.indexOf("file://") + 7));
+			Bitmap bitmap = BitmapFactory.decodeFile(url.substring(url.indexOf("file://") + 7));
+			Matrix matrix = new Matrix();
+			matrix.postRotate(90);
+			bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+			return bitmap;
 		} else {
 			return get(url);
 		}

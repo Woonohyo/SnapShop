@@ -16,6 +16,7 @@ import retrofit.mime.TypedString;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -145,6 +146,9 @@ public class UploadSnapView extends Activity {
 		options.inSampleSize = 4;
 		Bitmap bitmap = BitmapFactory.decodeFile(imageUriString.substring(imageUriString.indexOf(fileProtocolPrefix)
 				+ fileProtocolPrefix.length()), options);
+		Matrix matrix = new Matrix();
+		matrix.postRotate(90);
+		bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 		File imageFileFolder = new File(getCacheDir(), UPLOAD_PREFIX);
 		if (!imageFileFolder.exists()) {
 			imageFileFolder.mkdir();
