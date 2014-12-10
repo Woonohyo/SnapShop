@@ -15,7 +15,7 @@ public class LoginView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_view);
-
+		
 		Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
 		signInEmailButton.setOnTouchListener(new OnTouchListener() {
 

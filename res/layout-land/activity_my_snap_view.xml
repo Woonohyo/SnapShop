@@ -4,7 +4,7 @@
     android:orientation="vertical" >
 
    <GridView
-        android:id="@+id/favorite_main_grid_view"
+        android:id="@+id/my_snaps_main_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:horizontalSpacing="15dp"

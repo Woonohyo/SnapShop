@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.favorite;
+package com.l3cache.snapshop.mysnap;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.volley.FeedImageView;
 
-public class FavoriteAdapter extends BaseAdapter {
+public class MySnapsAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater;
-	private ArrayList<FavoriteData> favoriteItems;
+	private ArrayList<NewsfeedData> favoriteItems;
 	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-	public FavoriteAdapter(Activity activity, ArrayList<FavoriteData> feedItems) {
+	public MySnapsAdapter(Activity activity, ArrayList<NewsfeedData> feedItems) {
 		this.activity = activity;
 		this.favoriteItems = feedItems;
 	}
@@ -66,7 +66,7 @@ public class FavoriteAdapter extends BaseAdapter {
 		if (imageLoader == null)
 			imageLoader = AppController.getInstance().getImageLoader();
 
-		FavoriteData item = favoriteItems.get(position);
+		NewsfeedData item = favoriteItems.get(position);
 
 		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.newsfeed_item_image_view);
 		TextView writerTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_writer_text_view);

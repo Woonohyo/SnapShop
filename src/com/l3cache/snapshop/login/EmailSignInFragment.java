@@ -1,11 +1,13 @@
 package com.l3cache.snapshop.login;
 
+import io.realm.Realm;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,11 +25,15 @@ import com.google.gson.Gson;
 import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.constants.SnapConstants;
+import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
 public class EmailSignInFragment extends DialogFragment {
 	EditText emailField;
 	EditText passwordField;
+	String mEmail;
+	String mPassword;
+	Context mContext;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +43,7 @@ public class EmailSignInFragment extends DialogFragment {
 		passwordField = (EditText) view.findViewById(R.id.editText_password);
 		emailField.setText("test@test.com");
 		passwordField.setText("test");
+		mContext = getActivity();
 		signinButton.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -55,59 +62,78 @@ public class EmailSignInFragment extends DialogFragment {
 
 	private void intentTabHostActivity() {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 
 	}
 
-	public void authorizeSignin(String email, String password) {
+	public void authorizeSignin(Context context, String email, String password) {
+		mContext = context;
+		authorizeSignin(email, password);
+	}
+
+	private void authorizeSignin(String email, String password) {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
 				.setConverter(new GsonConverter(new Gson())).build();
-
+		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
+		mEmail = email;
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(email, password,
-				new Callback<LoginResponse>() {
+		service.login(email, password, new Callback<LoginResponse>() {
 
-					@Override
-					public void failure(RetrofitError error) {
-						Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
-						Log.i("Login", error.toString());
+			@Override
+			public void failure(RetrofitError error) {
+				Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
+				Log.i("Login", error.toString());
+			}
+
+			@Override
+			public void success(LoginResponse loginResponse, Response response) {
+				int status = loginResponse.getStatus();
+
+				switch (status) {
+				case SnapConstants.SUCCESS: {
+					Realm realm = Realm.getInstance(mContext);
+					realm.beginTransaction();
+					User currentUser = null;
+					if (realm.where(User.class).equalTo("uid", loginResponse.getId()).findFirst() != null) {
+						currentUser = realm.where(User.class).equalTo("uid", loginResponse.getId()).findFirst();
+						Toast.makeText(mContext,
+								"Welcome back " + currentUser.getUid() + " - " + currentUser.getEmail(),
+								Toast.LENGTH_LONG).show();
+					} else {
+						currentUser = realm.createObject(User.class);
+						currentUser.setUid(loginResponse.getId());
+						currentUser.setEmail(mEmail);
+						Toast.makeText(mContext, "Welcome " + currentUser.getUid() + " - " + currentUser.getEmail(),
+								Toast.LENGTH_LONG).show();
 					}
 
-					@Override
-					public void success(LoginResponse loginResponse, Response response) {
-						int status = loginResponse.getStatus();
+					realm.commitTransaction();
 
-						switch (status) {
-						case SnapConstants.SUCCESS: {
-							Toast.makeText(getActivity(), "Welcome user " + loginResponse.getId(), Toast.LENGTH_LONG)
-									.show();
-							intentTabHostActivity();
-							break;
-						}
-						case SnapConstants.EMAIL_ERROR: {
-							Toast.makeText(getActivity(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG)
-									.show();
-							break;
-						}
-						case SnapConstants.PASSWORD_ERROR: {
-							Toast.makeText(getActivity(), "Password Error " + loginResponse.getId(), Toast.LENGTH_LONG)
-									.show();
-							break;
-						}
+					intentTabHostActivity();
+					break;
+				}
+				case SnapConstants.EMAIL_ERROR: {
+					Toast.makeText(getActivity(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG).show();
+					break;
+				}
+				case SnapConstants.PASSWORD_ERROR: {
+					Toast.makeText(getActivity(), "Password Error " + loginResponse.getId(), Toast.LENGTH_LONG).show();
+					break;
+				}
 
-						case SnapConstants.ERROR: {
-							Toast.makeText(getActivity(), "Unrecognized Server Error!" + loginResponse.getId(),
-									Toast.LENGTH_LONG).show();
-							break;
-						}
+				case SnapConstants.ERROR: {
+					Toast.makeText(getActivity(), "Unrecognized Server Error!" + loginResponse.getId(),
+							Toast.LENGTH_LONG).show();
+					break;
+				}
 
-						default:
-							break;
-						}
+				default:
+					break;
+				}
 
-					}
-				});
+			}
+		});
 
 	}
 

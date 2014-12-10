@@ -73,7 +73,7 @@
             android:label="@string/title_activity_main" >
         </activity>
         <activity
-            android:name=".favorite.FavoriteView"
+            android:name="com.l3cache.snapshop.mysnap.MySnapsView"
             android:label="@string/title_activity_favorite_view" >
         </activity>
         <activity

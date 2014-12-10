@@ -102,7 +102,7 @@ public class EmailSignUpFragment extends DialogFragment {
 				switch (status) {
 				case SnapConstants.SUCCESS: {
 					EmailSignInFragment signinFragment = new EmailSignInFragment();
-					signinFragment.authorizeSignin(email, password);
+					signinFragment.authorizeSignin(getActivity().getApplicationContext(), email, password);
 					break;
 
 				}

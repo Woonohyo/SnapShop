@@ -1,6 +1,6 @@
-package com.l3cache.snapshop.favorite;
+package com.l3cache.snapshop.mysnap;
 
-public class FavoriteData {
+public class MySnapData {
 	private int pid;
 	private String title;
 	private String shopUrl;

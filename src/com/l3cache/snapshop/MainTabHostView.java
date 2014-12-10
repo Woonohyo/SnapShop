@@ -11,9 +11,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.favorite.FavoriteView;
 import com.l3cache.snapshop.info.InfoView;
 import com.l3cache.snapshop.myposts.MyPostsView;
+import com.l3cache.snapshop.mysnap.MySnapsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.upload.UploadSnapView;
 
@@ -32,7 +32,7 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost.addTab(
 				mTabHost.newTabSpec("newsfeed").setIndicator("FEEDS", getResources().getDrawable(R.drawable.news)),
 				NewsfeedView.class, null);
-		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("MY SNAPS"), FavoriteView.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("MY SNAPS"), MySnapsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("MY POSTS"), MyPostsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("info").setIndicator("Info"), InfoView.class, null);
 	}
