@@ -63,6 +63,7 @@
             android:layout_marginTop="@dimen/upload_item_margin"
             android:background="@drawable/upload_snap_edit_text"
             android:ems="10"
+            android:inputType="number"
             android:hint="Price of item"
             android:textColor="@color/textColorGray"
             android:textColorHint="@color/hintColorGray"

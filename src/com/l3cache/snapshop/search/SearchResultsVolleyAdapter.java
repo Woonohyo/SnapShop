@@ -61,7 +61,7 @@ public class SearchResultsVolleyAdapter extends BaseAdapter {
 				.findViewById(R.id.searchresults_list_row_item_name_text_view);
 		TextView itemPriceTextView = (TextView) convertView
 				.findViewById(R.id.searchresults_list_row_itemPrice_text_view);
-		
+
 		TextView mallNameTextView = (TextView) convertView.findViewById(R.id.searchresults_list_row_mallName_text_view);
 
 		SearchResultsItem item = resultItems.get(position);

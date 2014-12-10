@@ -16,11 +16,11 @@ public final class SnapConstants {
 	public static final String LOGIN_REQUEST() {
 		return "/app/users/login";
 	}
-	
+
 	public static final String MYSNAP_REQUEST(int uid) {
 		return "/app/users/" + uid + "/likes";
 	}
-	
+
 	public static final String MYPOST_REQUEST(int uid) {
 		return "/app/users/" + uid + "/posts";
 	}

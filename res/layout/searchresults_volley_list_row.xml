@@ -2,79 +2,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/feed_bg" >
+    android:background="@drawable/bg_result_item"
+    android:orientation="horizontal" >
+
+    <com.l3cache.snapshop.volley.FeedImageView
+        android:id="@+id/searchresults_list_row_image_view"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/item_photo"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:maxWidth="120dp"
+        android:scaleType="fitXY" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_result_item"
-        android:paddingBottom="@dimen/feed_item_padding_top_bottom"
-        android:paddingTop="@dimen/feed_item_padding_top_bottom" >
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_margin="2dp"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="@dimen/feed_item_padding_left_right"
+        android:paddingRight="@dimen/feed_item_padding_left_right"
+        android:paddingTop="10dp" >
 
-        <!--
-        android:layout_marginLeft="@dimen/feed_item_margin"
-        android:layout_marginRight="@dimen/feed_item_margin"
-        -->
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/searchresults_list_row_item_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right" >
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:text="Item Title"
+            android:textColor="@color/textColorGray"
+            android:textSize="17sp" />
 
-            <com.l3cache.snapshop.volley.FeedImageView
-                android:id="@+id/searchresults_list_row_image_view"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="@string/item_photo"
-                android:paddingLeft="1dp"
-                android:paddingRight="1dp"
-                android:scaleType="fitXY"
-                android:src="@android:drawable/ic_menu_gallery" />
+        <TextView
+            android:id="@+id/searchresults_list_row_itemPrice_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="Price"
+            android:textColor="@color/naver_green"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_padding_left_right"
-                android:paddingRight="@dimen/feed_item_padding_left_right" >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        </View>
 
-                <TextView
-                    android:id="@+id/searchresults_list_row_item_name_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center_vertical"
-                    android:maxLines="2"
-                    android:text="Item Title"
-                    android:textColor="@color/textColorGray"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/searchresults_list_row_itemPrice_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center_vertical"
-                    android:text="Price"
-                    android:textColor="@color/naver_green"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" >
-                </View>
-
-                <TextView
-                    android:id="@+id/searchresults_list_row_mallName_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Mall Name"
-                    android:textColor="@color/textLightGray" />
-            </LinearLayout>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/searchresults_list_row_mallName_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mall Name"
+            android:textColor="@color/textLightGray" />
     </LinearLayout>
 
 </LinearLayout>

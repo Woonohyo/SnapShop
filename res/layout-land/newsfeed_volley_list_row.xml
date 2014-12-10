@@ -16,7 +16,7 @@
  
 
         <com.l3cache.snapshop.volley.FeedImageView
-            android:id="@+id/newsfeed_item_image_view"
+            android:id="@+id/my_snap_image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/newsfeed_feedimage"
