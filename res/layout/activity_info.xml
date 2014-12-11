@@ -41,5 +41,15 @@
         android:text="Sign Out"
         android:textColor="@color/white"
         android:textSize="20sp" />
+    
+        <Button
+        android:id="@+id/info_deactivate_button"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/info_deactivate_button"
+        android:text="Deactivate Account"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
 </LinearLayout>

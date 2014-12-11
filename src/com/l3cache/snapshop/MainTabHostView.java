@@ -30,7 +30,7 @@ public class MainTabHostView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_tab_host);
-
+		
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -45,9 +45,9 @@ public class MainTabHostView extends FragmentActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		return true;
+	protected void onResume() {
+		super.onResume();
+		Log.i(TAG, "OnResume");
 	}
 
 	@Override
@@ -80,40 +80,9 @@ public class MainTabHostView extends FragmentActivity {
 
 	}
 
-	// @Override
-	// public void onActivityResult(int requestCode, int resultCode, Intent
-	// data) {
-	// super.onActivityResult(requestCode, resultCode, data);
-	// Log.i("Snap", "HI MAIN! Requesting: " + requestCode + " and Result:" +
-	// resultCode);
-	// if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-	// if (resultCode == Activity.RESULT_OK) {
-	// Toast.makeText(getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
-	//
-	// } else if (resultCode == Activity.RESULT_CANCELED) {
-	// Toast.makeText(getApplicationContext(), "Canceled",
-	// Toast.LENGTH_LONG).show();
-	//
-	// } else
-	// Toast.makeText(getApplicationContext(), "Capture Failed",
-	// Toast.LENGTH_LONG).show();
-	//
-	// } else if (requestCode == SnapConstants.RESULT_LOAD_IMAGE) {
-	// if (resultCode == Activity.RESULT_OK) {
-	// Intent uploadIntent = new Intent(getApplicationContext(),
-	// UploadSnapView.class);
-	// uploadIntent.putExtra("data", data);
-	// uploadIntent.putExtra("handler", SnapConstants.GALLERY_BUTTON);
-	// startActivity(uploadIntent);
-	// } else if (resultCode == Activity.RESULT_CANCELED) {
-	// Toast.makeText(getApplicationContext(), "Canceled",
-	// Toast.LENGTH_LONG).show();
-	// }
-	// }
-	// }
-
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		Log.i(TAG, "On Back Pressed");
+		moveTaskToBack(true);
 	}
 }

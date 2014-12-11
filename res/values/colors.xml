@@ -3,6 +3,7 @@
 
     <color name="actionBarText">#FFFFFF</color>
     <color name="snap_green">#40C59C</color>
+    <color name="snap_red">#E68585</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="feed_bg">#d3d6db</color>

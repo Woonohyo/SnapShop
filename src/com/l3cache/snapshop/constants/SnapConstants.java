@@ -1,11 +1,18 @@
 package com.l3cache.snapshop.constants;
 
 public final class SnapConstants {
-	
+
 	public static final String SERVER_URL = "http://125.209.199.221:8080";
 	public static final String NEWSFEED_REQUEST = "/app/posts/";
 	public static final String SEARCH_REQUEST = "/search/shop";
 	public static final String LOGIN_REQUEST = "/app/users/login";
+	public static final String SIGNUP_REQUEST = "/app/users/new";
+	public static final String NEW_NAVER_POST_REQUEST = "/app/posts/newurl";
+	public static final String NEW_CUSTOM_POST_REQUEST = "/app/posts/new";
+	public static final String SNAP_REQUEST = "/app/posts/like";
+	public static final String DEACTIVATE_REQUEST = "/app/users/delete";
+
+	public static final String READ_POST_REQUEST = "/app/posts/{pid}/read";
 
 	public static final String MYSNAP_REQUEST(int uid) {
 		return "/app/users/" + uid + "/likes";
