@@ -75,7 +75,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private EndlessScrollListener mEndlessScrollListener;
 	private OnItemClickListener mGridViewItemClickListener;
 	private OnTouchListener newPostButtonTouchListener;
-	private int mCurrentPosition = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -169,7 +168,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mGridViewItemClickListener = new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				mCurrentPosition  = position;
 				Intent intent = new Intent(getActivity(), PostViewer.class);
 				Log.i(TAG, id + " is id of clicked row");
 				intent.putExtra("pid", id);
@@ -443,7 +441,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 			@Override
 			public void run() {
-				mGridView.setSelection(mCurrentPosition);
+				mGridView.setSelection(0);
 			}
 		});
 		Log.i(TAG, "Reload data with new sort");

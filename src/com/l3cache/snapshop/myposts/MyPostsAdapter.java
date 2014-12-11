@@ -39,7 +39,7 @@ public class MyPostsAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return position;
+		return feedItems.get(position).getPid();
 	}
 
 	@Override

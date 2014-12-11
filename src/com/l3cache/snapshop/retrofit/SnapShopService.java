@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.retrofit;
 
 import retrofit.Callback;
+import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -48,4 +49,7 @@ public interface SnapShopService {
 	// 포스트 조회수 증가
 	@POST(SnapConstants.READ_POST_REQUEST)
 	void readPost(@Path("pid") long pid, Callback<DefaultResponse> cb);
+
+	@DELETE(SnapConstants.POST_DELETE_REQUEST)
+	void deletePost(@Path("pid") int pid, @Query("uid") int uid, Callback<DefaultResponse> cb);
 }

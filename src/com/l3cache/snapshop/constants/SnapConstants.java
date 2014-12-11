@@ -14,6 +14,8 @@ public final class SnapConstants {
 
 	public static final String READ_POST_REQUEST = "/app/posts/{pid}/read";
 
+	public static final String POST_DELETE_REQUEST = "/app/posts/delete/{pid}";
+
 	public static final String MYSNAP_REQUEST(int uid) {
 		return "/app/users/" + uid + "/likes";
 	}

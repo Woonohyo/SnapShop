@@ -9,12 +9,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.converter.GsonConverter;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -22,12 +30,15 @@ import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.newsfeed.NewsfeedRequest;
+import com.l3cache.snapshop.retrofit.DefaultResponse;
+import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class MyPostsView extends Fragment {
@@ -51,6 +62,68 @@ public class MyPostsView extends Fragment {
 		mFeedItems = new ArrayList<NewsfeedData>();
 		mListAdapter = new MyPostsAdapter(getActivity(), mFeedItems);
 		mGridView.setAdapter(mListAdapter);
+		mGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+					.setConverter(new GsonConverter(new Gson())).build();
+			SnapShopService service = restAdapter.create(SnapShopService.class);
+			SnapPreference pref = new SnapPreference(getActivity());
+			int pid;
+			int mPosition;
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
+				pid = (int) id;
+				mPosition = position;
+
+				alt_bld.setMessage("Do you want to delete your post?").setCancelable(true)
+						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface dialog, int id) {
+								Log.i(TAG,
+										"Deleting item pid - " + pid + " of user - "
+												+ pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
+								service.deletePost(pid, pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0),
+										new Callback<DefaultResponse>() {
+
+											@Override
+											public void success(DefaultResponse defResp, retrofit.client.Response arg1) {
+												if (defResp.getStatus() == 10) {
+													Toast.makeText(getActivity(), "The post was deleted.",
+															Toast.LENGTH_SHORT).show();
+													mFeedItems.remove(mPosition);
+													mListAdapter.notifyDataSetChanged();
+												} else if (defResp.getStatus() == 20) {
+													Toast.makeText(getActivity(), "Deletion failed", Toast.LENGTH_SHORT)
+															.show();
+
+												}
+											}
+
+											@Override
+											public void failure(RetrofitError arg0) {
+												Toast.makeText(getActivity(),
+														"Network Error - " + arg0.getLocalizedMessage(),
+														Toast.LENGTH_SHORT).show();
+
+											}
+										});
+
+							}
+						}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+
+				AlertDialog alert = alt_bld.create();
+				alert.setTitle("Delete Post");
+				alert.show();
+
+				return true;
+			}
+		});
+
 		mGridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
