@@ -63,18 +63,114 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private GridView mGridView;
 	private int sortInto = SORT_RECOMMENDED;
-	private NewsfeedVolleyAdapter mNewsfeedVolleyAdapter;
-	private NewsfeedVolleyRealmAdapter mNewsfeedVolleyRealmAdapter;
+	// private NewsfeedVolleyAdapter mNewsfeedVolleyAdapter;
+	private NewsfeedVolleyRealmAdapter mNewsfeedVolleyAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
 	protected int totalResults = 0;
 	private Spinner mSortSpinner;
 	private EndlessScrollListener mEndlessScrollListener;
+	private OnItemClickListener mGridViewItemClickListener;
+	private OnTouchListener newPostButtonTouchListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		clearRealm();
+
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
+		initEndlessScrollListener();
+		mGridView.setOnScrollListener(mEndlessScrollListener);
+		initGridViewItemClickListener();
+		mGridView.setOnItemClickListener(mGridViewItemClickListener);
+
+		newsfeedDatas = new ArrayList<NewsfeedData>();
+
+		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
+		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+				R.array.snaps_sort_array, android.R.layout.simple_spinner_dropdown_item);
+		mSortSpinner.setAdapter(spinnerAdapter);
+		mSortSpinner.setOnItemSelectedListener(this);
+
+		initNewPostButtonTouchListener();
+
+		menuButton = (FloatingActionsMenu) view.findViewById(R.id.multiple_actions);
+		FloatingActionButton cameraButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_camera_button);
+		FloatingActionButton galleryButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_gallery_button);
+		FloatingActionButton internetButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_internet_button);
+
+		cameraButton.setId(SnapConstants.CAMERA_BUTTON);
+		galleryButton.setId(SnapConstants.GALLERY_BUTTON);
+		internetButton.setId(SnapConstants.INTERNET_BUTTON);
+
+		cameraButton.setOnTouchListener(newPostButtonTouchListener);
+		galleryButton.setOnTouchListener(newPostButtonTouchListener);
+		internetButton.setOnTouchListener(newPostButtonTouchListener);
+
+		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		reloadGridViewData();
+		Log.i(TAG, "Newsfeed Onresume");
+	}
+
+	private void initNewPostButtonTouchListener() {
+		newPostButtonTouchListener = new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					int id = v.getId();
+
+					switch (id) {
+					case SnapConstants.CAMERA_BUTTON: {
+						Log.i("Snap", id + ": Camera");
+						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+						fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+						Log.i(TAG, fileUri.toString());
+
+						// start the image capture Intent
+						// getActivity().startActivityForResult(intent,
+						// SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+						startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+						break;
+					}
+					case SnapConstants.GALLERY_BUTTON: {
+						Crop.pickImage(getActivity());
+						break;
+					}
+					case SnapConstants.INTERNET_BUTTON: {
+						Intent intent = new Intent(getActivity(), SearchResultsView.class);
+						getActivity().startActivity(intent);
+						break;
+					}
+
+					}
+
+				}
+				return true;
+			}
+		};
+	}
+
+	private void initGridViewItemClickListener() {
+		mGridViewItemClickListener = new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getActivity(), PostViewer.class);
+				Log.i(TAG, id + " is id of clicked row");
+				intent.putExtra("pid", id);
+				startActivity(intent);
+				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
+			}
+		};
+	}
+
+	private void initEndlessScrollListener() {
 		mEndlessScrollListener = new EndlessScrollListener() {
 			private int mLastFirstVisibleItem;
 
@@ -105,93 +201,23 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				mLastFirstVisibleItem = firstVisibleItem;
 			}
 		};
+	}
 
-		mGridView.setOnScrollListener(mEndlessScrollListener);
+	private void clearRealm() {
+		Realm realm = Realm.getInstance(getActivity());
+		realm.beginTransaction();
+		realm.where(NewsfeedData.class).findAll().clear();
+		realm.commitTransaction();
+	}
 
-		newsfeedDatas = new ArrayList<NewsfeedData>();
-		mNewsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
-		mGridView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(getActivity(), PostViewer.class);
-				intent.putExtra("pid", id);
-				startActivity(intent);
-				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-			}
-		});
-
+		Realm realm = Realm.getInstance(getActivity());
+		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
+				.findAll(), true);
 		mGridView.setAdapter(mNewsfeedVolleyAdapter);
-
-		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
-		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
-				R.array.snaps_sort_array, android.R.layout.simple_spinner_dropdown_item);
-		mSortSpinner.setAdapter(spinnerAdapter);
-		mSortSpinner.setOnItemSelectedListener(this);
-
-		// 새로운 포스트를 작성하기 위한 버튼에 대한 TouchListener
-		OnTouchListener newPostButtonTouchListener = new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_UP) {
-					int id = v.getId();
-
-					switch (id) {
-					case SnapConstants.CAMERA_BUTTON: {
-						Log.i("Snap", id + ": Camera");
-						// create Intent to take a picture and return control to
-						// the
-						// calling application
-						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-						fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
-						intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-						Log.i(TAG, fileUri.toString());
-
-						// start the image capture Intent
-						// getActivity().startActivityForResult(intent,
-						// SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-						startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-						break;
-					}
-					case SnapConstants.GALLERY_BUTTON: {
-						Crop.pickImage(getActivity());
-						/*
-						 * Intent intent = new Intent(Intent.ACTION_PICK);
-						 * intent.setType(Images.Media.CONTENT_TYPE);
-						 * intent.setData(Images.Media.EXTERNAL_CONTENT_URI);
-						 * getActivity().startActivityForResult(intent,
-						 * SnapConstants.RESULT_LOAD_IMAGE);
-						 */
-						break;
-					}
-					case SnapConstants.INTERNET_BUTTON: {
-						Intent intent = new Intent(getActivity(), SearchResultsView.class);
-						getActivity().startActivity(intent);
-						break;
-					}
-
-					}
-
-				}
-				return true;
-			}
-		};
-
-		menuButton = (FloatingActionsMenu) view.findViewById(R.id.multiple_actions);
-		FloatingActionButton cameraButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_camera_button);
-		FloatingActionButton galleryButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_gallery_button);
-		FloatingActionButton internetButton = (FloatingActionButton) view.findViewById(R.id.newsfeed_internet_button);
-
-		cameraButton.setId(SnapConstants.CAMERA_BUTTON);
-		galleryButton.setId(SnapConstants.GALLERY_BUTTON);
-		internetButton.setId(SnapConstants.INTERNET_BUTTON);
-
-		cameraButton.setOnTouchListener(newPostButtonTouchListener);
-		galleryButton.setOnTouchListener(newPostButtonTouchListener);
-		internetButton.setOnTouchListener(newPostButtonTouchListener);
-
-		return view;
 	}
 
 	@Override
@@ -223,20 +249,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		if (mNewsfeedVolleyAdapter != null) {
 			mNewsfeedVolleyAdapter.notifyDataSetChanged();
 		}
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		// 서버로부터 데이터를 동기화하는 서비스 시작
-		Intent syncServiceIntent = new Intent();
-		syncServiceIntent.setAction(".service.SyncDataService");
-		getActivity().startService(syncServiceIntent);
-
-		// 화면 상단 스피너 설정
-
-		fetchDataFromServer(1);
 	}
 
 	private void removeAllNewsfeedRealm() {
@@ -323,7 +335,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					result.sort("pid", RealmResults.SORT_ORDER_DESCENDING);
 					newsfeedDatas.addAll(result);
 					mNewsfeedVolleyAdapter.notifyDataSetChanged();
-
 				}
 			});
 			AppController.getInstance().addToRequestQueue(jsonReq);
@@ -398,18 +409,22 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		if (currentSort != this.sortInto) {
-			newsfeedDatas.clear();
-			mEndlessScrollListener.reset();
-			fetchDataFromServer(1);
-			mGridView.post(new Runnable() {
-
-				@Override
-				public void run() {
-					mGridView.setSelection(0);
-				}
-			});
-			Log.i(TAG, "Reload data with new sort");
+			reloadGridViewData();
 		}
+	}
+
+	private void reloadGridViewData() {
+		clearRealm();
+		mEndlessScrollListener.reset();
+		fetchDataFromServer(1);
+		mGridView.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mGridView.setSelection(0);
+			}
+		});
+		Log.i(TAG, "Reload data with new sort");
 	}
 
 	@Override

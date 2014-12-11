@@ -32,8 +32,6 @@ import com.l3cache.snapshop.volley.FeedImageView;
 public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> implements OnTouchListener, ListAdapter {
 
 	private static final String TAG = NewsfeedVolleyRealmAdapter.class.getSimpleName();
-	private Activity activity;
-	private LayoutInflater inflater;
 	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	private static class MyViewHolder {
@@ -51,8 +49,6 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		MyViewHolder viewHolder;
-		if (inflater == null)
-			inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.newsfeed_volley_list_row, parent, false);
@@ -62,8 +58,9 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 			viewHolder.priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
 			viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
 			viewHolder.snapButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_snap_toggle_button);
-			viewHolder.snapButton.setOnTouchListener(this);
+			viewHolder.feedImageView.setOnTouchListener(this);
 			convertView.setOnTouchListener(this);
+			convertView.setTag(viewHolder);
 
 		} else {
 			viewHolder = (MyViewHolder) convertView.getTag();
@@ -73,7 +70,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 			imageLoader = AppController.getInstance().getImageLoader();
 
 		NewsfeedData item = realmResults.get(position);
-
+		
 		try {
 			NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
 			format.setParseIntegerOnly(true);
@@ -124,7 +121,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			Log.i(TAG, "onTouch");
+			Log.i(TAG, "onTouchHere " + v.toString());
 			return true;
 		}
 		return false;
@@ -133,5 +130,9 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 	public RealmResults<NewsfeedData> getRealmResults() {
 		return realmResults;
 	}
-
+	
+	@Override
+	public long getItemId(int position) {
+		return realmResults.get(position).getPid();
+	}
 }
