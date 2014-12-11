@@ -32,7 +32,7 @@ import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.newsfeed.NewsfeedRequest;
-import com.l3cache.snapshop.search.EndlessScrollListener;
+import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class MySnapsView extends Fragment implements OnItemClickListener {
 	private static final String TAG = MySnapsView.class.getSimpleName();

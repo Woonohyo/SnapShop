@@ -52,9 +52,9 @@ import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
-import com.l3cache.snapshop.search.EndlessScrollListener;
 import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.upload.UploadSnapView;
+import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_RECOMMENDED = 0;
@@ -63,7 +63,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private static final String TAG = NewsfeedView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.NEWSFEED_REQUEST;
 	private ArrayList<NewsfeedData> newsfeedDatas;
-	private int resultPageStart = 1;
 	private GridView mGridView;
 	private int sortInto = SORT_RECOMMENDED;
 	private NewsfeedViewAdapter mNewsfeedViewAdapter;
@@ -72,13 +71,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private FloatingActionsMenu menuButton;
 	protected int totalResults = 0;
 	private Spinner mSortSpinner;
+	private EndlessScrollListener mEndlessScrollListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
-
-		mGridView.setOnScrollListener(new EndlessScrollListener(5, resultPageStart) {
+		mEndlessScrollListener = new EndlessScrollListener() {
 			private int mLastFirstVisibleItem;
 
 			@Override
@@ -107,8 +106,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				}
 				mLastFirstVisibleItem = firstVisibleItem;
 			}
+		};
 
-		});
+		mGridView.setOnScrollListener(mEndlessScrollListener);
 
 		newsfeedDatas = new ArrayList<NewsfeedData>();
 		newsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
@@ -238,7 +238,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 		// 화면 상단 스피너 설정
 
-		fetchDataFromServer(resultPageStart);
+		fetchDataFromServer(1);
 	}
 
 	private void removeAllNewsfeedRealm() {
@@ -388,6 +388,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		Log.i(TAG, parent.getItemAtPosition(position).toString());
 		String sortBy = parent.getItemAtPosition(position).toString();
+		int currentSort = this.sortInto;
 		if (sortBy.equals("Recommended")) {
 			this.sortInto = SORT_RECOMMENDED;
 
@@ -396,6 +397,20 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 		} else if (sortBy.equals("Popular")) {
 			this.sortInto = SORT_POPULAR;
+		}
+
+		if (currentSort != this.sortInto) {
+			newsfeedDatas.clear();
+			mEndlessScrollListener.reset();
+			fetchDataFromServer(1);
+			mGridView.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					mGridView.setSelection(0);
+				}
+			});
+			Log.i(TAG, "Reload data with new sort");
 		}
 	}
 

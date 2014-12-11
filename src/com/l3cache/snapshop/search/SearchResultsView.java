@@ -42,6 +42,7 @@ import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.SearchResultsItem;
 import com.l3cache.snapshop.upload.UploadSnapView;
+import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class SearchResultsView extends Activity implements OnItemClickListener {
 

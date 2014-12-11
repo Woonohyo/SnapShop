@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.search;
+package com.l3cache.snapshop.util;
 
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -72,6 +72,13 @@ public abstract class EndlessScrollListener implements OnScrollListener {
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// Don't take any action on changed
+	}
+
+	public void reset() {
+		currentPage = 1;
+		previousTotalItemCount = 0;
+		loading = true;
+		startingPageIndex = 1;
 	}
 
 }

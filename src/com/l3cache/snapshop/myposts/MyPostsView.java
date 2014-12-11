@@ -32,7 +32,7 @@ import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.mysnap.MySnapsAdapter;
 import com.l3cache.snapshop.mysnap.MySnapsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedRequest;
-import com.l3cache.snapshop.search.EndlessScrollListener;
+import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class MyPostsView extends Fragment {
 	private static final String TAG = MyPostsView.class.getSimpleName();
