@@ -39,7 +39,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 	private int resultSorting = 0;
 	private int resultPageStart = 1;
 	protected int numOfTotalResult;
-	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.MYSNAP_REQUEST(1);
+	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.MYSNAP_REQUEST(1);
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

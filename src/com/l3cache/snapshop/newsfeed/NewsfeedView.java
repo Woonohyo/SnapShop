@@ -60,7 +60,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_RECENT = 1;
 	private final int SORT_POPULAR = 2;
 	private static final String TAG = NewsfeedView.class.getSimpleName();
-	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.NEWSFEED_REQUEST();
+	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.NEWSFEED_REQUEST;
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private int resultPageStart = 1;
 	private GridView mGridView;
@@ -75,7 +75,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
-		removeAllNewsfeedDatas();
+		removeAllNewsfeedRealm();
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 
 		mGridView.setOnScrollListener(new EndlessScrollListener(5, resultPageStart) {
@@ -240,7 +240,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		fetchDataFromServer(resultPageStart);
 	}
 
-	private void removeAllNewsfeedDatas() {
+	private void removeAllNewsfeedRealm() {
 		Realm realm = Realm.getInstance(getActivity());
 		realm.beginTransaction();
 		realm.clear(NewsfeedData.class);

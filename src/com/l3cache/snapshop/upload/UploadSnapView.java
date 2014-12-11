@@ -178,7 +178,7 @@ public class UploadSnapView extends Activity {
 
 	private void initRestfit() {
 		if (restAdapter == null) {
-			restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+			restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 					.setConverter(new GsonConverter(new Gson())).build();
 		}
 		if (service == null) {

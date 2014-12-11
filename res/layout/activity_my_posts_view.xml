@@ -4,9 +4,16 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Posts" />
+    <GridView
+        android:id="@+id/my_posts_main_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/feed_bg"
+        android:clipToPadding="false"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:padding="10dp"
+        android:verticalSpacing="10dp" >
+    </GridView>
 
 </RelativeLayout>

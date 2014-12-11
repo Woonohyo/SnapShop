@@ -91,7 +91,7 @@ public class EmailSignUpFragment extends DialogFragment {
 
 	protected void authorizeSignup() {
 		Log.i("SignUp", "Authorizing");
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 
 		SnapShopService service = restAdapter.create(SnapShopService.class);
@@ -131,7 +131,7 @@ public class EmailSignUpFragment extends DialogFragment {
 	}
 
 	private void authorizeSignin(String email, String password) {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
 		mEmail = email;
@@ -151,19 +151,11 @@ public class EmailSignUpFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					Realm realm = Realm.getInstance(getActivity());
-					realm.beginTransaction();
-					User currentUser = realm.createObject(User.class);
 					SnapPreference pref = new SnapPreference(getActivity());
-					currentUser.setUid(loginResponse.getId());
-					currentUser.setEmail(mEmail);
-					pref.put(SnapPreference.PREF_CURRENT_USER_ID, currentUser.getUid());
+					pref.put(SnapPreference.PREF_CURRENT_USER_ID, loginResponse.getId());
 					pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
 					pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
-					Toast.makeText(getActivity(), "Welcome " + currentUser.getUid() + " - " + currentUser.getEmail(),
-							Toast.LENGTH_LONG).show();
-
-					realm.commitTransaction();
+					Toast.makeText(getActivity(), "Welcome " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - " + pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "No Email"), Toast.LENGTH_SHORT).show();;
 
 					intentTabHostActivity();
 					break;

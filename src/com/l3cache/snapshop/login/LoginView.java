@@ -36,38 +36,39 @@ public class LoginView extends FragmentActivity {
 		if (pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null) != null) {
 			authorizeSignin(pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null),
 					pref.getValue(SnapPreference.PREF_CURRENT_USER_PASSWORD, null));
+		} else {
+
+			Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
+			signInEmailButton.setOnTouchListener(new OnTouchListener() {
+
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if (event.getAction() == MotionEvent.ACTION_DOWN) {
+						EmailSignInFragment fragment = new EmailSignInFragment();
+						fragment.show(getSupportFragmentManager(), null);
+					}
+					return true;
+				}
+			});
+
+			Button signUpEmailButton = (Button) findViewById(R.id.login_view_sign_up_button);
+			signUpEmailButton.setOnTouchListener(new OnTouchListener() {
+
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if (event.getAction() == MotionEvent.ACTION_DOWN) {
+						EmailSignUpFragment fragment = new EmailSignUpFragment();
+						fragment.show(getSupportFragmentManager(), null);
+					}
+					return true;
+				}
+			});
 		}
-
-		Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
-		signInEmailButton.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					EmailSignInFragment fragment = new EmailSignInFragment();
-					fragment.show(getSupportFragmentManager(), null);
-				}
-				return true;
-			}
-		});
-
-		Button signUpEmailButton = (Button) findViewById(R.id.login_view_sign_up_button);
-		signUpEmailButton.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					EmailSignUpFragment fragment = new EmailSignUpFragment();
-					fragment.show(getSupportFragmentManager(), null);
-				}
-				return true;
-			}
-		});
 
 	}
 
 	private void authorizeSignin(String email, String password) {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
 		SnapShopService service = restAdapter.create(SnapShopService.class);

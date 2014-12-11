@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 
 public class SnapPreference {
 	private final String PREF_NAME = "com.l3cache.snapshop.pref";
-	
+
 	public final static String PREF_CURRENT_USER_ID = "PREF_CURRENT_USER_ID";
 	public final static String PREF_CURRENT_USER_EMAIL = "PREF_CURRENT_USER_EMAIL";
 	public final static String PREF_CURRENT_USER_PASSWORD = "PREF_CURRENT_USER_PASSWORD";
@@ -42,7 +42,7 @@ public class SnapPreference {
 		editor.putInt(key, value);
 		editor.commit();
 	}
-	
+
 	public String getValue(String key, String dftValue) {
 		SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
 
@@ -73,5 +73,12 @@ public class SnapPreference {
 		} catch (Exception e) {
 			return dftValue;
 		}
+	}
+
+	public void removeCurrentUser() {
+		SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
+		SharedPreferences.Editor editor = pref.edit();
+		editor.remove(PREF_CURRENT_USER_EMAIL).remove(PREF_CURRENT_USER_ID).remove(PREF_CURRENT_USER_PASSWORD);
+		editor.commit();
 	}
 }

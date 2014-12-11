@@ -46,7 +46,7 @@ import com.l3cache.snapshop.upload.UploadSnapView;
 public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private final String TAG = SearchResultsView.class.getSimpleName();
-	private static final String URL_FEED = SnapConstants.SERVER_URL() + SnapConstants.SEARCH_REQUEST();
+	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.SEARCH_REQUEST;
 	private final String SORT_SIMILARITY = "sim";
 	private final String SORT_ASC = "asc";
 	private final String SORT_DESC = "dsc";

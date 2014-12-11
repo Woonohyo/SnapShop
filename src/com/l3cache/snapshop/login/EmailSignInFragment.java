@@ -73,7 +73,7 @@ public class EmailSignInFragment extends DialogFragment {
 	}
 
 	private void authorizeSignin(String email, String password) {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
 		mEmail = email;
@@ -93,27 +93,17 @@ public class EmailSignInFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					Realm realm = Realm.getInstance(mContext);
-					realm.beginTransaction();
-					User currentUser = null;
-					if (realm.where(User.class).equalTo("uid", loginResponse.getId()).findFirst() != null) {
-						currentUser = realm.where(User.class).equalTo("uid", loginResponse.getId()).findFirst();
-						Toast.makeText(mContext,
-								"Welcome back " + currentUser.getUid() + " - " + currentUser.getEmail(),
-								Toast.LENGTH_LONG).show();
-					} else {
-						currentUser = realm.createObject(User.class);
-						currentUser.setUid(loginResponse.getId());
-						currentUser.setEmail(mEmail);
-						SnapPreference pref = new SnapPreference(getActivity());
-						pref.put(SnapPreference.PREF_CURRENT_USER_ID, currentUser.getUid());
-						pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
-						pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
-						Toast.makeText(mContext, "Welcome " + currentUser.getUid() + " - " + currentUser.getEmail(),
-								Toast.LENGTH_LONG).show();
-					}
+					SnapPreference pref = new SnapPreference(getActivity());
+					pref.put(SnapPreference.PREF_CURRENT_USER_ID, loginResponse.getId());
+					pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
+					pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
 
-					realm.commitTransaction();
+					Toast.makeText(
+							getActivity(),
+							"Welcome back, " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
+									+ pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "No Email"),
+							Toast.LENGTH_SHORT).show();
+					;
 
 					intentTabHostActivity();
 					break;
