@@ -4,6 +4,8 @@ import io.realm.Realm;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +26,7 @@ import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
@@ -36,24 +39,21 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 	private GridView listView;
 	private MySnapsAdapter listAdapter;
 	private ArrayList<NewsfeedData> feedItems;
-	private int resultSorting = 0;
 	private int resultPageStart = 1;
 	protected int numOfTotalResult;
-	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.MYSNAP_REQUEST(1);
+	private static String URL_FEED;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.activity_my_snap_view, container, false);
-	}
+		SnapPreference pref = new SnapPreference(getActivity());
+		URL_FEED = SnapConstants.SERVER_URL
+				+ SnapConstants.MYSNAP_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		listView = (GridView) getView().findViewById(R.id.my_snaps_main_grid_view);
+		View view = inflater.inflate(R.layout.activity_my_snaps_view, container, false);
+		listView = (GridView) view.findViewById(R.id.my_snaps_main_grid_view);
 		feedItems = new ArrayList<NewsfeedData>();
 		listAdapter = new MySnapsAdapter(getActivity(), feedItems);
 		listView.setAdapter(listAdapter);
-		numOfTotalResult = Realm.getInstance(getActivity()).where(NewsfeedData.class).findAll().size();
 		listView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
@@ -62,12 +62,19 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 					return;
 				}
 
-				// fetchDataFromServer(page);
+				fetchDataFromServer(page);
 			}
 		});
 
-		// fetchDataFromServer(resultPageStart);
-		fetchDataFromRealm(resultPageStart);
+		return view;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		fetchDataFromServer(resultPageStart);
+		// fetchDataFromRealm(resultPageStart);
 	}
 
 	private void fetchDataFromRealm(int offset) {
@@ -93,7 +100,10 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 				e.printStackTrace();
 			}
 		} else {
-			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, null, new Response.Listener<JSONObject>() {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("start", start + "");
+			Log.i(TAG, URL_FEED);
+			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					Log.i(TAG, "Response: " + response.toString());

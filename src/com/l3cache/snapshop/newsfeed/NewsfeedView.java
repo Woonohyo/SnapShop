@@ -75,7 +75,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
-		removeAllNewsfeedRealm();
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 
 		mGridView.setOnScrollListener(new EndlessScrollListener(5, resultPageStart) {

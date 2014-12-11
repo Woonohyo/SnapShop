@@ -2358,7 +2358,7 @@ containing a value of this type.
         public static final int activity_login_view=0x7f030018;
         public static final int activity_main_tab_host=0x7f030019;
         public static final int activity_my_posts_view=0x7f03001a;
-        public static final int activity_my_snap_view=0x7f03001b;
+        public static final int activity_my_snaps_view=0x7f03001b;
         public static final int activity_newsfeed=0x7f03001c;
         public static final int activity_post_viewer=0x7f03001d;
         public static final int activity_search_results=0x7f03001e;
@@ -2385,7 +2385,7 @@ containing a value of this type.
         public static final int fragment_sign_in_email=0x7f030033;
         public static final int fragment_sign_up_email=0x7f030034;
         public static final int my_posts_volley_list_row=0x7f030035;
-        public static final int my_snap_volley_list_row=0x7f030036;
+        public static final int my_snaps_volley_list_row=0x7f030036;
         public static final int newsfeed_list_row=0x7f030037;
         public static final int newsfeed_volley_list_row=0x7f030038;
         public static final int searchresults_list_row=0x7f030039;
