@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.newsfeed;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -150,7 +151,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 						Log.i(TAG, fileUri.toString());
 
 						// start the image capture Intent
-//						getActivity().startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+						// getActivity().startActivityForResult(intent,
+						// SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 						startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 						break;
 					}
@@ -193,7 +195,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 		return view;
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "HI NEWS! Requesting: " + requestCode + " and Result:" + resultCode);
@@ -211,7 +213,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			}
 		}
 	}
-	
+
 	private void beginCrop(Uri source) {
 		Uri outputUri = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
 		new Crop(source).output(outputUri).asSquare().start(getActivity());
@@ -316,7 +318,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				public void onErrorResponse(VolleyError error) {
 					Log.i(TAG, "Error: " + error.getMessage());
 					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
-					parseJsonFeed(null);
+					Realm realm = Realm.getInstance(getActivity());
+					newsfeedDatas.clear();
+					realm.where(NewsfeedData.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
+					RealmResults<NewsfeedData> result = realm.where(NewsfeedData.class).findAll();
+					result.sort("pid", RealmResults.SORT_ORDER_DESCENDING);
+					newsfeedDatas.addAll(result);
+					newsfeedVolleyAdapter.notifyDataSetChanged();
 
 				}
 			});
@@ -341,8 +349,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				for (int i = 0; i < feedArray.length(); i++) {
 					JSONObject feedObj = (JSONObject) feedArray.get(i);
 					if (realm.where(NewsfeedData.class).equalTo("pid", feedObj.getInt("pid")).findFirst() != null) {
-						Log.i(TAG, "Post having id " + feedObj.getInt("pid") + " alreay exists - ");
-						continue;
+						Log.i(TAG, "Post having id " + feedObj.getInt("pid") + " alreay exists. delete and update it.");
+						realm.where(NewsfeedData.class).equalTo("pid", feedObj.getInt("pid")).findFirst()
+								.removeFromRealm();
 					}
 
 					NewsfeedData item = realm.createObject(NewsfeedData.class);

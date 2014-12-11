@@ -11,6 +11,8 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!--
      To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
      option is required to comply with the Google+ Sign-In developer policies
@@ -92,8 +94,7 @@
             android:name=".postViewer.PostViewer"
             android:label="@string/title_activity_post_viewer" >
         </activity>
-        <activity 
-            android:name=".photocrop.CropImageActivity" >
+        <activity android:name=".photocrop.CropImageActivity" >
         </activity>
 
         <meta-data

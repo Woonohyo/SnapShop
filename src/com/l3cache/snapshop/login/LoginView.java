@@ -36,34 +36,33 @@ public class LoginView extends FragmentActivity {
 		if (pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null) != null) {
 			authorizeSignin(pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null),
 					pref.getValue(SnapPreference.PREF_CURRENT_USER_PASSWORD, null));
-		} else {
-
-			Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
-			signInEmailButton.setOnTouchListener(new OnTouchListener() {
-
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					if (event.getAction() == MotionEvent.ACTION_DOWN) {
-						EmailSignInFragment fragment = new EmailSignInFragment();
-						fragment.show(getSupportFragmentManager(), null);
-					}
-					return true;
-				}
-			});
-
-			Button signUpEmailButton = (Button) findViewById(R.id.login_view_sign_up_button);
-			signUpEmailButton.setOnTouchListener(new OnTouchListener() {
-
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					if (event.getAction() == MotionEvent.ACTION_DOWN) {
-						EmailSignUpFragment fragment = new EmailSignUpFragment();
-						fragment.show(getSupportFragmentManager(), null);
-					}
-					return true;
-				}
-			});
 		}
+		
+		Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
+		signInEmailButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					EmailSignInFragment fragment = new EmailSignInFragment();
+					fragment.show(getSupportFragmentManager(), null);
+				}
+				return true;
+			}
+		});
+
+		Button signUpEmailButton = (Button) findViewById(R.id.login_view_sign_up_button);
+		signUpEmailButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					EmailSignUpFragment fragment = new EmailSignUpFragment();
+					fragment.show(getSupportFragmentManager(), null);
+				}
+				return true;
+			}
+		});
 
 	}
 
