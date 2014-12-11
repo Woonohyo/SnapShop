@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.retrofit.SnapShopService;
@@ -64,7 +65,6 @@ public class EmailSignInFragment extends DialogFragment {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
-
 	}
 
 	public void authorizeSignin(Context context, String email, String password) {
@@ -77,6 +77,7 @@ public class EmailSignInFragment extends DialogFragment {
 				.setConverter(new GsonConverter(new Gson())).build();
 		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
 		mEmail = email;
+		mPassword = password;
 		SnapShopService service = restAdapter.create(SnapShopService.class);
 		service.login(email, password, new Callback<LoginResponse>() {
 
@@ -104,6 +105,10 @@ public class EmailSignInFragment extends DialogFragment {
 						currentUser = realm.createObject(User.class);
 						currentUser.setUid(loginResponse.getId());
 						currentUser.setEmail(mEmail);
+						SnapPreference pref = new SnapPreference(getActivity());
+						pref.put(SnapPreference.PREF_CURRENT_USER_ID, currentUser.getUid());
+						pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
+						pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
 						Toast.makeText(mContext, "Welcome " + currentUser.getUid() + " - " + currentUser.getEmail(),
 								Toast.LENGTH_LONG).show();
 					}

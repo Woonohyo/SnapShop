@@ -1,5 +1,7 @@
 package com.l3cache.snapshop.login;
 
+import io.realm.Realm;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.constants.SnapConstants;
+import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
 public class EmailSignUpFragment extends DialogFragment {
@@ -33,6 +37,8 @@ public class EmailSignUpFragment extends DialogFragment {
 	private EditText passwordField;
 	private Button signupButton;
 	private EditText passwordAgainField;
+	private String mEmail;
+	private String mPassword;
 	private static String email;
 	private static String password;
 
@@ -101,8 +107,7 @@ public class EmailSignUpFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					EmailSignInFragment signinFragment = new EmailSignInFragment();
-					signinFragment.authorizeSignin(getActivity().getApplicationContext(), email, password);
+					authorizeSignin(email, password);
 					break;
 
 				}
@@ -123,6 +128,68 @@ public class EmailSignUpFragment extends DialogFragment {
 
 			}
 		});
+	}
+
+	private void authorizeSignin(String email, String password) {
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL())
+				.setConverter(new GsonConverter(new Gson())).build();
+		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
+		mEmail = email;
+		mPassword = password;
+		SnapShopService service = restAdapter.create(SnapShopService.class);
+		service.login(email, password, new Callback<LoginResponse>() {
+
+			@Override
+			public void failure(RetrofitError error) {
+				Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
+				Log.i("Login", error.toString());
+			}
+
+			@Override
+			public void success(LoginResponse loginResponse, Response response) {
+				int status = loginResponse.getStatus();
+
+				switch (status) {
+				case SnapConstants.SUCCESS: {
+					Realm realm = Realm.getInstance(getActivity());
+					realm.beginTransaction();
+					User currentUser = realm.createObject(User.class);
+					SnapPreference pref = new SnapPreference(getActivity());
+					currentUser.setUid(loginResponse.getId());
+					currentUser.setEmail(mEmail);
+					pref.put(SnapPreference.PREF_CURRENT_USER_ID, currentUser.getUid());
+					pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
+					pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
+					Toast.makeText(getActivity(), "Welcome " + currentUser.getUid() + " - " + currentUser.getEmail(),
+							Toast.LENGTH_LONG).show();
+
+					realm.commitTransaction();
+
+					intentTabHostActivity();
+					break;
+				}
+				case SnapConstants.EMAIL_ERROR: {
+					Toast.makeText(getActivity(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG).show();
+					break;
+				}
+				case SnapConstants.PASSWORD_ERROR: {
+					Toast.makeText(getActivity(), "Password Error " + loginResponse.getId(), Toast.LENGTH_LONG).show();
+					break;
+				}
+
+				case SnapConstants.ERROR: {
+					Toast.makeText(getActivity(), "Unrecognized Server Error!" + loginResponse.getId(),
+							Toast.LENGTH_LONG).show();
+					break;
+				}
+
+				default:
+					break;
+				}
+
+			}
+		});
+
 	}
 
 	private void intentTabHostActivity() {
