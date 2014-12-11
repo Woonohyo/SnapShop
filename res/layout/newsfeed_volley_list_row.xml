@@ -60,12 +60,10 @@
             android:paddingRight="@dimen/feed_item_padding_left_right" >
 
             <ToggleButton
-                android:id="@+id/newsfeed_item_like_toggle_button"
+                android:id="@+id/newsfeed_item_snap_toggle_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/newsfeed_volley_list_row_buttonshape"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:textOff="Snap"
                 android:textOn="Snapped"
                 android:textSize="13sp"

@@ -17,12 +17,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
@@ -53,7 +52,6 @@ import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.SearchResultsView;
-import com.l3cache.snapshop.upload.UploadSnapView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class NewsfeedView extends Fragment implements OnItemSelectedListener {
@@ -65,8 +63,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private ArrayList<NewsfeedData> newsfeedDatas;
 	private GridView mGridView;
 	private int sortInto = SORT_RECOMMENDED;
-	private NewsfeedViewAdapter mNewsfeedViewAdapter;
-	private NewsfeedVolleyAdapter newsfeedVolleyAdapter;
+	private NewsfeedVolleyAdapter mNewsfeedVolleyAdapter;
+	private NewsfeedVolleyRealmAdapter mNewsfeedVolleyRealmAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
 	protected int totalResults = 0;
@@ -111,7 +109,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mGridView.setOnScrollListener(mEndlessScrollListener);
 
 		newsfeedDatas = new ArrayList<NewsfeedData>();
-		newsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
+		mNewsfeedVolleyAdapter = new NewsfeedVolleyAdapter(getActivity(), newsfeedDatas);
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -123,7 +121,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			}
 		});
 
-		mGridView.setAdapter(newsfeedVolleyAdapter);
+		mGridView.setAdapter(mNewsfeedVolleyAdapter);
 
 		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -222,8 +220,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		if (mNewsfeedViewAdapter != null) {
-			mNewsfeedViewAdapter.notifyDataSetChanged();
+		if (mNewsfeedVolleyAdapter != null) {
+			mNewsfeedVolleyAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -324,7 +322,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					RealmResults<NewsfeedData> result = realm.where(NewsfeedData.class).findAll();
 					result.sort("pid", RealmResults.SORT_ORDER_DESCENDING);
 					newsfeedDatas.addAll(result);
-					newsfeedVolleyAdapter.notifyDataSetChanged();
+					mNewsfeedVolleyAdapter.notifyDataSetChanged();
 
 				}
 			});
@@ -372,7 +370,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				}
 
 				// notify data changes to list adapater
-				newsfeedVolleyAdapter.notifyDataSetChanged();
+				mNewsfeedVolleyAdapter.notifyDataSetChanged();
 			} catch (JSONException e) {
 				e.printStackTrace();
 				realm.commitTransaction();
@@ -404,7 +402,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			mEndlessScrollListener.reset();
 			fetchDataFromServer(1);
 			mGridView.post(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					mGridView.setSelection(0);

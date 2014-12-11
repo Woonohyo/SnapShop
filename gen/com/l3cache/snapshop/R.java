@@ -2238,8 +2238,8 @@ containing a value of this type.
         public static final int newsfeed_gallery_button=0x7f0c0060;
         public static final int newsfeed_internet_button=0x7f0c005f;
         public static final int newsfeed_item_image_view=0x7f0c00a5;
-        public static final int newsfeed_item_like_toggle_button=0x7f0c00a8;
         public static final int newsfeed_item_price_button=0x7f0c00a9;
+        public static final int newsfeed_item_snap_toggle_button=0x7f0c00a8;
         public static final int newsfeed_item_title_text_view=0x7f0c00a6;
         public static final int newsfeed_item_writer_text_view=0x7f0c00a7;
         public static final int newsfeed_list_row_itemPrice_text_view=0x7f0c00a3;

@@ -7,6 +7,7 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +26,8 @@ import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.volley.FeedImageView;
 
-public class NewsfeedVolleyAdapter extends BaseAdapter {
+public class NewsfeedVolleyAdapter extends BaseAdapter implements OnTouchListener {
+	private static final String TAG = NewsfeedVolleyAdapter.class.getSimpleName();
 	private Activity activity;
 	private LayoutInflater inflater;
 	private ArrayList<NewsfeedData> newsfeedDatas;
@@ -67,7 +69,19 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		TextView writerTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_writer_text_view);
 		Button priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
 		TextView titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
-		ToggleButton likeButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_like_toggle_button);
+		ToggleButton snapButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_snap_toggle_button);
+
+		snapButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					Log.i(TAG, "Snap!");
+					return true;
+				}
+				return false;
+			}
+		});
 
 		try {
 			NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
@@ -100,7 +114,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 		}
 
 		// likeButton의 체크 여부를 item에서 가져와서 세팅하자
-		likeButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		snapButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -112,9 +126,9 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 
 			}
 		});
-		likeButton.setChecked((item.getUserLike() == 1 ? true : false));
+		snapButton.setChecked((item.getUserLike() == 1 ? true : false));
 
-		likeButton.setOnTouchListener(new OnTouchListener() {
+		snapButton.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -123,7 +137,17 @@ public class NewsfeedVolleyAdapter extends BaseAdapter {
 			}
 		});
 
+		convertView.setOnTouchListener(this);
 		return convertView;
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_UP) {
+			Log.i(TAG, "onTouch");
+			return true;
+		}
+		return false;
 	}
 
 }
