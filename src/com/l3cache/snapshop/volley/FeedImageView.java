@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -18,7 +19,9 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 public class FeedImageView extends ImageView {
-	 private static final int FADE_IN_TIME_MS = 250;
+	private static final int POST_VIEWER_ID = 2131492962;
+	private static final int FADE_IN_TIME_MS = 250;
+
 	public interface ResponseObserver {
 		public void onError();
 
@@ -252,25 +255,31 @@ public class FeedImageView extends ImageView {
 
 		if (bWidth == 0 || bHeight == 0)
 			return;
+		Log.i("FeedImage", this.getId() + "");
 
 		int swidth = getWidth();
 		int new_height = 0;
 		new_height = swidth * bHeight / bWidth;
 		params.width = swidth;
-		params.height = new_height;
+
+		if (this.getId() == POST_VIEWER_ID) {
+			params.height = new_height;
+
+		} else {
+			params.height = (new_height < swidth ? new_height : swidth);
+		}
+
 		setLayoutParams(params);
 	}
-	
+
 	@Override
-    public void setImageBitmap(Bitmap bm) {
-        TransitionDrawable td = new TransitionDrawable(new Drawable[]{
-                new ColorDrawable(android.R.color.transparent),
-                new BitmapDrawable(getContext().getResources(), bm)
-        });
- 
-        setImageDrawable(td);
-        td.setCrossFadeEnabled(true);
-        td.startTransition(FADE_IN_TIME_MS);
-    }
+	public void setImageBitmap(Bitmap bm) {
+		TransitionDrawable td = new TransitionDrawable(new Drawable[] { new ColorDrawable(android.R.color.transparent),
+				new BitmapDrawable(getContext().getResources(), bm) });
+
+		setImageDrawable(td);
+		td.setCrossFadeEnabled(true);
+		td.startTransition(FADE_IN_TIME_MS);
+	}
 
 }

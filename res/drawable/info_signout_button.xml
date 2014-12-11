@@ -4,7 +4,7 @@
 
     <corners android:radius="5dp" />
 
-    <solid android:color="@color/naver_green" />
+    <solid android:color="@color/snap_green" />
 
     <padding
         android:bottom="0dp"

@@ -7,6 +7,6 @@
         />
 
     <solid
-        android:color="@color/naver_green"
+        android:color="@color/snap_green"
         />
 </shape>

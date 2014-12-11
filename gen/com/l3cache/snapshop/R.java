@@ -1767,7 +1767,6 @@ containing a value of this type.
         public static final int material_blue_grey_950=0x7f07003b;
         public static final int material_deep_teal_200=0x7f070037;
         public static final int material_deep_teal_500=0x7f070038;
-        public static final int naver_green=0x7f07003d;
         public static final int pink=0x7f07004d;
         public static final int pink_pressed=0x7f07004e;
         public static final int primary_dark_material_dark=0x7f070015;
@@ -1788,6 +1787,7 @@ containing a value of this type.
         public static final int secondary_text_default_material_light=0x7f070030;
         public static final int secondary_text_disabled_material_dark=0x7f070036;
         public static final int secondary_text_disabled_material_light=0x7f070034;
+        public static final int snap_green=0x7f07003d;
         public static final int switch_thumb_normal_material_dark=0x7f07001d;
         public static final int switch_thumb_normal_material_light=0x7f07001e;
         public static final int textColorGray=0x7f070048;

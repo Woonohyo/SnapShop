@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/naver_green"
+        android:background="@color/snap_green"
         android:text="Sign In"
         android:textColor="@color/white" />
 

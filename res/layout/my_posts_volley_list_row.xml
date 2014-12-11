@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/feed_bg"
+    android:background="@drawable/bg_parent_rounded_corner"
     android:orientation="vertical" >
  
 
-    <LinearLayout
+    <com.l3cache.snapshop.volley.FeedImageView
+        android:id="@+id/my_post_image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_parent_rounded_corner"
-        android:orientation="vertical" >
- 
-
-        <com.l3cache.snapshop.volley.FeedImageView
-            android:id="@+id/my_post_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/newsfeed_feedimage"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:scaleType="fitCenter" />
+        android:background="@drawable/newsfeed_feedimage"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:scaleType="fitXY" >
+    </com.l3cache.snapshop.volley.FeedImageView>
         
 
-        <TextView
-            android:id="@+id/my_post_title_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="5dp"
-            android:text="title of item"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/my_post_title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#99000000"
+        android:gravity="center_vertical|center_horizontal"
+        android:lines="1"
+        android:padding="5dp"
+        android:text="title of item"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
         
-    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

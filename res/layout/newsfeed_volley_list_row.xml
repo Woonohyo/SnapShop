@@ -19,7 +19,6 @@
             android:id="@+id/newsfeed_item_image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="400dp"
             android:background="@drawable/newsfeed_feedimage"
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
