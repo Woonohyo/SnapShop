@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.newsfeed;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 import java.io.File;
@@ -43,6 +44,7 @@ import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.adapter.NewsfeedViewAdapter;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
@@ -53,6 +55,7 @@ import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
+import com.l3cache.snapshop.util.SnapNetworkUtils;
 
 public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_RECOMMENDED = 0;
@@ -72,11 +75,10 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private EndlessScrollListener mEndlessScrollListener;
 	private OnItemClickListener mGridViewItemClickListener;
 	private OnTouchListener newPostButtonTouchListener;
+	private int mCurrentPosition = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		clearRealm();
-
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 		initEndlessScrollListener();
@@ -113,7 +115,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		reloadGridViewData();
+		SnapNetworkUtils netUtils = new SnapNetworkUtils();
+		if (netUtils.isOnline(getActivity())) {
+			reloadGridViewData();
+		} else {
+			Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
+		}
+
 		Log.i(TAG, "Newsfeed Onresume");
 	}
 
@@ -161,6 +169,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mGridViewItemClickListener = new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				mCurrentPosition  = position;
 				Intent intent = new Intent(getActivity(), PostViewer.class);
 				Log.i(TAG, id + " is id of clicked row");
 				intent.putExtra("pid", id);
@@ -213,8 +222,14 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
+		Log.i(TAG, "onActivityCreated");
 		Realm realm = Realm.getInstance(getActivity());
+		realm.addChangeListener(new RealmChangeListener() {
+			@Override
+			public void onChange() {
+				Log.i(TAG, "Realm Data Changed");
+			}
+		});
 		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
 				.findAll(), true);
 		mGridView.setAdapter(mNewsfeedVolleyAdapter);
@@ -310,10 +325,11 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				e.printStackTrace();
 			}
 		} else {
+			SnapPreference pref = new SnapPreference(getActivity());
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("sort", sortInto + "");
 			params.put("start", offset + "");
-			params.put("id", "1");
+			params.put("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");
 			Log.i(TAG, "Parameters: " + params.toString());
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
@@ -409,7 +425,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		if (currentSort != this.sortInto) {
-			reloadGridViewData();
+			SnapNetworkUtils netUtils = new SnapNetworkUtils();
+			if (netUtils.isOnline(getActivity())) {
+				reloadGridViewData();
+			} else {
+				Realm realm = Realm.getInstance(getActivity());
+				realm.where(NewsfeedData.class).findAll().sort("numLike", RealmResults.SORT_ORDER_DESCENDING);
+			}
 		}
 	}
 
@@ -421,7 +443,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 			@Override
 			public void run() {
-				mGridView.setSelection(0);
+				mGridView.setSelection(mCurrentPosition);
 			}
 		});
 		Log.i(TAG, "Reload data with new sort");

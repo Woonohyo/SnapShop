@@ -37,7 +37,7 @@ public class LoginView extends FragmentActivity {
 			authorizeSignin(pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null),
 					pref.getValue(SnapPreference.PREF_CURRENT_USER_PASSWORD, null));
 		}
-		
+
 		Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);
 		signInEmailButton.setOnTouchListener(new OnTouchListener() {
 
@@ -85,13 +85,10 @@ public class LoginView extends FragmentActivity {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					Realm realm = Realm.getInstance(getApplicationContext());
-					realm.beginTransaction();
-					User currentUser = realm.where(User.class).equalTo("uid", loginResponse.getId()).findFirst();
+					SnapPreference pref = new SnapPreference(getApplicationContext());
 					Toast.makeText(getApplicationContext(),
-							"Welcome back " + currentUser.getUid() + " - " + currentUser.getEmail(), Toast.LENGTH_LONG)
+							"Welcome back " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - " + pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "NO EMAIL"), Toast.LENGTH_LONG)
 							.show();
-					realm.commitTransaction();
 
 					intentTabHostActivity();
 

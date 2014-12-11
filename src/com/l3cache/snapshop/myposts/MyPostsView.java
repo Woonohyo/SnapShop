@@ -1,7 +1,5 @@
 package com.l3cache.snapshop.myposts;
 
-import io.realm.Realm;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,16 +19,14 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
+import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Cache.Entry;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
-import com.l3cache.snapshop.mysnap.MySnapsAdapter;
-import com.l3cache.snapshop.mysnap.MySnapsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedRequest;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
@@ -39,7 +35,6 @@ public class MyPostsView extends Fragment {
 	private GridView mGridView;
 	private ArrayList<NewsfeedData> mFeedItems;
 	private MyPostsAdapter mListAdapter;
-	private int mTotalResults;
 	private int mTotalResult;
 
 	private static String URL_FEED = null;
@@ -92,7 +87,7 @@ public class MyPostsView extends Fragment {
 		} else {
 
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("start", start+"");
+			params.put("start", start + "");
 
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
@@ -114,8 +109,6 @@ public class MyPostsView extends Fragment {
 	}
 
 	private void parseJsonFeed(JSONObject response) {
-		Realm realm = Realm.getInstance(getActivity());
-		realm.beginTransaction();
 		try {
 			JSONObject jsonData = response.getJSONObject("response");
 			if (jsonData.getInt("total") == 0) {
@@ -124,7 +117,6 @@ public class MyPostsView extends Fragment {
 			}
 			mTotalResult = jsonData.getInt("total");
 			JSONArray feedArray = jsonData.getJSONArray("data");
-
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 				NewsfeedData item = new NewsfeedData();
@@ -149,8 +141,6 @@ public class MyPostsView extends Fragment {
 			mListAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
-			realm.commitTransaction();
 		}
-		realm.commitTransaction();
 	}
 }

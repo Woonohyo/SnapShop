@@ -43,7 +43,7 @@ public interface SnapShopService {
 	// 포스트 스냅하기
 	@FormUrlEncoded
 	@POST(SnapConstants.SNAP_REQUEST)
-	void snapPost(@Field("uid") int uid, @Field("pid") int pid);
+	void snapPost(@Field("uid") int uid, @Field("pid") int pid, Callback<DefaultResponse> cb);
 
 	// 포스트 조회수 증가
 	@POST(SnapConstants.READ_POST_REQUEST)

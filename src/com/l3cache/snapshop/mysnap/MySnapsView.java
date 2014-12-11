@@ -77,13 +77,6 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 		// fetchDataFromRealm(resultPageStart);
 	}
 
-	private void fetchDataFromRealm(int offset) {
-		Realm realm = Realm.getInstance(getActivity());
-		User user = realm.where(User.class).findFirst();
-		feedItems.addAll(realm.where(NewsfeedData.class).equalTo("writer", user.getEmail()).findAll());
-		listAdapter.notifyDataSetChanged();
-	}
-
 	private void fetchDataFromServer(int start) {
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
 		Entry entry = cache.get(URL_FEED);
