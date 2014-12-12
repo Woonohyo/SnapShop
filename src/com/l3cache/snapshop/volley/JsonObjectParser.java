@@ -1,6 +1,5 @@
 package com.l3cache.snapshop.volley;
 
-
 import java.io.UnsupportedEncodingException;
 
 import org.json.JSONException;
@@ -16,10 +15,8 @@ public class JsonObjectParser implements NewtorkResponseParser<JSONObject> {
 	@Override
 	public Response<JSONObject> parseResponse(NetworkResponse response) {
 		try {
-			String jsonString = new String(response.data,
-					HttpHeaderParser.parseCharset(response.headers));
-			return Response.success(new JSONObject(jsonString),
-					HttpHeaderParser.parseCacheHeaders(response));
+			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+			return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));
 		} catch (JSONException je) {

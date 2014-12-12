@@ -31,7 +31,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
+import com.l3cache.snapshop.util.ExifUtils;
 
 /**
  * Helper that handles loading and caching images from remote URLs.
@@ -269,7 +269,7 @@ public class ExtendedImageLoader extends ImageLoader {
 	 */
 	protected void onGetImageSuccess(String cacheKey, Bitmap response) {
 		// cache the image that was fetched.
-		mCache.putBitmap(cacheKey, response);
+		mCache.putBitmap(cacheKey, ExifUtils.rotateBitmap(cacheKey, response));
 
 		// remove the request from the list of in-flight requests.
 		BatchedImageRequest request = mInFlightRequests.remove(cacheKey);

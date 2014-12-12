@@ -197,7 +197,8 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 
 								@Override
 								public void failure(RetrofitError err) {
-									Toast.makeText(context, "Network Error - " + err.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+									Toast.makeText(context, "Network Error - " + err.getLocalizedMessage(),
+											Toast.LENGTH_SHORT).show();
 									snapButton.setChecked(true);
 									snapButton.setTextColor(Color.parseColor("#2DB400"));
 								}
