@@ -1,10 +1,10 @@
 package com.l3cache.snapshop.newsfeed;
 
+import io.realm.Realm;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import retrofit.Callback;
@@ -12,18 +12,15 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +55,11 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 	}
 
 	@Override
+	public NewsfeedData getItem(int position) {
+		return realmResults.get(position);
+	}
+
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		MyViewHolder viewHolder;
 		NewsfeedData item = realmResults.get(position);
@@ -70,9 +72,6 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 			viewHolder.priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
 			viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
 			viewHolder.snapButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_snap_toggle_button);
-			viewHolder.feedImageView.setOnTouchListener(this);
-			viewHolder.snapButton.setTag(item.getPid());
-			convertView.setOnTouchListener(this);
 			convertView.setTag(viewHolder);
 
 		} else {
@@ -115,68 +114,108 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 		viewHolder.snapButton.setChecked((item.getUserLike() == 1 ? true : false));
 		if (viewHolder.snapButton.isChecked()) {
 			viewHolder.snapButton.setTextColor(Color.parseColor("#2DB400"));
+		} else {
+			viewHolder.snapButton.setTextColor(Color.parseColor("#000000"));
 		}
 
-		// likeButton의 체크 여부를 item에서 가져와서 세팅하자
-		viewHolder.snapButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
-					.setConverter(new GsonConverter(new Gson())).build();
-			SnapShopService service = restAdapter.create(SnapShopService.class);
+		viewHolder.snapButton.setTag(position);
+		Log.i(TAG, "Setting button tag into " + getItem(position));
+		viewHolder.snapButton.setOnClickListener(new OnClickListener() {
+			RestAdapter restAdapter;
+			SnapShopService service;
 			SnapPreference pref = new SnapPreference(context);
+			int pid;
+			ToggleButton snapButton;
+			NewsfeedData currentItem;
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					;
-					buttonView.setTextColor(Color.parseColor("#2DB400"));
-					service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), (int) buttonView.getTag(),
+			public void onClick(View v) {
+
+				if (restAdapter == null) {
+					restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+							.setConverter(new GsonConverter(new Gson())).build();
+				}
+
+				if (service == null) {
+					service = restAdapter.create(SnapShopService.class);
+				}
+
+				pid = (int) getItemId((int) v.getTag());
+
+				snapButton = (ToggleButton) v;
+				Realm realm = Realm.getInstance(context);
+				currentItem = realm.where(NewsfeedData.class).equalTo("pid", getItemId((int) v.getTag())).findFirst();
+
+				if (snapButton.isChecked()) {
+					service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), pid,
 							new Callback<DefaultResponse>() {
 
 								@Override
 								public void success(DefaultResponse defResp, Response resp) {
-									Log.i(TAG, defResp.getStatus() + "");
-									Toast.makeText(context, "Snap!", Toast.LENGTH_SHORT).show();
+									if (defResp.getStatus() == SnapConstants.SUCCESS) {
+										Toast.makeText(context, "Snap - " + pid, Toast.LENGTH_SHORT).show();
+										snapButton.setChecked(true);
+										snapButton.setTextColor(Color.parseColor("#2DB400"));
+										currentItem.setUserLike(1);
+									} else {
+										Toast.makeText(context, "Snap Failed. Server Error - " + defResp.getStatus(),
+												Toast.LENGTH_SHORT).show();
+										snapButton.setChecked(false);
+										snapButton.setTextColor(Color.parseColor("#000000"));
+
+									}
 								}
 
 								@Override
 								public void failure(RetrofitError err) {
-									if (err.getResponse() != null) {
-										Log.i(TAG, err.getResponse().toString());
-									}
+									Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
+									snapButton.setChecked(false);
+									snapButton.setTextColor(Color.parseColor("#000000"));
 								}
 							});
 
 				} else {
-					service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), (int) buttonView.getTag(),
+					service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), pid,
 							new Callback<DefaultResponse>() {
 
 								@Override
 								public void success(DefaultResponse defResp, Response resp) {
-									Log.i(TAG, defResp.getStatus() + "");
-									Toast.makeText(context, "Unsnap!", Toast.LENGTH_SHORT).show();
+									if (defResp.getStatus() == SnapConstants.SUCCESS) {
+										Toast.makeText(context, "Unsnap - " + pid, Toast.LENGTH_SHORT).show();
+										snapButton.setChecked(false);
+										currentItem.setUserLike(0);
+										snapButton.setTextColor(Color.parseColor("#000000"));
+									} else {
+										Toast.makeText(context, "Unsnap Failed. Server Error - " + defResp.getStatus(),
+												Toast.LENGTH_SHORT).show();
+										snapButton.setChecked(true);
+										snapButton.setTextColor(Color.parseColor("#2DB400"));
+
+									}
+
 								}
 
 								@Override
 								public void failure(RetrofitError err) {
-									if (err.getResponse() != null) {
-										Log.i(TAG, err.getResponse().toString());
-									}
+									Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
+									snapButton.setChecked(true);
+									snapButton.setTextColor(Color.parseColor("#2DB400"));
 								}
 							});
-					buttonView.setTextColor(Color.parseColor("#000000"));
 				}
-
 			}
 		});
+
 		return convertView;
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			Log.i(TAG, "onTouchHere " + v.toString());
-			return true;
+			Log.i(TAG, "NOOOOOOO");
+			return false;
 		}
+
 		return false;
 	}
 

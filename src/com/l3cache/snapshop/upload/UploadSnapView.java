@@ -87,12 +87,12 @@ public class UploadSnapView extends Activity {
 
 		case SnapConstants.GALLERY_BUTTON: {
 			Uri imageUri = (Uri) getIntent().getExtras().get("data");
-			 compressToJpeg(imageUri);
-//			fileFromUri = new File(imageUri.getPath());
-//			imageTypedFile = new TypedFile("image/jpeg", fileFromUri);
+			compressToJpeg(imageUri);
+			// fileFromUri = new File(imageUri.getPath());
+			// imageTypedFile = new TypedFile("image/jpeg", fileFromUri);
 			Log.i(TAG, imageTypedFile.toString());
 			uploadingImageView.setImageUrl(imageUri.toString(), imageLoader);
-			
+
 			break;
 
 		}
@@ -144,8 +144,9 @@ public class UploadSnapView extends Activity {
 		String imageUriString = imageUri.toString();
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inSampleSize = 4;
-		Bitmap bitmap = BitmapFactory.decodeFile(imageUriString.substring(imageUriString.indexOf(fileProtocolPrefix)
-				+ fileProtocolPrefix.length()), options);
+		Bitmap bitmap = BitmapFactory.decodeFile(
+				imageUriString.substring(imageUriString.indexOf(fileProtocolPrefix) + fileProtocolPrefix.length()),
+				options);
 		Matrix matrix = new Matrix();
 		matrix.postRotate(90);
 		bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);

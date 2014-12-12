@@ -266,7 +266,7 @@ public class FeedImageView extends ImageView {
 			params.height = new_height;
 
 		} else {
-			params.height = (new_height < swidth ? new_height : swidth);
+			params.height = (new_height != swidth ? new_height : swidth);
 		}
 
 		setLayoutParams(params);

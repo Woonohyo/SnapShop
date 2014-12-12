@@ -74,7 +74,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		setContentView(R.layout.activity_search_results);
 		setTitle("SnapShop Search");
 		mToolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
-
 		listView = (ListView) findViewById(R.id.search_results_listView);
 		listView.setOnItemClickListener(this);
 		searchResultsViewVolleyAdapter = new SearchResultsVolleyAdapter(this, resultItems);
@@ -82,7 +81,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		listView.setOnScrollListener(new EndlessScrollListener(5, 1) {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				if (numOfTotalResult < 10 || ((page-1) * 20) > numOfTotalResult) {
+				if (numOfTotalResult < 10 || ((page - 1) * 20) > numOfTotalResult) {
 					return;
 				}
 				Log.i(TAG, "Loading page " + page);

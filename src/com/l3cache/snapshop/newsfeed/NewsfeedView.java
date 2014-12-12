@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,6 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -45,7 +47,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.adapter.NewsfeedViewAdapter;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
@@ -116,7 +117,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		super.onResume();
 		SnapNetworkUtils netUtils = new SnapNetworkUtils();
 		if (netUtils.isOnline(getActivity())) {
-			reloadGridViewData();
+			clearRealm();
+			reloadDataFromServer();
 		} else {
 			Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 		}
@@ -152,6 +154,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					}
 					case SnapConstants.INTERNET_BUTTON: {
 						Intent intent = new Intent(getActivity(), SearchResultsView.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						getActivity().startActivity(intent);
 						break;
 					}
@@ -173,6 +176,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				intent.putExtra("pid", id);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
+
 			}
 		};
 	}
@@ -425,7 +429,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		if (currentSort != this.sortInto) {
 			SnapNetworkUtils netUtils = new SnapNetworkUtils();
 			if (netUtils.isOnline(getActivity())) {
-				reloadGridViewData();
+				clearRealm();
+				reloadDataFromServer();
 			} else {
 				Realm realm = Realm.getInstance(getActivity());
 				realm.where(NewsfeedData.class).findAll().sort("numLike", RealmResults.SORT_ORDER_DESCENDING);
@@ -433,8 +438,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 	}
 
-	private void reloadGridViewData() {
-		clearRealm();
+	private void reloadDataFromServer() {
 		mEndlessScrollListener.reset();
 		fetchDataFromServer(1);
 		mGridView.post(new Runnable() {

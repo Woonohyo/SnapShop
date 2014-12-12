@@ -2,96 +2,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/feed_bg"
-    android:orientation="vertical" >
+    android:background="@drawable/bg_parent_rounded_corner"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/feed_item_padding_top_bottom" >
  
+
+    <com.l3cache.snapshop.volley.FeedImageView
+        android:id="@+id/newsfeed_item_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/newsfeed_feedimage"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:scaleType="fitXY" />
+        
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/feed_item_margin"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/feed_item_padding_left_right"
+        android:paddingRight="@dimen/feed_item_padding_left_right" >
+
+        <TextView
+            android:id="@+id/newsfeed_item_title_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="title of item"
+            android:textSize="@dimen/feed_item_profile_name"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/newsfeed_item_writer_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="writer"
+            android:textColor="@color/timestamp"
+            android:textSize="@dimen/feed_item_timestamp" />
+        
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
         android:layout_marginTop="@dimen/feed_item_margin"
-        android:background="@drawable/bg_parent_rounded_corner"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/feed_item_padding_top_bottom" >
- 
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/feed_item_padding_left_right"
+        android:paddingRight="@dimen/feed_item_padding_left_right" >
 
-        <com.l3cache.snapshop.volley.FeedImageView
-            android:id="@+id/newsfeed_item_image_view"
-            android:layout_width="match_parent"
+        <ToggleButton
+            android:id="@+id/newsfeed_item_snap_toggle_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/newsfeed_feedimage"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:scaleType="fitXY" />
-        
+            android:background="@drawable/newsfeed_volley_list_row_buttonshape"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textOff="Snap"
+            android:textOn="Snap'd"
+            android:textSize="13sp"
+            android:textStyle="bold" >
+        </ToggleButton>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/feed_item_margin"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right" >
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+        </View>
 
-            <TextView
-                android:id="@+id/newsfeed_item_title_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="title of item"
-                android:textSize="@dimen/feed_item_profile_name"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/newsfeed_item_writer_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="writer"
-                android:textColor="@color/timestamp"
-                android:textSize="@dimen/feed_item_timestamp" />
-        
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="@dimen/feed_item_margin"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right" >
-
-            <ToggleButton
-                android:id="@+id/newsfeed_item_snap_toggle_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/newsfeed_volley_list_row_buttonshape"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:textOff="Snap"
-                android:textOn="Snapped"
-                android:textSize="13sp"
-                android:textStyle="bold" >
-            </ToggleButton>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" >
-            </View>
-
-            <Button
-                android:id="@+id/newsfeed_item_price_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:background="@drawable/newsfeed_volley_list_row_priceshape"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#FFF" >
-            </Button>
-        </LinearLayout>
+        <Button
+            android:id="@+id/newsfeed_item_price_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@drawable/newsfeed_volley_list_row_priceshape"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FFF" >
+        </Button>
     </LinearLayout>
 
 </LinearLayout>
