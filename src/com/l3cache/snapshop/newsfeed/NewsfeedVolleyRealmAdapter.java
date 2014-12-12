@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
@@ -35,12 +34,13 @@ import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> implements OnTouchListener, ListAdapter {
 
 	private static final String TAG = NewsfeedVolleyRealmAdapter.class.getSimpleName();
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	private static class MyViewHolder {
 		FeedImageView feedImageView;

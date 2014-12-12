@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
@@ -26,6 +25,7 @@ import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class PostViewer extends Activity {
@@ -36,7 +36,7 @@ public class PostViewer extends Activity {
 	private Button priceButton;
 	private TextView descTextView;
 
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

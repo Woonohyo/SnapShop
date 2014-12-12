@@ -10,17 +10,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class MyPostsAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater;
 	private ArrayList<NewsfeedData> feedItems;
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public MyPostsAdapter(Activity activity, ArrayList<NewsfeedData> feedItems) {
 		this.activity = activity;

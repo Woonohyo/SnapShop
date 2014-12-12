@@ -1,39 +1,26 @@
 package com.l3cache.snapshop.mysnap;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class MySnapsAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater;
 	private ArrayList<NewsfeedData> favoriteItems;
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public MySnapsAdapter(Activity activity, ArrayList<NewsfeedData> feedItems) {
 		this.activity = activity;

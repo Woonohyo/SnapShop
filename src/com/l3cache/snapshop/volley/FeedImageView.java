@@ -14,9 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.l3cache.snapshop.volley.ExtendedImageLoader.ImageContainer;
+import com.l3cache.snapshop.volley.ExtendedImageLoader.ImageListener;
 
 public class FeedImageView extends ImageView {
 	private static final int POST_VIEWER_ID = 2131492962;
@@ -53,7 +52,7 @@ public class FeedImageView extends ImageView {
 	/**
 	 * Local copy of the ImageLoader.
 	 */
-	private ImageLoader mImageLoader;
+	private ExtendedImageLoader mImageLoader;
 
 	/**
 	 * Current ImageContainer. (either in-flight or finished)
@@ -87,7 +86,7 @@ public class FeedImageView extends ImageView {
 	 * @param imageLoader
 	 *            ImageLoader that will be used to make the request.
 	 */
-	public void setImageUrl(String url, ImageLoader imageLoader) {
+	public void setImageUrl(String url, ExtendedImageLoader imageLoader) {
 		mUrl = url;
 		mImageLoader = imageLoader;
 		// The URL has potentially changed. See if we need to load it.

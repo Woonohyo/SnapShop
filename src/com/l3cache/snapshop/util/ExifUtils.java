@@ -11,12 +11,21 @@ import android.graphics.Matrix;
 import android.os.Build;
 
 public class ExifUtils {
+
+	private static int orientation = -1;
+
+	public static Bitmap rotateBitmap(String src, Bitmap bitmap, int orientation) {
+		ExifUtils.orientation = orientation;
+		return rotateBitmap(src, bitmap);
+	}
+
 	/**
 	 * @see http://sylvana.net/jpegcrop/exif_orientation.html
 	 */
 	public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
 		try {
-			int orientation = getExifOrientation(src);
+			if (orientation == -1)
+				orientation = getExifOrientation(src);
 
 			if (orientation == 1) {
 				return bitmap;

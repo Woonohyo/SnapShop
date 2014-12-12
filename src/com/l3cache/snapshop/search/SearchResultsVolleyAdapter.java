@@ -13,18 +13,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
-import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.data.SearchResultsItem;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class SearchResultsVolleyAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater;
 	private ArrayList<SearchResultsItem> resultItems;
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	private ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public SearchResultsVolleyAdapter(Activity activity, ArrayList<SearchResultsItem> resultItems) {
 		this.activity = activity;

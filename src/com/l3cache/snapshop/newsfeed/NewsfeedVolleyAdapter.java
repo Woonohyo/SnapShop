@@ -20,10 +20,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.data.NewsfeedData;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class NewsfeedVolleyAdapter extends BaseAdapter implements OnTouchListener {
@@ -31,7 +31,7 @@ public class NewsfeedVolleyAdapter extends BaseAdapter implements OnTouchListene
 	private Activity activity;
 	private LayoutInflater inflater;
 	private ArrayList<NewsfeedData> newsfeedDatas;
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public NewsfeedVolleyAdapter(Activity activity, ArrayList<NewsfeedData> newsfeedDatas) {
 		this.activity = activity;

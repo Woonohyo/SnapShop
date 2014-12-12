@@ -10,5 +10,9 @@ public class Log {
     public static final void e(String msg, Throwable e) {
         android.util.Log.e(TAG, msg, e);
     }
+    
+    public static final void i(String msg) {
+    	android.util.Log.e(TAG, msg);
+    }
 
 }

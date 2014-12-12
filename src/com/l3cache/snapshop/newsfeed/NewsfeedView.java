@@ -104,7 +104,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		cameraButton.setOnTouchListener(newPostButtonTouchListener);
 		galleryButton.setOnTouchListener(newPostButtonTouchListener);
 		internetButton.setOnTouchListener(newPostButtonTouchListener);
-		
+
 		realm = Realm.getInstance(getActivity());
 
 		return view;

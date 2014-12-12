@@ -13,6 +13,7 @@ public class SnapPreference {
 	public final static String PREF_CURRENT_USER_EMAIL = "PREF_CURRENT_USER_EMAIL";
 	public final static String PREF_CURRENT_USER_PASSWORD = "PREF_CURRENT_USER_PASSWORD";
 	public final static String PROPERTY_REG_ID = "registration_id";
+	public final static String PREF_EXIF_ORIENTATION = "PREF_EXIF_ORIENTATION";
 
 	private Context mContext;
 

@@ -55,7 +55,7 @@ public class GcmIntentService extends IntentService {
 				}
 				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
 				// Post notification of received message.
-				sendNotification("Received: " + extras.toString());
+				sendNotification("Check New Awesome Snap!");
 				Log.i(TAG, "Received: " + extras.toString());
 			}
 		}
@@ -69,7 +69,7 @@ public class GcmIntentService extends IntentService {
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, LoginView.class), 0);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle("GCM Notification").setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+				.setContentTitle("SnapShop").setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
 				.setContentText(msg);
 
 		mBuilder.setContentIntent(contentIntent);

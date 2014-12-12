@@ -1,9 +1,6 @@
 package com.l3cache.snapshop.upload;
 
-import io.realm.Realm;
-
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import retrofit.Callback;
@@ -14,9 +11,10 @@ import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,23 +25,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.data.User;
+import com.l3cache.snapshop.photocrop.CropUtil;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class UploadSnapView extends Activity {
-	private Bitmap bitmap;
-	private String filePath;
-	private String fileName;
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	private ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 	private EditText titleEditText;
 	private EditText contentsEditText;
 	private FeedImageView uploadingImageView;
@@ -56,19 +49,14 @@ public class UploadSnapView extends Activity {
 	private int handlerId;
 	private RestAdapter restAdapter;
 	private SnapShopService service;
-	private User currentUser;
-	private String fileProtocolPrefix = "file://";
-	private String UPLOAD_PREFIX = "Upload";
-	private String JPEG_POSTFIX = ".jpg";
-	private File fileFromUri;
+	private SnapPreference pref;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload_snap_view);
 
-		Realm realm = Realm.getInstance(this);
-		currentUser = realm.where(User.class).findFirst();
+		pref = new SnapPreference(getApplicationContext());
 
 		titleEditText = (EditText) findViewById(R.id.upload_snap_editText_title);
 		contentsEditText = (EditText) findViewById(R.id.upload_snap_editText_contents);
@@ -87,12 +75,25 @@ public class UploadSnapView extends Activity {
 
 		case SnapConstants.GALLERY_BUTTON: {
 			Uri imageUri = (Uri) getIntent().getExtras().get("data");
-			compressToJpeg(imageUri);
-			// fileFromUri = new File(imageUri.getPath());
-			// imageTypedFile = new TypedFile("image/jpeg", fileFromUri);
-			Log.i(TAG, imageTypedFile.toString());
+			File imageFile = CropUtil.getFromMediaUri(getContentResolver(), imageUri);
+
+			ExifInterface exifResult;
+			try {
+				exifResult = new ExifInterface(imageFile.getAbsolutePath());
+				int orientation = exifResult.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+						ExifInterface.ORIENTATION_NORMAL);
+				pref.put(SnapPreference.PREF_EXIF_ORIENTATION, orientation);
+				Log.i(TAG, "Orientation - " + orientation);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			uploadingImageView.setImageUrl(imageUri.toString(), imageLoader);
 
+			imageTypedFile = new TypedFile("image/jpeg", new File(imageUri.getPath()));
+
+			Log.i(TAG, imageTypedFile.toString());
 			break;
 
 		}
@@ -104,7 +105,6 @@ public class UploadSnapView extends Activity {
 			uploadingImageView.setImageUrl(mImageUrl, imageLoader);
 			priceEditText.setText(extras.getInt("price") + "");
 			shopUrlEditText.setText(extras.getString("shopUrl"));
-
 			break;
 		}
 		}
@@ -127,11 +127,7 @@ public class UploadSnapView extends Activity {
 						upload(mImageUrl);
 						break;
 					}
-
-					default:
-						break;
 					}
-
 				}
 				return false;
 			}
@@ -140,41 +136,42 @@ public class UploadSnapView extends Activity {
 
 	}
 
-	private void compressToJpeg(Uri imageUri) {
-		String imageUriString = imageUri.toString();
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inSampleSize = 4;
-		Bitmap bitmap = BitmapFactory.decodeFile(
-				imageUriString.substring(imageUriString.indexOf(fileProtocolPrefix) + fileProtocolPrefix.length()),
-				options);
-		Matrix matrix = new Matrix();
-		matrix.postRotate(90);
-		bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-		File imageFileFolder = new File(getCacheDir(), UPLOAD_PREFIX);
-		if (!imageFileFolder.exists()) {
-			imageFileFolder.mkdir();
+	public int exifOrientationToDegrees(int exifOrientation) {
+		if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+			return 90;
+		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+			return 180;
+		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+			return 270;
 		}
-		File imageFileName = new File(imageFileFolder, UPLOAD_PREFIX + System.currentTimeMillis() + JPEG_POSTFIX);
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(imageFileName);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-			fos.flush();
+		return 0;
+	}
 
-		} catch (IOException e) {
-			Log.e(TAG, "Failed to convert image to JPEG", e);
-		} finally {
+	public Bitmap rotate(Bitmap bitmap, int degrees) {
+		if (degrees != 0 && bitmap != null) {
+			Matrix m = new Matrix();
+			m.setRotate(degrees, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+
 			try {
-				if (fos != null) {
-					fos.close();
+				Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+				if (bitmap != converted) {
+					bitmap.recycle();
+					bitmap = converted;
 				}
-
-			} catch (IOException e) {
-				Log.e(TAG, "Failed to close output stream", e);
+			} catch (OutOfMemoryError ex) {
+				// 메모리가 부족하여 회전을 시키지 못할 경우 그냥 원본을 반환합니다.
 			}
 		}
+		return bitmap;
+	}
 
-		imageTypedFile = new TypedFile("image/jpeg", imageFileName);
+	public String getPathFromUri(Uri uri) {
+		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+		cursor.moveToNext();
+		String path = cursor.getString(cursor.getColumnIndex("_data"));
+		cursor.close();
+
+		return path;
 	}
 
 	private void initRestfit() {
@@ -191,14 +188,15 @@ public class UploadSnapView extends Activity {
 	private void upload(TypedFile imageFile) {
 		service.uploadSnap(new TypedString(titleEditText.getText().toString()), new TypedString(shopUrlEditText
 				.getText().toString()), new TypedString(contentsEditText.getText().toString()), imageTypedFile,
-				new TypedString(priceEditText.getText().toString()), currentUser.getUid(),
-				new Callback<UploadResponse>() {
+				new TypedString(priceEditText.getText().toString()), pref.getValue(SnapPreference.PREF_CURRENT_USER_ID,
+						0), new Callback<UploadResponse>() {
 
 					@Override
 					public void failure(RetrofitError error) {
-						if (error.getResponse() != null) {
-							Log.i(TAG, error.getResponse().getStatus() + "");
-						}
+						Log.i("Upload", error.getLocalizedMessage());
+						Toast.makeText(getApplicationContext(), "Error - " + error.getLocalizedMessage(),
+								Toast.LENGTH_LONG).show();
+						;
 					}
 
 					@Override
@@ -218,27 +216,25 @@ public class UploadSnapView extends Activity {
 
 	private void upload(String imageUrl) {
 		service.uploadSnap(titleEditText.getText().toString(), shopUrlEditText.getText().toString(), contentsEditText
-				.getText().toString(), imageUrl, priceEditText.getText().toString(), currentUser.getUid(),
-				new Callback<UploadResponse>() {
+				.getText().toString(), imageUrl, priceEditText.getText().toString(), pref.getValue(
+				SnapPreference.PREF_CURRENT_USER_ID, 0), new Callback<UploadResponse>() {
 
-					@Override
-					public void failure(RetrofitError error) {
-						Log.i("Upload", error.toString());
-						Log.i("Upload", error.getLocalizedMessage());
-					}
+			@Override
+			public void failure(RetrofitError error) {
+				Log.i("Upload", error.getLocalizedMessage());
+			}
 
-					@Override
-					public void success(UploadResponse uploadResponse, Response response) {
-						Log.i("Upload", uploadResponse.getStatus() + "");
-						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
-							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
-									.show();
+			@Override
+			public void success(UploadResponse uploadResponse, Response response) {
+				Log.i("Upload", uploadResponse.getStatus() + "");
+				if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
+					Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG).show();
 
-							finish();
-						}
-					}
+					finish();
+				}
+			}
 
-				});
+		});
 	}
 
 }

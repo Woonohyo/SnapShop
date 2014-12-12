@@ -16,6 +16,7 @@
 
 package com.l3cache.snapshop.photocrop;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +31,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.BitmapFactory.Options;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Build;
@@ -40,6 +43,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.util.ExifUtils;
 
 /*
  * Modified from original in AOSP.
@@ -47,8 +51,8 @@ import com.l3cache.snapshop.R;
 public class CropImageActivity extends MonitoredActivity {
 
 	private static final boolean IN_MEMORY_CROP = Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1;
-	private static final int SIZE_DEFAULT = 2048;
-	private static final int SIZE_LIMIT = 4096;
+	private static final int SIZE_DEFAULT = 1024;
+	private static final int SIZE_LIMIT = 1024;
 
 	private final Handler handler = new Handler();
 
@@ -69,6 +73,7 @@ public class CropImageActivity extends MonitoredActivity {
 	private RotateBitmap rotateBitmap;
 	private CropImageView imageView;
 	private HighlightView cropView;
+	private final String TAG = "PhotoCrop";
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -125,6 +130,7 @@ public class CropImageActivity extends MonitoredActivity {
 		sourceUri = intent.getData();
 		if (sourceUri != null) {
 			exifRotation = CropUtil.getExifRotation(CropUtil.getFromMediaUri(getContentResolver(), sourceUri));
+			Log.i("exifRotation - " + exifRotation);
 
 			InputStream is = null;
 			try {
@@ -133,6 +139,7 @@ public class CropImageActivity extends MonitoredActivity {
 				BitmapFactory.Options option = new BitmapFactory.Options();
 				option.inSampleSize = sampleSize;
 				rotateBitmap = new RotateBitmap(BitmapFactory.decodeStream(is, null, option), exifRotation);
+				Log.i("Bitmap Size: " + rotateBitmap.getBitmap().getByteCount());
 			} catch (IOException e) {
 				Log.e("Error reading image: " + e.getMessage(), e);
 				setResultException(e);
@@ -162,6 +169,7 @@ public class CropImageActivity extends MonitoredActivity {
 		while (options.outHeight / sampleSize > maxSize || options.outWidth / sampleSize > maxSize) {
 			sampleSize = sampleSize << 1;
 		}
+		android.util.Log.i(TAG, "Returning samplesize " + sampleSize);
 		return sampleSize;
 	}
 
@@ -222,7 +230,7 @@ public class CropImageActivity extends MonitoredActivity {
 			Rect imageRect = new Rect(0, 0, width, height);
 
 			// Make the default size about 4/5 of the width or height
-//			int cropWidth = Math.min(width, height) * 4 / 5;
+			// int cropWidth = Math.min(width, height) * 4 / 5;
 			int cropWidth = Math.min(width, height);
 			@SuppressWarnings("SuspiciousNameCombination")
 			int cropHeight = cropWidth;
@@ -405,12 +413,15 @@ public class CropImageActivity extends MonitoredActivity {
 	}
 
 	private void saveOutput(Bitmap croppedImage) {
+		Log.i("Size of cropped Image - " + croppedImage.getByteCount());
 		if (saveUri != null) {
 			OutputStream outputStream = null;
 			try {
 				outputStream = getContentResolver().openOutputStream(saveUri);
 				if (outputStream != null) {
-					croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					options.inSampleSize = 2;
+					croppedImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
 				}
 			} catch (IOException e) {
 				setResultException(e);
@@ -424,7 +435,6 @@ public class CropImageActivity extends MonitoredActivity {
 				CropUtil.copyExifRotation(CropUtil.getFromMediaUri(getContentResolver(), sourceUri),
 						CropUtil.getFromMediaUri(getContentResolver(), saveUri));
 			}
-
 			setResultUri(saveUri);
 		}
 

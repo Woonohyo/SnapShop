@@ -20,6 +20,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
+import com.l3cache.snapshop.SnapPreference;
+
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -32,10 +34,11 @@ import android.text.TextUtils;
 /*
  * Modified from original in AOSP.
  */
-class CropUtil {
+public class CropUtil {
 
 	private static final String SCHEME_FILE = "file";
 	private static final String SCHEME_CONTENT = "content";
+	private static final String TAG = "PhotoCrop";
 
 	public static void closeSilently(Closeable c) {
 		if (c == null)
@@ -75,6 +78,7 @@ class CropUtil {
 		try {
 			ExifInterface exifSource = new ExifInterface(sourceFile.getAbsolutePath());
 			ExifInterface exifDest = new ExifInterface(destFile.getAbsolutePath());
+			
 			exifDest.setAttribute(ExifInterface.TAG_ORIENTATION, exifSource.getAttribute(ExifInterface.TAG_ORIENTATION));
 			exifDest.saveAttributes();
 			return true;
