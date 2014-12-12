@@ -45,6 +45,10 @@ public interface SnapShopService {
 	@FormUrlEncoded
 	@POST(SnapConstants.SNAP_REQUEST)
 	void snapPost(@Field("uid") int uid, @Field("pid") int pid, Callback<DefaultResponse> cb);
+	
+	// 포스트 스냅 취소하기
+	@DELETE(SnapConstants.SNAP_REQUEST)
+	void unSnapPost(@Query("uid") int uid, @Query("pid") int pid, Callback<DefaultResponse> cb);
 
 	// 포스트 조회수 증가
 	@POST(SnapConstants.READ_POST_REQUEST)

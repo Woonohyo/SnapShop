@@ -1,12 +1,15 @@
 package com.l3cache.snapshop.login;
 
-import io.realm.Realm;
+import java.io.IOException;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -17,22 +20,36 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
 public class LoginView extends FragmentActivity {
+	public static final String EXTRA_MESSAGE = "message";
+	private static final String PROPERTY_APP_VERSION = "appVersion";
+	private final static String TAG = LoginView.class.getSimpleName();
+	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+	String SENDER_ID = "447902358753";
+	private GoogleCloudMessaging gcm;
+	private String regid;
+	Context context;
+	private SnapPreference pref;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_view);
 
-		SnapPreference pref = new SnapPreference(this);
+		context = getApplicationContext();
+		pref = new SnapPreference(context);
+
 		if (pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null) != null) {
 			authorizeSignin(pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null),
 					pref.getValue(SnapPreference.PREF_CURRENT_USER_PASSWORD, null));
@@ -64,6 +81,68 @@ public class LoginView extends FragmentActivity {
 			}
 		});
 
+		// Check device for Play Services APK.
+		if (checkPlayServices()) {
+			gcm = GoogleCloudMessaging.getInstance(this);
+			regid = getRegistrationId();
+			
+			if (regid.isEmpty()) {
+				registerInBackground();
+			} else {
+				Log.i(TAG, "No valid Google Play Services APK Found");
+			}
+		}
+	}
+
+	private String getRegistrationId() {
+		String registrationId = pref.getValue(SnapPreference.PROPERTY_REG_ID, "");
+		return registrationId;
+	}
+
+	private void registerInBackground() {
+		new AsyncTask<Object, Object, Object>() {
+
+			@Override
+			protected String doInBackground(Object... params) {
+				String msg = "";
+				try {
+					if (gcm == null) {
+						gcm = GoogleCloudMessaging.getInstance(context);
+					}
+					regid = gcm.register(SENDER_ID);
+					msg = "Device registered, registration ID=" + regid;
+					Log.i(TAG, msg);
+
+					// You should send the registration ID to your server over
+					// HTTP,
+					// so it can use GCM/HTTP or CCS to send messages to your
+					// app.
+					// The request to your server should be authenticated if
+					// your app
+					// is using accounts.
+					// sendRegistrationIdToBackend();
+
+					// For this demo: we don't need to send it because the
+					// device
+					// will send upstream messages to a server that echo back
+					// the
+					// message using the 'from' address in the message.
+
+					// Persist the regID - no need to register again.
+					storeRegistrationId(context, regid);
+				} catch (Exception ex) {
+					msg = "Error :" + ex.getMessage();
+					// If there is an error, don't just keep trying to register.
+					// Require the user to click a button again, or perform
+					// exponential back-off.
+				}
+				return msg;
+			}
+		}.execute(null, null, null);
+	}
+
+	private void storeRegistrationId(Context context, String regid) {
+		pref.put(SnapPreference.PROPERTY_REG_ID, regid);
 	}
 
 	private void authorizeSignin(String email, String password) {
@@ -86,9 +165,11 @@ public class LoginView extends FragmentActivity {
 				switch (status) {
 				case SnapConstants.SUCCESS: {
 					SnapPreference pref = new SnapPreference(getApplicationContext());
-					Toast.makeText(getApplicationContext(),
-							"Welcome back " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - " + pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "NO EMAIL"), Toast.LENGTH_LONG)
-							.show();
+					Toast.makeText(
+							getApplicationContext(),
+							"Welcome back " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
+									+ pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "NO EMAIL"),
+							Toast.LENGTH_LONG).show();
 
 					intentTabHostActivity();
 
@@ -128,8 +209,8 @@ public class LoginView extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		AppEventsLogger.activateApp(this);
+		checkPlayServices();
 	}
 
 	@Override
@@ -138,5 +219,19 @@ public class LoginView extends FragmentActivity {
 		super.onPause();
 
 		AppEventsLogger.deactivateApp(this);
+	}
+
+	private boolean checkPlayServices() {
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+				GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				Log.i(TAG, "This device is not supported.");
+				finish();
+			}
+			return false;
+		}
+		return true;
 	}
 }

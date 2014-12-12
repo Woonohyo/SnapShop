@@ -18,7 +18,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,10 +35,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
@@ -64,7 +61,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_POPULAR = 2;
 	private static final String TAG = NewsfeedView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.NEWSFEED_REQUEST;
-	private ArrayList<NewsfeedData> newsfeedDatas;
 	private GridView mGridView;
 	private int sortInto = SORT_RECOMMENDED;
 	// private NewsfeedVolleyAdapter mNewsfeedVolleyAdapter;
@@ -76,6 +72,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private EndlessScrollListener mEndlessScrollListener;
 	private OnItemClickListener mGridViewItemClickListener;
 	private OnTouchListener newPostButtonTouchListener;
+	private SnapNetworkUtils netUtils = new SnapNetworkUtils();
+	private Realm realm;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,8 +83,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mGridView.setOnScrollListener(mEndlessScrollListener);
 		initGridViewItemClickListener();
 		mGridView.setOnItemClickListener(mGridViewItemClickListener);
-
-		newsfeedDatas = new ArrayList<NewsfeedData>();
 
 		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -108,6 +104,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		cameraButton.setOnTouchListener(newPostButtonTouchListener);
 		galleryButton.setOnTouchListener(newPostButtonTouchListener);
 		internetButton.setOnTouchListener(newPostButtonTouchListener);
+		
+		realm = Realm.getInstance(getActivity());
 
 		return view;
 	}
@@ -115,15 +113,14 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		SnapNetworkUtils netUtils = new SnapNetworkUtils();
-		if (netUtils.isOnline(getActivity())) {
-			clearRealm();
-			reloadDataFromServer();
-		} else {
-			Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
-		}
+		/*
+		 * SnapNetworkUtils netUtils = new SnapNetworkUtils(); if
+		 * (netUtils.isOnline(getActivity())) { clearRealm();
+		 * reloadDataFromServer(); } else { Toast.makeText(getActivity(),
+		 * "Network Error", Toast.LENGTH_SHORT).show(); }
+		 */
 
-		Log.i(TAG, "Newsfeed Onresume");
+		Log.i(TAG, "Newsfeed OnResume");
 	}
 
 	private void initNewPostButtonTouchListener() {
@@ -215,7 +212,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	}
 
 	private void clearRealm() {
-		Realm realm = Realm.getInstance(getActivity());
 		realm.beginTransaction();
 		realm.where(NewsfeedData.class).findAll().clear();
 		realm.commitTransaction();
@@ -225,7 +221,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.i(TAG, "onActivityCreated");
-		Realm realm = Realm.getInstance(getActivity());
 		realm.addChangeListener(new RealmChangeListener() {
 			@Override
 			public void onChange() {
@@ -235,6 +230,10 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
 				.findAll(), true);
 		mGridView.setAdapter(mNewsfeedVolleyAdapter);
+		if (netUtils.isOnline(getActivity())) {
+			clearRealm();
+			fetchDataFromServer(1);
+		}
 	}
 
 	@Override
@@ -266,13 +265,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		if (mNewsfeedVolleyAdapter != null) {
 			mNewsfeedVolleyAdapter.notifyDataSetChanged();
 		}
-	}
-
-	private void removeAllNewsfeedRealm() {
-		Realm realm = Realm.getInstance(getActivity());
-		realm.beginTransaction();
-		realm.clear(NewsfeedData.class);
-		realm.commitTransaction();
 	}
 
 	private Uri getOutputMediaFileUri(int type) {
@@ -346,12 +338,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				public void onErrorResponse(VolleyError error) {
 					Log.i(TAG, "Error: " + error.getMessage());
 					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
-					Realm realm = Realm.getInstance(getActivity());
-					newsfeedDatas.clear();
 					realm.where(NewsfeedData.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
 					RealmResults<NewsfeedData> result = realm.where(NewsfeedData.class).findAll();
 					result.sort("pid", RealmResults.SORT_ORDER_DESCENDING);
-					newsfeedDatas.addAll(result);
 					mNewsfeedVolleyAdapter.notifyDataSetChanged();
 				}
 			});
@@ -364,7 +353,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	 */
 
 	private void parseJsonFeed(JSONObject response) {
-		Realm realm = Realm.getInstance(getActivity());
 		realm.beginTransaction();
 		if (response != null) {
 			try {
@@ -395,20 +383,20 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					item.setWriter(feedObj.getString("writer"));
 					item.setUserLike(feedObj.getInt("like"));
 					item.setRead(feedObj.getInt("read"));
-					newsfeedDatas.add(item);
+					Log.i(TAG, item.getPid() + "");
 				}
 
 				// notify data changes to list adapater
-				mNewsfeedVolleyAdapter.notifyDataSetChanged();
 			} catch (JSONException e) {
 				e.printStackTrace();
 				realm.commitTransaction();
 			}
 		}
 
+		realm.where(NewsfeedData.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
+		mNewsfeedVolleyAdapter.notifyDataSetChanged();
 		realm.commitTransaction();
 
-		Log.i(TAG, newsfeedDatas.size() + "");
 	}
 
 	@Override
@@ -418,7 +406,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		int currentSort = this.sortInto;
 		if (sortBy.equals("Recommended")) {
 			this.sortInto = SORT_RECOMMENDED;
-
 		} else if (sortBy.equals("Recent")) {
 			this.sortInto = SORT_RECENT;
 
@@ -427,12 +414,10 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		if (currentSort != this.sortInto) {
-			SnapNetworkUtils netUtils = new SnapNetworkUtils();
 			if (netUtils.isOnline(getActivity())) {
 				clearRealm();
 				reloadDataFromServer();
 			} else {
-				Realm realm = Realm.getInstance(getActivity());
 				realm.where(NewsfeedData.class).findAll().sort("numLike", RealmResults.SORT_ORDER_DESCENDING);
 			}
 		}
@@ -445,7 +430,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 			@Override
 			public void run() {
-				mGridView.setSelection(0);
+				// mGridView.setSelection(0);
 			}
 		});
 		Log.i(TAG, "Reload data with new sort");

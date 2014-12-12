@@ -44,7 +44,7 @@ import com.l3cache.snapshop.data.SearchResultsItem;
 import com.l3cache.snapshop.upload.UploadSnapView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
-public class SearchResultsView extends Activity implements OnItemClickListener {
+public class SearchResultsView extends Activity implements OnItemClickListener, OnItemSelectedListener {
 
 	private final String TAG = SearchResultsView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.SEARCH_REQUEST;
@@ -266,5 +266,17 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		uploadIntent.putExtra("title", query);
 
 		startActivity(uploadIntent);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		Log.i(TAG, parent.getItemAtPosition(position).toString());
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// TODO Auto-generated method stub
+		
 	}
 }
