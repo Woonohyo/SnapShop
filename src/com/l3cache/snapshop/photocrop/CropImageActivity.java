@@ -73,7 +73,6 @@ public class CropImageActivity extends MonitoredActivity {
 	private RotateBitmap rotateBitmap;
 	private CropImageView imageView;
 	private HighlightView cropView;
-	private final String TAG = "PhotoCrop";
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -169,7 +168,7 @@ public class CropImageActivity extends MonitoredActivity {
 		while (options.outHeight / sampleSize > maxSize || options.outWidth / sampleSize > maxSize) {
 			sampleSize = sampleSize << 1;
 		}
-		android.util.Log.i(TAG, "Returning samplesize " + sampleSize);
+		Log.i("Returning samplesize " + sampleSize);
 		return sampleSize;
 	}
 
@@ -419,10 +418,8 @@ public class CropImageActivity extends MonitoredActivity {
 			try {
 				outputStream = getContentResolver().openOutputStream(saveUri);
 				if (outputStream != null) {
-					BitmapFactory.Options options = new BitmapFactory.Options();
-					options.inSampleSize = 2;
-					croppedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 					croppedImage = Bitmap.createScaledBitmap(croppedImage, 500, 500, true);
+					croppedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 				}
 			} catch (IOException e) {
 				setResultException(e);

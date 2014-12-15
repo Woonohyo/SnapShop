@@ -112,8 +112,8 @@
             android:label="@string/title_activity_info" >
         </activity>
         <activity
-            android:name=".upload.UploadSnapView"
-            android:label="@string/title_activity_upload_snap_view" >
+            android:name=".upload.UploadPostView"
+            android:label="@string/title_activity_upload_post_view" >
         </activity>
         <activity
             android:name=".postViewer.PostViewer"

@@ -1,7 +1,5 @@
 package com.l3cache.snapshop.login;
 
-import java.io.IOException;
-
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -20,14 +18,17 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.Result;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
@@ -46,6 +47,13 @@ public class LoginView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_view);
+
+		// Get tracker.
+		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
+		// Set screen name.
+		t.setScreenName(LoginView.class.getSimpleName());
+		// Send a screen view.
+		t.send(new HitBuilders.AppViewBuilder().build());
 
 		context = getApplicationContext();
 		pref = new SnapPreference(context);
@@ -85,7 +93,7 @@ public class LoginView extends FragmentActivity {
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId();
-			
+
 			if (regid.isEmpty()) {
 				registerInBackground();
 			} else {

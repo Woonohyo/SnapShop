@@ -255,7 +255,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	}
 
 	private void beginCrop(Uri source) {
-		Uri outputUri = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
+		Uri outputUri = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped.jpeg"));
 		new Crop(source).output(outputUri).asSquare().start(getActivity());
 	}
 

@@ -66,17 +66,16 @@ public class UploadPostView extends Activity {
 		uploadingButton = (Button) findViewById(R.id.upload_snap_button_upload);
 
 		handlerId = getIntent().getExtras().getInt("handler");
+		Log.i(TAG, "Image handler - " + handlerId);
 
 		switch (handlerId) {
 		case SnapConstants.CAMERA_BUTTON: {
-
 			break;
 		}
 
 		case SnapConstants.GALLERY_BUTTON: {
 			Uri imageUri = (Uri) getIntent().getExtras().get("data");
 			File imageFile = CropUtil.getFromMediaUri(getContentResolver(), imageUri);
-
 			ExifInterface exifResult;
 			try {
 				exifResult = new ExifInterface(imageFile.getAbsolutePath());
@@ -90,15 +89,13 @@ public class UploadPostView extends Activity {
 			}
 
 			uploadingImageView.setImageUrl(imageUri.toString(), imageLoader);
-
 			imageTypedFile = new TypedFile("image/jpeg", new File(imageUri.getPath()));
-
 			Log.i(TAG, imageTypedFile.toString());
 			break;
 
 		}
 		case SnapConstants.INTERNET_BUTTON: {
-			Log.i("Upload", "INTERNET!");
+			Log.i(TAG, "INTERNET!");
 			Bundle extras = getIntent().getExtras();
 			titleEditText.setText(extras.getString("title"));
 			mImageUrl = extras.getString("image");
@@ -117,6 +114,7 @@ public class UploadPostView extends Activity {
 					initRestfit();
 
 					switch (handlerId) {
+					case SnapConstants.CAMERA_BUTTON:
 					case SnapConstants.GALLERY_BUTTON: {
 						upload(imageTypedFile);
 						break;
@@ -193,20 +191,21 @@ public class UploadPostView extends Activity {
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.i("Upload", error.getLocalizedMessage());
-						Toast.makeText(getApplicationContext(), "Error - " + error.getLocalizedMessage(),
+						Log.i(TAG, error.getLocalizedMessage());
+						Toast.makeText(getApplicationContext(), "Error(image) - " + error.getLocalizedMessage(),
 								Toast.LENGTH_LONG).show();
 						;
 					}
 
 					@Override
 					public void success(UploadResponse uploadResponse, Response response) {
-						Log.i("Upload", uploadResponse.getStatus() + "");
 						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
 									.show();
-
 							finish();
+						} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
+							Toast.makeText(getApplicationContext(), "Error(image) - " + uploadResponse.getStatus(),
+									Toast.LENGTH_LONG).show();
 						}
 					}
 
@@ -221,20 +220,21 @@ public class UploadPostView extends Activity {
 
 			@Override
 			public void failure(RetrofitError error) {
-				Log.i("Upload", error.getLocalizedMessage());
+				Log.i(TAG, error.getLocalizedMessage());
+				Toast.makeText(getApplicationContext(), "Error(url) - " + error.getLocalizedMessage(),
+						Toast.LENGTH_LONG).show();
+				;
 			}
 
 			@Override
 			public void success(UploadResponse uploadResponse, Response response) {
-				Log.i("Upload", uploadResponse.getStatus() + "");
+				Log.i(TAG, uploadResponse.getStatus() + "");
 				if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 					Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG).show();
-
 					finish();
 				}
 			}
 
 		});
 	}
-
 }

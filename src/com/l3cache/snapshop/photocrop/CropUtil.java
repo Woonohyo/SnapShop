@@ -78,7 +78,7 @@ public class CropUtil {
 		try {
 			ExifInterface exifSource = new ExifInterface(sourceFile.getAbsolutePath());
 			ExifInterface exifDest = new ExifInterface(destFile.getAbsolutePath());
-			
+
 			exifDest.setAttribute(ExifInterface.TAG_ORIENTATION, exifSource.getAttribute(ExifInterface.TAG_ORIENTATION));
 			exifDest.saveAttributes();
 			return true;

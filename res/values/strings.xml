@@ -40,7 +40,7 @@
 
     <string name="title_activity_my_posts_view">My Posts</string>
     <string name="title_activity_info">User Info</string>
-    <string name="title_activity_upload_snap_view">Upload Snap</string>
+    <string name="title_activity_upload_post_view">Upload Snap</string>
     <string name="title_activity_login_view">Login</string>
     <string name="title_activity_post_viewer">PostViewer</string>
     <string name="facebook_app_id">1598472933714160</string>
