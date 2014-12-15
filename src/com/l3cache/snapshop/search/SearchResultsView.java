@@ -37,8 +37,11 @@ import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.SearchResultsItem;
 import com.l3cache.snapshop.upload.UploadPostView;
@@ -71,6 +74,14 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Get tracker.
+		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
+		// Set screen name.
+		t.setScreenName(SearchResultsView.class.getSimpleName());
+		// Send a screen view.
+		t.send(new HitBuilders.AppViewBuilder().build());
+
 		setContentView(R.layout.activity_search_results);
 		setTitle("SnapShop Search");
 		mToolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
@@ -271,12 +282,12 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		Log.i(TAG, parent.getItemAtPosition(position).toString());
-		
+
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

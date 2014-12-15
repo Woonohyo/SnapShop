@@ -4,15 +4,15 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.info.InfoView;
 import com.l3cache.snapshop.myposts.MyPostsView;
@@ -30,7 +30,7 @@ public class MainTabHostView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_tab_host);
-		
+
 		// create the Tabhost that will contain the Tab
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);

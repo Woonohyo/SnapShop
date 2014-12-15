@@ -11,6 +11,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,15 +19,20 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
 public class PostViewer extends Activity {
 	private String TAG = PostViewer.class.getSimpleName();
@@ -41,12 +47,29 @@ public class PostViewer extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Get tracker.
+		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
+		// Set screen name.
+		t.setScreenName(PostViewer.class.getSimpleName());
+		// Send a screen view.
+		t.send(new HitBuilders.AppViewBuilder().build());
+
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_post_viewer);
+
+		// FadingActionBarHelper helper = new FadingActionBarHelper()
+		// .actionBarBackground(new
+		// ColorDrawable(getResources().getColor(R.color.snap_green)))
+		// .headerLayout(R.layout.header).contentLayout(R.layout.activity_post_viewer);
+		// setContentView(helper.createView(this));
+		// helper.initActionBar(this);
+
 		Realm realm = Realm.getInstance(this);
 		Bundle extras = getIntent().getExtras();
 		NewsfeedData currentData = realm.where(NewsfeedData.class).equalTo("pid", extras.getLong("pid")).findFirst();
 		Log.i(TAG, currentData.toString());
+
 		feedImageView = (FeedImageView) findViewById(R.id.post_viewer_item_image_view);
 		feedImageView.setImageUrl(currentData.getImageUrl(), imageLoader);
 
@@ -84,6 +107,7 @@ public class PostViewer extends Activity {
 
 			}
 		});
+
 	}
 
 	@Override

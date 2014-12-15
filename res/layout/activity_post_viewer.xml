@@ -4,6 +4,7 @@
     android:background="@color/feed_bg" >
 
     <ScrollView
+        android:id="@+id/post_viewer_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="55dp"
@@ -19,7 +20,7 @@
                 android:id="@+id/post_viewer_image_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true" >
+                android:orientation="vertical" >
 
                 <com.l3cache.snapshop.volley.FeedImageView
                     android:id="@+id/post_viewer_item_image_view"
@@ -27,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/newsfeed_feedimage"
                     android:padding="1dp"
-                    android:scaleType="fitXY"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/default_feed_image" />
             </LinearLayout>
 
@@ -80,7 +81,7 @@
                 <TextView
                     android:id="@+id/post_viewer_description_text_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="500dp"
                     android:lineSpacingExtra="10dp"
                     android:paddingTop="10dp"
                     android:text="This is a description of a item" />

@@ -25,13 +25,17 @@ import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.newsfeed.NewsfeedRequest;
+import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class MySnapsView extends Fragment implements OnItemClickListener {
@@ -45,6 +49,12 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
+		// Set screen name.
+		t.setScreenName(MySnapsView.class.getSimpleName());
+		// Send a screen view.
+		t.send(new HitBuilders.AppViewBuilder().build());
+		
 		SnapPreference pref = new SnapPreference(getActivity());
 		URL_FEED = SnapConstants.SERVER_URL
 				+ SnapConstants.MYSNAP_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));

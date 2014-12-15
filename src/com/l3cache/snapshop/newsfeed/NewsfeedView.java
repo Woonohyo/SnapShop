@@ -42,13 +42,17 @@ import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
+import com.l3cache.snapshop.login.LoginView;
 import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.SearchResultsView;
@@ -77,6 +81,14 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		// Get tracker.
+		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
+		// Set screen name.
+		t.setScreenName(NewsfeedView.class.getSimpleName());
+		// Send a screen view.
+		t.send(new HitBuilders.AppViewBuilder().build());
+
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
 		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 		initEndlessScrollListener();

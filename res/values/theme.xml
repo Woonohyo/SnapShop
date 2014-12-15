@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!-- the theme applied to the application or activity -->
-    <style name="SnapActionBarTheme"
-           parent="@android:style/Theme.Holo.Light">
+    <style name="SnapActionBarTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/SnapActionBarTheme.ActionBar</item>
     </style>
 
     <!-- ActionBar styles -->
-    <style name="SnapActionBarTheme.ActionBar"
-           parent="@android:style/Widget.Holo.Light.ActionBar">
+    <style name="SnapActionBarTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:titleTextStyle">@style/SnapActionBarTheme.ActionBar.Text</item>
     </style>
-    
-    <style name="SnapActionBarTheme.ActionBar.Text" 
-        parent="@android:style/TextAppearance">
+
+    <style name="SnapActionBarTheme.ActionBar.Text" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/actionBarText</item>
     </style>
+
 </resources>
