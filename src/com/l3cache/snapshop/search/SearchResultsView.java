@@ -41,7 +41,7 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.SearchResultsItem;
-import com.l3cache.snapshop.upload.UploadSnapView;
+import com.l3cache.snapshop.upload.UploadPostView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class SearchResultsView extends Activity implements OnItemClickListener, OnItemSelectedListener {
@@ -258,7 +258,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		SearchResultsItem item = resultItems.get(position);
-		Intent uploadIntent = new Intent(this, UploadSnapView.class);
+		Intent uploadIntent = new Intent(this, UploadPostView.class);
 		uploadIntent.putExtra("image", item.getImage());
 		uploadIntent.putExtra("handler", SnapConstants.INTERNET_BUTTON);
 		uploadIntent.putExtra("shopUrl", item.getLink());

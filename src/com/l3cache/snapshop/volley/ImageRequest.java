@@ -66,6 +66,8 @@ public class ImageRequest extends Request<Bitmap> {
 	 * avoid OOM's)
 	 */
 	private static final Object sDecodeLock = new Object();
+	private final String ROTATE_90_CW = "Right side, top (Rotate 90 CW)";
+	private final String ROTATE_270_CW = "Left side, bottom (Rotate 270 CW)";
 
 	/**
 	 * Creates a new image request, decoding to a maximum specified width and
@@ -204,13 +206,17 @@ public class ImageRequest extends Request<Bitmap> {
 			BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(data));
 			Metadata meta = ImageMetadataReader.readMetadata(bis, true);
 			ExifIFD0Directory directory = meta.getDirectory(ExifIFD0Directory.class);
-			String rotate90CW = "Right side, top (Rotate 90 CW)";
 			if (directory.getDescription(ExifIFD0Directory.TAG_ORIENTATION) != null) {
 				String orientation = directory.getDescription(ExifIFD0Directory.TAG_ORIENTATION);
+				Log.i(TAG, "Orientation is " + orientation);
 				// 왼쪽으로 90도 돌아간 그림의 경우
-				if (orientation.equals(rotate90CW)) {
+				if (orientation.equals(ROTATE_90_CW)) {
 					Log.i(TAG, "Gotcha! - " + orientation);
 					matrix.postRotate(90);
+					bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+				} else if (orientation.equals(ROTATE_270_CW)) {
+					Log.i(TAG, "Gotcha! - " + orientation);
+					matrix.postRotate(270);
 					bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 				}
 			}

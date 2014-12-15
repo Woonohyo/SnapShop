@@ -19,7 +19,7 @@ import com.l3cache.snapshop.myposts.MyPostsView;
 import com.l3cache.snapshop.mysnap.MySnapsView;
 import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.photocrop.Crop;
-import com.l3cache.snapshop.upload.UploadSnapView;
+import com.l3cache.snapshop.upload.UploadPostView;
 
 public class MainTabHostView extends FragmentActivity {
 	private FragmentTabHost mTabHost;
@@ -70,7 +70,7 @@ public class MainTabHostView extends FragmentActivity {
 
 	private void handleCrop(int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			Intent uploadIntent = new Intent(this, UploadSnapView.class);
+			Intent uploadIntent = new Intent(this, UploadPostView.class);
 			uploadIntent.putExtra("data", Crop.getOutput(data));
 			uploadIntent.putExtra("handler", SnapConstants.GALLERY_BUTTON);
 			startActivity(uploadIntent);

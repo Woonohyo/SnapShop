@@ -421,7 +421,8 @@ public class CropImageActivity extends MonitoredActivity {
 				if (outputStream != null) {
 					BitmapFactory.Options options = new BitmapFactory.Options();
 					options.inSampleSize = 2;
-					croppedImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+					croppedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+					croppedImage = Bitmap.createScaledBitmap(croppedImage, 500, 500, true);
 				}
 			} catch (IOException e) {
 				setResultException(e);

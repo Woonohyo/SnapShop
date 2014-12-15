@@ -35,7 +35,7 @@ import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
-public class UploadSnapView extends Activity {
+public class UploadPostView extends Activity {
 	private ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 	private EditText titleEditText;
 	private EditText contentsEditText;
@@ -45,7 +45,7 @@ public class UploadSnapView extends Activity {
 	private Button uploadingButton;
 	private String mImageUrl;
 	private TypedFile imageTypedFile;
-	private String TAG = UploadSnapView.class.getSimpleName();
+	private String TAG = UploadPostView.class.getSimpleName();
 	private int handlerId;
 	private RestAdapter restAdapter;
 	private SnapShopService service;
