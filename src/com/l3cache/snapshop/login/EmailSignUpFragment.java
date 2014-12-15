@@ -24,12 +24,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.MainTabHostView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.User;
+import com.l3cache.snapshop.myposts.MyPostsView;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
 public class EmailSignUpFragment extends DialogFragment {
@@ -44,6 +49,12 @@ public class EmailSignUpFragment extends DialogFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
+		// Set screen name.
+		t.setScreenName(EmailSignUpFragment.class.getSimpleName());
+		// Send a screen view.
+		t.send(new HitBuilders.AppViewBuilder().build());
+
 		View view = inflater.inflate(R.layout.fragment_sign_up_email, container, false);
 		signupButton = (Button) view.findViewById(R.id.button_sign_up);
 		emailField = (EditText) view.findViewById(R.id.editText_email);
@@ -155,7 +166,12 @@ public class EmailSignUpFragment extends DialogFragment {
 					pref.put(SnapPreference.PREF_CURRENT_USER_ID, loginResponse.getId());
 					pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
 					pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
-					Toast.makeText(getActivity(), "Welcome " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - " + pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "No Email"), Toast.LENGTH_SHORT).show();;
+					Toast.makeText(
+							getActivity(),
+							"Welcome " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
+									+ pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "No Email"),
+							Toast.LENGTH_SHORT).show();
+					;
 
 					intentTabHostActivity();
 					break;

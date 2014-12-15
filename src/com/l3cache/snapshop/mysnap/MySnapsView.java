@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
@@ -54,7 +55,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 		t.setScreenName(MySnapsView.class.getSimpleName());
 		// Send a screen view.
 		t.send(new HitBuilders.AppViewBuilder().build());
-		
+
 		SnapPreference pref = new SnapPreference(getActivity());
 		URL_FEED = SnapConstants.SERVER_URL
 				+ SnapConstants.MYSNAP_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
@@ -128,6 +129,10 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 	private void parseJsonFeed(JSONObject response) {
 		try {
 			JSONObject jsonData = response.getJSONObject("response");
+			if (jsonData.getInt("total") == 0) {
+				Toast.makeText(getActivity(), "No My Snaps", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			JSONArray feedArray = jsonData.getJSONArray("data");
 
 			for (int i = 0; i < feedArray.length(); i++) {
