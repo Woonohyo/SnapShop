@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -126,28 +125,9 @@ public class LoginView extends FragmentActivity {
 					msg = "Device registered, registration ID=" + regid;
 					Log.i(TAG, msg);
 
-					// You should send the registration ID to your server over
-					// HTTP,
-					// so it can use GCM/HTTP or CCS to send messages to your
-					// app.
-					// The request to your server should be authenticated if
-					// your app
-					// is using accounts.
-					// sendRegistrationIdToBackend();
-
-					// For this demo: we don't need to send it because the
-					// device
-					// will send upstream messages to a server that echo back
-					// the
-					// message using the 'from' address in the message.
-
-					// Persist the regID - no need to register again.
 					storeRegistrationId(context, regid);
 				} catch (Exception ex) {
 					msg = "Error :" + ex.getMessage();
-					// If there is an error, don't just keep trying to register.
-					// Require the user to click a button again, or perform
-					// exponential back-off.
 				}
 				return msg;
 			}
@@ -159,80 +139,52 @@ public class LoginView extends FragmentActivity {
 	}
 
 	private void authorizeSignin() {
-		final Handler handler = new Handler();
-		new Thread() {
-			public void run() {
-				handler.post(new Runnable() {
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+				.setConverter(new GsonConverter(new Gson())).build();
+		SnapShopService service = restAdapter.create(SnapShopService.class);
+		service.login(mEmail, mPassword, new Callback<SignInResponse>() {
 
-					@Override
-					public void run() {
-						dialogProgress = ProgressDialog.show(LoginView.this, null, "Signing In...");
-					}
-				});
-				RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
-						.setConverter(new GsonConverter(new Gson())).build();
-				// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
-				SnapShopService service = restAdapter.create(SnapShopService.class);
-				service.login(mEmail, mPassword, new Callback<LoginResponse>() {
+			@Override
+			public void failure(RetrofitError error) {
+				Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
+				Log.i("Login", error.toString());
+			}
 
-					@Override
-					public void failure(RetrofitError error) {
-						handler.post(new Runnable() {
+			@Override
+			public void success(SignInResponse loginResponse, Response response) {
+				int status = loginResponse.getStatus();
+				switch (status) {
+				case SnapConstants.SUCCESS: {
+					SnapPreference pref = new SnapPreference(getApplicationContext());
+					Toast.makeText(
+							getApplicationContext(),
+							"Welcome back " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
+									+ pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "NO EMAIL"),
+							Toast.LENGTH_LONG).show();
 
-							@Override
-							public void run() {
-								dialogProgress.cancel();
-							}
-						});
-						Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
-						Log.i("Login", error.toString());
-					}
+					intentTabHostActivity();
 
-					@Override
-					public void success(LoginResponse loginResponse, Response response) {
-						handler.post(new Runnable() {
+					break;
+				}
+				case SnapConstants.EMAIL_ERROR: {
+					Toast.makeText(getApplicationContext(), "Email Error " + loginResponse.getId(), Toast.LENGTH_LONG)
+							.show();
+					break;
+				}
+				case SnapConstants.PASSWORD_ERROR: {
+					Toast.makeText(getApplicationContext(), "Password Error " + loginResponse.getId(),
+							Toast.LENGTH_LONG).show();
+					break;
+				}
 
-							@Override
-							public void run() {
-								dialogProgress.cancel();
-							}
-						});
-						int status = loginResponse.getStatus();
-						switch (status) {
-						case SnapConstants.SUCCESS: {
-							SnapPreference pref = new SnapPreference(getApplicationContext());
-							Toast.makeText(
-									getApplicationContext(),
-									"Welcome back " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
-											+ pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "NO EMAIL"),
-									Toast.LENGTH_LONG).show();
-
-							intentTabHostActivity();
-
-							break;
-						}
-						case SnapConstants.EMAIL_ERROR: {
-							Toast.makeText(getApplicationContext(), "Email Error " + loginResponse.getId(),
-									Toast.LENGTH_LONG).show();
-							break;
-						}
-						case SnapConstants.PASSWORD_ERROR: {
-							Toast.makeText(getApplicationContext(), "Password Error " + loginResponse.getId(),
-									Toast.LENGTH_LONG).show();
-							break;
-						}
-
-						case SnapConstants.ERROR: {
-							Toast.makeText(getApplicationContext(),
-									"Unrecognized Server Error!" + loginResponse.getId(), Toast.LENGTH_LONG).show();
-							break;
-						}
-						}
-
-					}
-				});
-			};
-		}.start();
+				case SnapConstants.ERROR: {
+					Toast.makeText(getApplicationContext(), "Unrecognized Server Error!" + loginResponse.getId(),
+							Toast.LENGTH_LONG).show();
+					break;
+				}
+				}
+			}
+		});
 	}
 
 	private void intentTabHostActivity() {

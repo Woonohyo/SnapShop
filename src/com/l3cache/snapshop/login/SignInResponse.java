@@ -1,8 +1,11 @@
 package com.l3cache.snapshop.login;
 
-public class LoginResponse {
+import retrofit.client.Response;
+
+public class SignInResponse {
 	int id;
 	int status;
+	private Response response;
 
 	public int getId() {
 		return id;
@@ -18,5 +21,13 @@ public class LoginResponse {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public Response getResponse() {
+		return response;
+	}
+
+	public void setResponse(Response response) {
+		this.response = response;
 	}
 }

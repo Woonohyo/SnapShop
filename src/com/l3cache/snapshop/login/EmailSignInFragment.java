@@ -79,7 +79,7 @@ public class EmailSignInFragment extends DialogFragment {
 		mEmail = email;
 		mPassword = password;
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(email, password, new Callback<LoginResponse>() {
+		service.login(email, password, new Callback<SignInResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
@@ -88,7 +88,7 @@ public class EmailSignInFragment extends DialogFragment {
 			}
 
 			@Override
-			public void success(LoginResponse loginResponse, Response response) {
+			public void success(SignInResponse loginResponse, Response response) {
 				int status = loginResponse.getStatus();
 
 				switch (status) {

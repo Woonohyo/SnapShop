@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.protocol.RequestConnControl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +71,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	private LinearLayout mToolBar;
 	private TextView mallNameTextView;
 	Handler handler = new Handler();
+	private int REQUEST_EXIT = 681;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -275,8 +277,18 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 		uploadIntent.putExtra("shopUrl", item.getLink());
 		uploadIntent.putExtra("price", item.getLprice());
 		uploadIntent.putExtra("title", query);
+		startActivityForResult(uploadIntent, REQUEST_EXIT);
+	}
 
-		startActivity(uploadIntent);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(TAG, "Request: " + requestCode + " Result: " + resultCode);
+		if (requestCode == REQUEST_EXIT) {
+			if (resultCode == RESULT_OK) {
+				finish();
+				Log.i(TAG, "finishing");
+			}
+		}
 	}
 
 	@Override

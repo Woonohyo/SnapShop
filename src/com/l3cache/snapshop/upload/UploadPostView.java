@@ -11,6 +11,7 @@ import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -35,7 +36,6 @@ import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.photocrop.CropUtil;
 import com.l3cache.snapshop.retrofit.SnapShopService;
-import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
@@ -54,10 +54,12 @@ public class UploadPostView extends Activity {
 	private RestAdapter restAdapter;
 	private SnapShopService service;
 	private SnapPreference pref;
+	private Context mContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mContext = this;
 		setContentView(R.layout.activity_upload_snap_view);
 
 		// Get tracker.
@@ -213,7 +215,6 @@ public class UploadPostView extends Activity {
 						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
 									.show();
-							finish();
 						} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
 							Toast.makeText(getApplicationContext(), "Error(image) - " + uploadResponse.getStatus(),
 									Toast.LENGTH_LONG).show();
@@ -242,6 +243,7 @@ public class UploadPostView extends Activity {
 				Log.i(TAG, uploadResponse.getStatus() + "");
 				if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 					Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG).show();
+					((Activity) mContext).setResult(RESULT_OK);
 					finish();
 				}
 			}

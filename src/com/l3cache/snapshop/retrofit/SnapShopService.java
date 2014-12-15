@@ -14,14 +14,17 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.login.LoginResponse;
+import com.l3cache.snapshop.login.SignInResponse;
 import com.l3cache.snapshop.login.SignUpResponse;
 import com.l3cache.snapshop.upload.UploadResponse;
 
 public interface SnapShopService {
 	// 로그인
 	@GET(SnapConstants.LOGIN_REQUEST)
-	void login(@Query("email") String email, @Query("password") String password, Callback<LoginResponse> cb);
+	void login(@Query("email") String email, @Query("password") String password, Callback<SignInResponse> cb);
+
+	@GET(SnapConstants.LOGIN_REQUEST)
+	Callback<SignInResponse> login(@Query("email") String email, @Query("password") String password);
 
 	// 회원가
 	@POST(SnapConstants.SIGNUP_REQUEST)
@@ -45,7 +48,7 @@ public interface SnapShopService {
 	@FormUrlEncoded
 	@POST(SnapConstants.SNAP_REQUEST)
 	void snapPost(@Field("uid") int uid, @Field("pid") int pid, Callback<DefaultResponse> cb);
-	
+
 	// 포스트 스냅 취소하기
 	@DELETE(SnapConstants.SNAP_REQUEST)
 	void unSnapPost(@Query("uid") int uid, @Query("pid") int pid, Callback<DefaultResponse> cb);
