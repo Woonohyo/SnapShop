@@ -1,2 +1,9 @@
 bin/
 /.apt_generated/
+.idea/
+.settings/
+gen/
+libs/
+.apt_generated/io/realm/
+SnapShopDoxygen
+Doxygen/

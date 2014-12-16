@@ -324,6 +324,11 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 		return mediaFile;
 	}
+	
+	/**
+	 * 서버와 통신하여 필요한 정보를 가져옵니다
+	 * @param offset 서버로부터 가져올 결과의 페이지
+	 */
 
 	private void fetchDataFromServer(int offset) {
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
