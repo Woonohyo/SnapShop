@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.view;
+package com.l3cache.snapshop.activity;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.controller;
+package com.l3cache.snapshop.adapter;
 
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;

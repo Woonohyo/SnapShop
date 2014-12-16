@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.controller;
+package com.l3cache.snapshop.adapter;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.model.NewsfeedData;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;

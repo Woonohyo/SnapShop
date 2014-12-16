@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.view;
+package com.l3cache.snapshop.activity;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -47,9 +47,9 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapNetworkUtils;
 import com.l3cache.snapshop.SnapPreference;
+import com.l3cache.snapshop.adapter.EndlessScrollListener;
+import com.l3cache.snapshop.adapter.NewsfeedVolleyRealmAdapter;
 import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.EndlessScrollListener;
-import com.l3cache.snapshop.controller.NewsfeedVolleyRealmAdapter;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
@@ -403,7 +403,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					item.setRead(feedObj.getInt("read"));
 				}
 
-				// notify data changes to list adapater
 			} catch (JSONException e) {
 				e.printStackTrace();
 				realm.commitTransaction();
@@ -442,13 +441,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private void reloadDataFromServer() {
 		mEndlessScrollListener.reset();
 		fetchDataFromServer(1);
-		mGridView.post(new Runnable() {
-
-			@Override
-			public void run() {
-				// mGridView.setSelection(0);
-			}
-		});
 	}
 
 	@Override

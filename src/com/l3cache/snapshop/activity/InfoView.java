@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.view;
+package com.l3cache.snapshop.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

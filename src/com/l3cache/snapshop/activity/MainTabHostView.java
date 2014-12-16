@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.view;
+package com.l3cache.snapshop.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

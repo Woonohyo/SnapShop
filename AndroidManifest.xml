@@ -65,7 +65,7 @@
         </meta-data>
 
         <activity
-            android:name="com.l3cache.snapshop.view.LoginView"
+            android:name="com.l3cache.snapshop.activity.LoginView"
             android:label="@string/app_name"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat"
@@ -77,38 +77,38 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.NewsfeedView"
+            android:name="com.l3cache.snapshop.activity.NewsfeedView"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.SearchResultsView"
+            android:name="com.l3cache.snapshop.activity.SearchResultsView"
             android:label="@string/title_activity_search_results" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.MainTabHostView"
+            android:name="com.l3cache.snapshop.activity.MainTabHostView"
             android:label="@string/title_activity_main" >
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.MySnapsView"
+            android:name="com.l3cache.snapshop.activity.MySnapsView"
             android:label="@string/title_activity_favorite_view" >
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.MyPostsView"
+            android:name="com.l3cache.snapshop.activity.MyPostsView"
             android:label="@string/title_activity_my_posts_view" >
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.InfoView"
+            android:name="com.l3cache.snapshop.activity.InfoView"
             android:label="@string/title_activity_info" >
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.UploadPostView"
+            android:name="com.l3cache.snapshop.activity.UploadPostView"
             android:label="@string/title_activity_upload_post_view" >
         </activity>
         <activity
-            android:name="com.l3cache.snapshop.view.PostViewer"
+            android:name="com.l3cache.snapshop.activity.PostViewer"
             android:label=""
             android:theme="@style/TransparentTheme" >
         </activity>

@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.view;
+package com.l3cache.snapshop.activity;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -42,9 +42,9 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
+import com.l3cache.snapshop.adapter.EndlessScrollListener;
+import com.l3cache.snapshop.adapter.SearchResultsVolleyAdapter;
 import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.EndlessScrollListener;
-import com.l3cache.snapshop.controller.SearchResultsVolleyAdapter;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
 import com.l3cache.snapshop.model.SearchResultsItem;
 import com.l3cache.snapshop.retrofit.SearchRequest;

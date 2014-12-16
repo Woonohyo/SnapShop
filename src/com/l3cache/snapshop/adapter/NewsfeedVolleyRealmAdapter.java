@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.controller;
+package com.l3cache.snapshop.adapter;
 
 import io.realm.Realm;
 import io.realm.RealmBaseAdapter;
@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
+import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.model.NewsfeedData;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;

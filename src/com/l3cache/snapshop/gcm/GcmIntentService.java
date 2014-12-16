@@ -13,7 +13,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.R.drawable;
-import com.l3cache.snapshop.view.LoginView;
+import com.l3cache.snapshop.activity.LoginView;
 
 public class GcmIntentService extends IntentService {
 	private final String TAG = GcmIntentService.class.getSimpleName();
