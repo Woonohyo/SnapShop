@@ -54,6 +54,7 @@ import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.SearchResultsView;
+import com.l3cache.snapshop.upload.UploadPostView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 import com.l3cache.snapshop.util.SnapNetworkUtils;
 
@@ -123,12 +124,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		Log.i(TAG, "onActivityCreated");
 		realm.addChangeListener(new RealmChangeListener() {
 			@Override
 			public void onChange() {
-				Log.i(TAG, "Realm Data Changed");
 			}
 		});
 		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
@@ -144,7 +142,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	public void onResume() {
 		super.onResume();
 		mNewsfeedVolleyAdapter.notifyDataSetChanged();
-		Log.i(TAG, "Newsfeed OnResume");
 	}
 
 	private void initNewPostButtonTouchListener() {
@@ -156,12 +153,10 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 					switch (id) {
 					case SnapConstants.CAMERA_BUTTON: {
-						Log.i("Snap", id + ": Camera");
 						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 						fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-						Log.i(TAG, fileUri.toString());
 
 						// start the image capture Intent
 						// getActivity().startActivityForResult(intent,
@@ -170,7 +165,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 						break;
 					}
 					case SnapConstants.GALLERY_BUTTON: {
-						Crop.pickImage(getActivity());
+						// Crop.pickImage(getActivity());
+						Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*");
+						startActivityForResult(intent, Crop.REQUEST_PICK);
 						break;
 					}
 					case SnapConstants.INTERNET_BUTTON: {
@@ -193,7 +190,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getActivity(), PostViewer.class);
-				Log.i(TAG, id + " is id of clicked row");
 				intent.putExtra("pid", id);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
@@ -210,11 +206,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			public void onLoadMore(int page, int totalItemsCount) {
 
 				if (totalResults < 10 || ((page - 1) * 20) > totalResults) {
-					Log.i(TAG, "Loading end. page: " + page + " total: " + totalResults);
 					return;
 				}
-
-				Log.i(TAG, "Page: " + page + "  total: " + totalItemsCount);
 
 				fetchDataFromServer(page);
 			}
@@ -245,6 +238,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "HI NEWS! Requesting: " + requestCode + " and Result:" + resultCode);
 		// 카메라 촬영 사진 이용
+		if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
+			beginCrop(data.getData());
+		} else if (requestCode == Crop.REQUEST_CROP) {
+			handleCrop(resultCode, data);
+		}
+
+		// 갤러리 이용
 		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				beginCrop(fileUri);
@@ -267,7 +267,19 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 	private void beginCrop(Uri source) {
 		Uri outputUri = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped.jpeg"));
-		new Crop(source).output(outputUri).asSquare().start(getActivity());
+		new Crop(source).output(outputUri).asSquare().start(getActivity(), this);
+	}
+
+	private void handleCrop(int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			Intent uploadIntent = new Intent(getActivity(), UploadPostView.class);
+			uploadIntent.putExtra("data", Crop.getOutput(data));
+			uploadIntent.putExtra("handler", SnapConstants.GALLERY_BUTTON);
+			startActivityForResult(uploadIntent, SnapConstants.REQUEST_UPLOAD);
+		} else if (resultCode == Crop.RESULT_ERROR) {
+			Toast.makeText(getActivity(), Crop.getError(data).getMessage(), Toast.LENGTH_SHORT).show();
+		}
+
 	}
 
 	@Override
@@ -335,7 +347,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			params.put("sort", sortInto + "");
 			params.put("start", offset + "");
 			params.put("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");
-			Log.i(TAG, "Parameters: " + params.toString());
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
@@ -347,7 +358,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.i(TAG, "Error: " + error.getMessage());
 					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
 					realm.where(NewsfeedData.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
 					RealmResults<NewsfeedData> result = realm.where(NewsfeedData.class).findAll();
@@ -370,12 +380,10 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				JSONObject jsonData = response.getJSONObject("response");
 				totalResults = jsonData.getInt("total");
 				JSONArray feedArray = jsonData.getJSONArray("data");
-				Log.i(TAG, "Total: " + totalResults);
 
 				for (int i = 0; i < feedArray.length(); i++) {
 					JSONObject feedObj = (JSONObject) feedArray.get(i);
 					if (realm.where(NewsfeedData.class).equalTo("pid", feedObj.getInt("pid")).findFirst() != null) {
-						Log.i(TAG, "Post having id " + feedObj.getInt("pid") + " alreay exists. delete and update it.");
 						realm.where(NewsfeedData.class).equalTo("pid", feedObj.getInt("pid")).findFirst()
 								.removeFromRealm();
 					}
@@ -394,7 +402,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					item.setWriter(feedObj.getString("writer"));
 					item.setUserLike(feedObj.getInt("like"));
 					item.setRead(feedObj.getInt("read"));
-					Log.i(TAG, item.getPid() + "");
 				}
 
 				// notify data changes to list adapater
@@ -412,7 +419,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		Log.i(TAG, parent.getItemAtPosition(position).toString());
 		String sortBy = parent.getItemAtPosition(position).toString();
 		int currentSort = this.sortInto;
 		if (sortBy.equals("Recommended")) {
@@ -444,7 +450,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				// mGridView.setSelection(0);
 			}
 		});
-		Log.i(TAG, "Reload data with new sort");
 	}
 
 	@Override

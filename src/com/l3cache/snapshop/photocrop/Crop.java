@@ -1,15 +1,14 @@
 package com.l3cache.snapshop.photocrop;
 
 import android.annotation.TargetApi;
-
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.l3cache.snapshop.R;
@@ -32,6 +31,10 @@ public class Crop {
 	}
 
 	private Intent cropIntent;
+	
+	public Intent getIntent() {
+		return cropIntent;
+	}
 
 	/**
 	 * Create a crop Intent builder with source image

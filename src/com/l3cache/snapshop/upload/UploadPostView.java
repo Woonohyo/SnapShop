@@ -221,7 +221,7 @@ public class UploadPostView extends Activity {
 						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
 									.show();
-							sendBroadcast(new Intent("com.l3cache.snapshop.postUploaded"));
+							didUploadFinishActivity();
 						} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
 							Toast.makeText(getApplicationContext(), "Error(image) - " + uploadResponse.getStatus(),
 									Toast.LENGTH_LONG).show();
@@ -249,10 +249,8 @@ public class UploadPostView extends Activity {
 			public void success(UploadResponse uploadResponse, Response response) {
 				Log.i(TAG, uploadResponse.getStatus() + "");
 				if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
-					sendBroadcast(new Intent("com.l3cache.snapshop.UPLOAD_COMPLETED"));
 					Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG).show();
-					((Activity) mContext).setResult(RESULT_OK);
-					finish();
+					didUploadFinishActivity();
 				} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
 					Toast.makeText(getApplicationContext(), "Error(url) - " + uploadResponse.getStatus(),
 							Toast.LENGTH_LONG).show();
@@ -260,5 +258,10 @@ public class UploadPostView extends Activity {
 			}
 
 		});
+	}
+
+	private void didUploadFinishActivity() {
+		((Activity) mContext).setResult(RESULT_OK);
+		finish();
 	}
 }
