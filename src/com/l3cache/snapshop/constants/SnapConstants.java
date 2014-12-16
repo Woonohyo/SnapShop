@@ -11,9 +11,7 @@ public final class SnapConstants {
 	public static final String NEW_CUSTOM_POST_REQUEST = "/app/posts/new";
 	public static final String SNAP_REQUEST = "/app/posts/like";
 	public static final String DEACTIVATE_REQUEST = "/app/users/delete";
-
 	public static final String READ_POST_REQUEST = "/app/posts/{pid}/read";
-
 	public static final String POST_DELETE_REQUEST = "/app/posts/delete/{pid}";
 
 	public static final String MYSNAP_REQUEST(int uid) {
@@ -38,4 +36,7 @@ public final class SnapConstants {
 	public static final int CAMERA_BUTTON = 1001;
 	public static final int GALLERY_BUTTON = 1002;
 	public static final int INTERNET_BUTTON = 1003;
+
+	public static final int REQUEST_UPLOAD = 263;
+
 }

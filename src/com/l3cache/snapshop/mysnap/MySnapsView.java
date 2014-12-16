@@ -1,7 +1,5 @@
 package com.l3cache.snapshop.mysnap;
 
-import io.realm.Realm;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,9 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
@@ -34,9 +32,7 @@ import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
-import com.l3cache.snapshop.data.User;
 import com.l3cache.snapshop.newsfeed.NewsfeedRequest;
-import com.l3cache.snapshop.newsfeed.NewsfeedView;
 import com.l3cache.snapshop.util.EndlessScrollListener;
 
 public class MySnapsView extends Fragment implements OnItemClickListener {
@@ -120,6 +116,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					Log.i(TAG, "Error: " + error.getMessage());
+					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 				}
 			});
 			AppController.getInstance().addToRequestQueue(jsonReq);

@@ -12,6 +12,7 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -120,14 +121,15 @@ public class UploadPostView extends Activity {
 		}
 
 		uploadingButton.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					initRestfit();
-					
-					if(priceEditText.getText().length() == 0) {
-						Toast.makeText(getApplicationContext(), "Please enter price of your item", Toast.LENGTH_SHORT).show();
+
+					if (priceEditText.getText().length() == 0) {
+						Toast.makeText(getApplicationContext(), "What's price of your item?", Toast.LENGTH_SHORT)
+								.show();
+						return true;
 					}
 
 					switch (handlerId) {
@@ -219,6 +221,7 @@ public class UploadPostView extends Activity {
 						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
 									.show();
+							sendBroadcast(new Intent("com.l3cache.snapshop.postUploaded"));
 						} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
 							Toast.makeText(getApplicationContext(), "Error(image) - " + uploadResponse.getStatus(),
 									Toast.LENGTH_LONG).show();
@@ -246,9 +249,13 @@ public class UploadPostView extends Activity {
 			public void success(UploadResponse uploadResponse, Response response) {
 				Log.i(TAG, uploadResponse.getStatus() + "");
 				if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
+					sendBroadcast(new Intent("com.l3cache.snapshop.UPLOAD_COMPLETED"));
 					Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG).show();
 					((Activity) mContext).setResult(RESULT_OK);
 					finish();
+				} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
+					Toast.makeText(getApplicationContext(), "Error(url) - " + uploadResponse.getStatus(),
+							Toast.LENGTH_LONG).show();
 				}
 			}
 

@@ -183,6 +183,7 @@ public class MyPostsView extends Fragment {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					Log.i(TAG, "Error: " + error.getMessage());
+					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 				}
 			});
 			AppController.getInstance().addToRequestQueue(jsonReq);

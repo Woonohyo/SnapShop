@@ -7,7 +7,6 @@ import io.realm.RealmResults;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +51,6 @@ import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
-import com.l3cache.snapshop.login.LoginView;
 import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postViewer.PostViewer;
 import com.l3cache.snapshop.search.SearchResultsView;
@@ -123,15 +121,29 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	}
 
 	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		Log.i(TAG, "onActivityCreated");
+		realm.addChangeListener(new RealmChangeListener() {
+			@Override
+			public void onChange() {
+				Log.i(TAG, "Realm Data Changed");
+			}
+		});
+		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
+				.findAll(), true);
+		mGridView.setAdapter(mNewsfeedVolleyAdapter);
+		if (netUtils.isOnline(getActivity())) {
+			clearRealm();
+			fetchDataFromServer(1);
+		}
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
-		/*
-		 * SnapNetworkUtils netUtils = new SnapNetworkUtils(); if
-		 * (netUtils.isOnline(getActivity())) { clearRealm();
-		 * reloadDataFromServer(); } else { Toast.makeText(getActivity(),
-		 * "Network Error", Toast.LENGTH_SHORT).show(); }
-		 */
-
+		mNewsfeedVolleyAdapter.notifyDataSetChanged();
 		Log.i(TAG, "Newsfeed OnResume");
 	}
 
@@ -164,7 +176,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					case SnapConstants.INTERNET_BUTTON: {
 						Intent intent = new Intent(getActivity(), SearchResultsView.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						getActivity().startActivity(intent);
+						startActivityForResult(intent, SnapConstants.REQUEST_UPLOAD);
 						break;
 					}
 
@@ -230,25 +242,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.i(TAG, "onActivityCreated");
-		realm.addChangeListener(new RealmChangeListener() {
-			@Override
-			public void onChange() {
-				Log.i(TAG, "Realm Data Changed");
-			}
-		});
-		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
-				.findAll(), true);
-		mGridView.setAdapter(mNewsfeedVolleyAdapter);
-		if (netUtils.isOnline(getActivity())) {
-			clearRealm();
-			fetchDataFromServer(1);
-		}
-	}
-
-	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "HI NEWS! Requesting: " + requestCode + " and Result:" + resultCode);
 		// 카메라 촬영 사진 이용
@@ -262,6 +255,12 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 			} else {
 				Toast.makeText(getActivity(), "Capture Failed", Toast.LENGTH_LONG).show();
+			}
+		}
+
+		if (requestCode == SnapConstants.REQUEST_UPLOAD) {
+			if (resultCode == Activity.RESULT_OK) {
+				reloadDataFromServer();
 			}
 		}
 	}
