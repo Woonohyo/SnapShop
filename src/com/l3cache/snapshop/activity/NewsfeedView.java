@@ -1,3 +1,13 @@
+/**
+ * @file NewsfeedView.java
+ * @brief 서버 내 모든 포스트의 목록을 출력
+ * @author Woonohyo, woonohyo@nhnnext.org
+ * @details 서버 내 모든 포스트의 목록을 출력한다. 
+ * 각 포스트에 있는 사진의 터치를 통해 상세 포스트를 볼 수 있는 PostViewer.java 로 이동할 수 있다. 
+ * 각 포스트에 있는 Snap 버튼의 터치를 통해 해당 포스트를 Snap/UnSnap 할 수 있다. 
+ * 화면 좌측 하단에 있는 FloatingActionButton을 통해 카메라/갤러리/검색을 통한 새로운 포스트 작성이 가능하다.
+ */
+
 package com.l3cache.snapshop.activity;
 
 import io.realm.Realm;
@@ -33,7 +43,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -43,6 +52,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapNetworkUtils;
@@ -58,18 +68,17 @@ import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.retrofit.NewsfeedRequest;
 
 public class NewsfeedView extends Fragment implements OnItemSelectedListener {
+	private static final String TAG = NewsfeedView.class.getSimpleName();
+	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.NEWSFEED_REQUEST;
 	private final int SORT_RECOMMENDED = 0;
 	private final int SORT_RECENT = 1;
 	private final int SORT_POPULAR = 2;
-	private static final String TAG = NewsfeedView.class.getSimpleName();
-	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.NEWSFEED_REQUEST;
-	private GridView mGridView;
+	private PullToRefreshGridView mGridView;
 	private int sortInto = SORT_RECOMMENDED;
-	// private NewsfeedVolleyAdapter mNewsfeedVolleyAdapter;
-	private NewsfeedVolleyRealmAdapter mNewsfeedVolleyAdapter;
+	private NewsfeedVolleyRealmAdapter mNewsfeedVolleyRealmAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
-	protected int totalResults = 0;
+	private int totalResults = 0;
 	private Spinner mSortSpinner;
 	private EndlessScrollListener mEndlessScrollListener;
 	private OnItemClickListener mGridViewItemClickListener;
@@ -88,11 +97,16 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		t.send(new HitBuilders.AppViewBuilder().build());
 
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
-		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
+		mGridView = (PullToRefreshGridView) view.findViewById(R.id.newsfeed_main_gridView);
 		initEndlessScrollListener();
 		mGridView.setOnScrollListener(mEndlessScrollListener);
 		initGridViewItemClickListener();
 		mGridView.setOnItemClickListener(mGridViewItemClickListener);
+		// mGridView.setOnRefreshListener(new OnRefreshListener<GridView>() {
+		// @Override
+		// public void onRefresh(PullToRefreshBase<GridView> refreshView) {
+		// }
+		// });
 
 		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -128,9 +142,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			public void onChange() {
 			}
 		});
-		mNewsfeedVolleyAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
+		mNewsfeedVolleyRealmAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(NewsfeedData.class)
 				.findAll(), true);
-		mGridView.setAdapter(mNewsfeedVolleyAdapter);
+		mGridView.setAdapter(mNewsfeedVolleyRealmAdapter);
 		if (netUtils.isOnline(getActivity())) {
 			clearRealm();
 			fetchDataFromServer(1);
@@ -140,9 +154,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mNewsfeedVolleyAdapter.notifyDataSetChanged();
+		mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * @details 새 포스트 작성을 위한 FlotingActionButton(카메라, 갤러리, 검색)에 TouchListener를
+	 *          설정하고, 각 버튼에 대한 사용자의 입력을 처리한다.
+	 */
 	private void initNewPostButtonTouchListener() {
 		newPostButtonTouchListener = new OnTouchListener() {
 			@Override
@@ -153,13 +171,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					switch (id) {
 					case SnapConstants.CAMERA_BUTTON: {
 						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
 						fileUri = getOutputMediaFileUri(SnapConstants.MEDIA_TYPE_IMAGE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
-						// start the image capture Intent
-						// getActivity().startActivityForResult(intent,
-						// SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 						startActivityForResult(intent, SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 						break;
 					}
@@ -184,6 +198,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		};
 	}
 
+	/**
+	 * @brief GridView에 물릴 ClickListener 초기화
+	 */
 	private void initGridViewItemClickListener() {
 		mGridViewItemClickListener = new OnItemClickListener() {
 			@Override
@@ -197,27 +214,33 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		};
 	}
 
+	/**
+	 * @brief GridView에 물릴 EndlessScrhollListener 초기화
+	 */
 	private void initEndlessScrollListener() {
 		mEndlessScrollListener = new EndlessScrollListener() {
 			private int mLastFirstVisibleItem;
 
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-
 				if (totalResults < 10 || ((page - 1) * 20) > totalResults) {
 					return;
 				}
-
 				fetchDataFromServer(page);
 			}
 
+			/**
+			 * @brief FloatingActionButton과 SortSpinner을 스크롤에 따라 화면에서 제거/표시한다.
+			 */
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+				// 스크롤을 내리는 경우
 				if (mLastFirstVisibleItem < firstVisibleItem) {
 					menuButton.setVisibility(View.INVISIBLE);
 					mSortSpinner.setVisibility(View.INVISIBLE);
 				}
+				// 스크롤을 올리는 경우
 				if (mLastFirstVisibleItem > firstVisibleItem) {
 					mSortSpinner.setVisibility(View.VISIBLE);
 					menuButton.setVisibility(View.VISIBLE);
@@ -227,6 +250,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		};
 	}
 
+	/**
+	 * @brief Realm 내에 모든 NewsfeedData를 제거한다.
+	 */
 	private void clearRealm() {
 		realm.beginTransaction();
 		realm.where(NewsfeedData.class).findAll().clear();
@@ -236,19 +262,22 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "HI NEWS! Requesting: " + requestCode + " and Result:" + resultCode);
-		// 카메라 촬영 사진 이용
+		/**
+		 * @brief 카메라를 통해 새로운 포스트 작성 시
+		 */
 		if (requestCode == Crop.REQUEST_PICK && resultCode == Activity.RESULT_OK) {
 			beginCrop(data.getData());
 		} else if (requestCode == Crop.REQUEST_CROP) {
 			handleCrop(resultCode, data);
 		}
 
-		// 갤러리 이용
+		/**
+		 * @brief 갤러리를 통해 새로운 포스트 작성 시
+		 */
 		if (requestCode == SnapConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				beginCrop(fileUri);
 				Toast.makeText(getActivity(), "OK!", Toast.LENGTH_LONG).show();
-
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Toast.makeText(getActivity(), "Photo Cancelled", Toast.LENGTH_LONG).show();
 
@@ -257,6 +286,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			}
 		}
 
+		/**
+		 * @brief 업로드를 무사히 마친 경우, 서버로부터 데이터를 다시 받아 온다.
+		 */
 		if (requestCode == SnapConstants.REQUEST_UPLOAD) {
 			if (resultCode == Activity.RESULT_OK) {
 				reloadDataFromServer();
@@ -264,11 +296,25 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 	}
 
+	/**
+	 * Crop 될 이미지의 출력 URI를 생성하고, CropActivity를 시작한다.
+	 * 
+	 * @param source
+	 *            Crop할 이미지의 URI
+	 */
 	private void beginCrop(Uri source) {
 		Uri outputUri = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped.jpeg"));
 		new Crop(source).output(outputUri).asSquare().start(getActivity(), this);
 	}
 
+	/**
+	 * 이미지를 Crop한 뒤, 포스트 업로드를 위한 UploadPostView를 시작한다.
+	 * 
+	 * @param resultCode
+	 *            Crop의 성공 여부에 대한 코드
+	 * @param data
+	 *            Crop된 이미지를 담고 있는 Intent
+	 */
 	private void handleCrop(int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			Intent uploadIntent = new Intent(getActivity(), UploadPostView.class);
@@ -284,8 +330,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		if (mNewsfeedVolleyAdapter != null) {
-			mNewsfeedVolleyAdapter.notifyDataSetChanged();
+		if (mNewsfeedVolleyRealmAdapter != null) {
+			mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -293,8 +339,12 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		return Uri.fromFile(getOutputMediaFile(type));
 	}
 
-	/*
-	 * Create a File for saving an image or video
+	/**
+	 * 카메라를 통한 포스트 작성 시, 출력할 파일을 생성한다.
+	 * 
+	 * @param type
+	 *            파일 유형
+	 * @return 외부 저장소에 임시 이름으로 저장한 미디어 File
 	 */
 	private static File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
@@ -324,15 +374,24 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 
 		return mediaFile;
 	}
-	
-	/**
-	 * 서버와 통신하여 필요한 정보를 가져옵니다
-	 * @param offset 서버로부터 가져올 결과의 페이지
-	 */
 
+	/**
+	 * 서버로부터 포스트 목록을 페이지 단위로 받아온다.
+	 * 
+	 * @param offset
+	 *            포스트 목록을 출력할 페이지
+	 */
 	private void fetchDataFromServer(int offset) {
+		SnapPreference pref = new SnapPreference(getActivity());
+		Uri.Builder builder = new Uri.Builder();
+		String tempUrl = SnapConstants.SERVER_URL + "/app/posts";
+		builder.encodedPath(URL_FEED).appendQueryParameter("sort", sortInto + "")
+				.appendQueryParameter("start", offset + "")
+				.appendQueryParameter("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");
+		Log.i(TAG, "Built URI " + builder.build().toString());
+
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
-		Entry entry = cache.get(URL_FEED);
+		Entry entry = cache.get(builder.build().toString());
 		if (entry != null) {
 			try {
 				String data = new String(entry.data, "UTF-8");
@@ -346,17 +405,16 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				e.printStackTrace();
 			}
 		} else {
-			SnapPreference pref = new SnapPreference(getActivity());
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("sort", sortInto + "");
 			params.put("start", offset + "");
 			params.put("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");
+			Log.i(TAG, params.toString());
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
-					if (response != null) {
-						parseJsonFeed(response);
-					}
+					Log.i(TAG, "Cache miss: " + response.toString());
+					parseJsonFeed(response);
 				}
 			}, new Response.ErrorListener() {
 
@@ -366,22 +424,23 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 					realm.where(NewsfeedData.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
 					RealmResults<NewsfeedData> result = realm.where(NewsfeedData.class).findAll();
 					result.sort("pid", RealmResults.SORT_ORDER_DESCENDING);
-					mNewsfeedVolleyAdapter.notifyDataSetChanged();
+					mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
 				}
 			});
 			AppController.getInstance().addToRequestQueue(jsonReq);
 		}
 	}
 
-	/* 
+	/**
+	 * HTTP 통신 결과 응답으로 받은 JSONData를 파싱하여, NewsfeedData로 변환한다.
 	 * 
+	 * @param response
+	 *            HTTP 통신 후 응답
 	 */
-
-	private void parseJsonFeed(JSONObject response) {
+	private void parseJsonFeed(JSONObject jsonData) {
 		realm.beginTransaction();
-		if (response != null) {
+		if (jsonData != null) {
 			try {
-				JSONObject jsonData = response.getJSONObject("response");
 				totalResults = jsonData.getInt("total");
 				JSONArray feedArray = jsonData.getJSONArray("data");
 
@@ -391,7 +450,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 						realm.where(NewsfeedData.class).equalTo("pid", feedObj.getInt("pid")).findFirst()
 								.removeFromRealm();
 					}
-
 					NewsfeedData item = realm.createObject(NewsfeedData.class);
 					item.setPid(feedObj.getInt("pid"));
 					item.setTitle(feedObj.getString("title"));
@@ -415,11 +473,14 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		realm.where(NewsfeedData.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
-		mNewsfeedVolleyAdapter.notifyDataSetChanged();
+		mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
 		realm.commitTransaction();
 
 	}
 
+	/**
+	 * 포스트 목록 정렬을 위한 mSortSpinner 선택 시 분기 처리
+	 */
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		String sortBy = parent.getItemAtPosition(position).toString();
@@ -443,6 +504,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 	}
 
+	/**
+	 * 새로운 페이징을 위해 EndlessScrollListener를 초기화 하고, 서버로부터 데이터를 1페이지부터 다시 받아온다.
+	 */
 	private void reloadDataFromServer() {
 		mEndlessScrollListener.reset();
 		fetchDataFromServer(1);

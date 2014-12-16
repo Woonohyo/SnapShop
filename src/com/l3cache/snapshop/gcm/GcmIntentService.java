@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.R.drawable;
+import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.activity.LoginView;
 
 public class GcmIntentService extends IntentService {
@@ -45,19 +46,8 @@ public class GcmIntentService extends IntentService {
 				sendNotification("Send error: " + extras.toString());
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
 				sendNotification("Deleted messages on server: " + extras.toString());
-				// If it's a regular GCM message, do some work.
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-				// This loop represents the service doing some work.
-				for (int i = 0; i < 5; i++) {
-					Log.i(TAG, "Working... " + (i + 1) + "/5 @ " + SystemClock.elapsedRealtime());
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-					}
-				}
-				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-				// Post notification of received message.
-				sendNotification("Check New Awesome Snap!");
+				sendNotification("New Awesome Snap Arrived!");
 				Log.i(TAG, "Received: " + extras.toString());
 			}
 		}
@@ -68,7 +58,8 @@ public class GcmIntentService extends IntentService {
 	private void sendNotification(String msg) {
 		mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, LoginView.class), 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, SnapConstants.REQUEST_UPLOAD, new Intent(this,
+				LoginView.class), 0);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle("SnapShop").setStyle(new NotificationCompat.BigTextStyle().bigText(msg))

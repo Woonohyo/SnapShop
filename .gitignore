@@ -11,3 +11,5 @@ Doxygen/
 .factorypath
 .project
 project.properties
+Documents/
+SnapShop.doxyfile

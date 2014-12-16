@@ -7,7 +7,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.support.v4.util.LruCache;
 import android.util.Log;
-
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.l3cache.snapshop.SnapPreference;
 

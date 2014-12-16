@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.protocol.RequestConnControl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +13,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -70,7 +70,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	private Spinner mSortSpinner;
 	private TextView totalResultTextView;
 	private LinearLayout mToolBar;
-	private TextView mallNameTextView;
 	Handler handler = new Handler();
 
 	@Override
@@ -142,8 +141,11 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 
 	private void fetchDataFromServer(int offset) {
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
-
-		Entry entry = cache.get(URL_FEED);
+		Uri.Builder builder = new Uri.Builder();
+		String targetUrl = builder.encodedPath(URL_FEED).appendQueryParameter("query", query)
+				.appendQueryParameter("display", numOfResultDisplay + "").appendQueryParameter("start", offset + "")
+				.appendQueryParameter("sort", sortingBy).build().toString();
+		Entry entry = cache.get(targetUrl);
 		if (entry != null) {
 			// fetch the data from cache
 			try {
@@ -177,7 +179,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					Log.i(TAG, "Error: " + error.getMessage());
-					Toast toast = Toast.makeText(SearchResultsView.this, "네트워크 상태를 확인해주세요!", Toast.LENGTH_LONG);
+					Toast toast = Toast.makeText(SearchResultsView.this, "Network Error", Toast.LENGTH_LONG);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 				}
@@ -189,8 +191,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 
 	private void parseJsonFeed(JSONObject response) {
 		try {
-			JSONObject jsonData = response.getJSONObject("response");
-			jsonData = jsonData.getJSONObject("data");
+			JSONObject jsonData = response.getJSONObject("data");
 			numOfTotalResult = jsonData.getInt("total");
 			DecimalFormat formatter = new DecimalFormat("#,###,###");
 			totalResultTextView.setText(formatter.format(numOfTotalResult) + "건");

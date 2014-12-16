@@ -1,3 +1,9 @@
+/**
+ * @file MyPostsView.java
+ * @brief 현재 로그인한 유저가 작성한 포스트 목록 출력
+ * @author Woonohyo, woonohyo@nhnnext.org
+ */
+
 package com.l3cache.snapshop.activity;
 
 import java.io.UnsupportedEncodingException;
@@ -15,6 +21,7 @@ import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -51,22 +58,21 @@ public class MyPostsView extends Fragment {
 	private ArrayList<NewsfeedData> mFeedItems;
 	private MyPostsAdapter mListAdapter;
 	private int mTotalResult;
+	SnapPreference pref;
 
 	private static String URL_FEED = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
-		// Set screen name.
 		t.setScreenName(MyPostsView.class.getSimpleName());
-		// Send a screen view.
 		t.send(new HitBuilders.AppViewBuilder().build());
-		SnapPreference pref = new SnapPreference(getActivity());
+
+		pref = new SnapPreference(getActivity());
 		URL_FEED = SnapConstants.SERVER_URL
 				+ SnapConstants.MYPOST_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 
 		View view = inflater.inflate(R.layout.activity_my_posts_view, container, false);
-
 		mGridView = (GridView) view.findViewById(R.id.my_posts_main_grid_view);
 		mFeedItems = new ArrayList<NewsfeedData>();
 		mListAdapter = new MyPostsAdapter(getActivity(), mFeedItems);
@@ -75,10 +81,12 @@ public class MyPostsView extends Fragment {
 			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 					.setConverter(new GsonConverter(new Gson())).build();
 			SnapShopService service = restAdapter.create(SnapShopService.class);
-			SnapPreference pref = new SnapPreference(getActivity());
 			int pid;
 			int mPosition;
 
+			/**
+			 * 롱터치를 통해 포스트 삭제
+			 */
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
@@ -87,7 +95,6 @@ public class MyPostsView extends Fragment {
 
 				alt_bld.setMessage("Do you want to delete your post?").setCancelable(true)
 						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-
 							public void onClick(DialogInterface dialog, int id) {
 								Log.i(TAG,
 										"Deleting item pid - " + pid + " of user - "
@@ -105,7 +112,6 @@ public class MyPostsView extends Fragment {
 												} else if (defResp.getStatus() == 20) {
 													Toast.makeText(getActivity(), "Deletion failed", Toast.LENGTH_SHORT)
 															.show();
-
 												}
 											}
 
@@ -151,9 +157,10 @@ public class MyPostsView extends Fragment {
 	}
 
 	private void fetchDataFromServer(int start) {
-		Log.i(TAG, "Fetching data via " + URL_FEED);
+		Uri.Builder builder = new Uri.Builder();
+		String targetUrl = builder.encodedPath(URL_FEED).appendQueryParameter("start", start + "").build().toString();
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
-		Entry entry = cache.get(URL_FEED);
+		Entry entry = cache.get(targetUrl);
 		if (entry != null) {
 			try {
 				String data = new String(entry.data, "UTF-8");
@@ -193,13 +200,12 @@ public class MyPostsView extends Fragment {
 
 	private void parseJsonFeed(JSONObject response) {
 		try {
-			JSONObject jsonData = response.getJSONObject("response");
-			if (jsonData.getInt("total") == 0) {
+			if (response.getInt("total") == 0) {
 				Toast.makeText(getActivity(), "No My Posts", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			mTotalResult = jsonData.getInt("total");
-			JSONArray feedArray = jsonData.getJSONArray("data");
+			mTotalResult = response.getInt("total");
+			JSONArray feedArray = response.getJSONArray("data");
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 				NewsfeedData item = new NewsfeedData();

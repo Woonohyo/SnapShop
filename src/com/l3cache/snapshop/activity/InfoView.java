@@ -18,12 +18,13 @@ public class InfoView extends Fragment {
 
 	private TextView emailTextView;
 	private Button signoutButton;
+	private SnapPreference pref;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_info, container, false);
 
-		SnapPreference pref = new SnapPreference(getActivity());
+		pref = new SnapPreference(getActivity());
 		emailTextView = (TextView) view.findViewById(R.id.info_email_text_view);
 		emailTextView.setText(pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, "No Email Address"));
 
@@ -33,14 +34,10 @@ public class InfoView extends Fragment {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-
-					SnapPreference pref = new SnapPreference(getActivity());
 					pref.removeCurrentUser();
-
 					Intent intent = new Intent(getActivity(), LoginView.class);
 					getActivity().finish();
 					startActivity(intent);
-
 				}
 
 				return false;

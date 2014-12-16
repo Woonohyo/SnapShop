@@ -38,12 +38,10 @@ public class LoginView extends FragmentActivity {
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	private final static String TAG = LoginView.class.getSimpleName();
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-	String SENDER_ID = "447902358753";
 	private GoogleCloudMessaging gcm;
 	private String regid;
 	Context context;
 	private SnapPreference pref;
-	private ProgressDialog dialogProgress;
 	private String mEmail;
 	private String mPassword;
 
@@ -51,11 +49,8 @@ public class LoginView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_view);
-		// Get tracker.
 		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
-		// Set screen name.
 		t.setScreenName(LoginView.class.getSimpleName());
-		// Send a screen view.
 		t.send(new HitBuilders.AppViewBuilder().build());
 
 		context = getApplicationContext();
@@ -99,13 +94,14 @@ public class LoginView extends FragmentActivity {
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId();
-
 			if (regid.isEmpty()) {
 				registerInBackground();
-			} else {
-				Log.i(TAG, "No valid Google Play Services APK Found");
 			}
+			
+		} else {
+			Log.i(TAG, "No valid Google Play Services APK Found");
 		}
+		Log.i(TAG, regid);
 	}
 
 	private String getRegistrationId() {
@@ -115,7 +111,6 @@ public class LoginView extends FragmentActivity {
 
 	private void registerInBackground() {
 		new AsyncTask<Object, Object, Object>() {
-
 			@Override
 			protected String doInBackground(Object... params) {
 				String msg = "";
@@ -123,7 +118,7 @@ public class LoginView extends FragmentActivity {
 					if (gcm == null) {
 						gcm = GoogleCloudMessaging.getInstance(context);
 					}
-					regid = gcm.register(SENDER_ID);
+					regid = gcm.register(SnapConstants.GCM_SENDER_ID);
 					msg = "Device registered, registration ID=" + regid;
 					Log.i(TAG, msg);
 
@@ -189,6 +184,9 @@ public class LoginView extends FragmentActivity {
 		});
 	}
 
+	/**
+	 * 로그인 성공 시, MainTabHostView 액티비티를 시작한다.
+	 */
 	private void intentTabHostActivity() {
 		Intent intent = new Intent(this, MainTabHostView.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -1,6 +1,5 @@
 package com.l3cache.snapshop.activity;
 
-import io.realm.Realm;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -21,11 +20,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.model.User;
+import com.l3cache.snapshop.controller.AppController;
+import com.l3cache.snapshop.controller.AppController.TrackerName;
 import com.l3cache.snapshop.retrofit.SignInResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
@@ -34,30 +36,34 @@ public class EmailSignInFragment extends DialogFragment {
 	EditText passwordField;
 	String mEmail;
 	String mPassword;
-	Context mContext;
+	SnapPreference pref;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
+		t.setScreenName(EmailSignInFragment.class.getSimpleName());
+		t.send(new HitBuilders.AppViewBuilder().build());
+
+		pref = new SnapPreference(getActivity());
+
 		View view = inflater.inflate(R.layout.fragment_sign_in_email, container, false);
 		Button signinButton = (Button) view.findViewById(R.id.button_sign_in);
 		emailField = (EditText) view.findViewById(R.id.editText_email);
 		passwordField = (EditText) view.findViewById(R.id.editText_password);
 		emailField.setText("test@test.com");
 		passwordField.setText("test");
-		mContext = getActivity();
 		signinButton.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					authorizeSignin(emailField.getText().toString(), passwordField.getText().toString());
+					mEmail = emailField.getText().toString();
+					mPassword = passwordField.getText().toString();
+					authorizeSignin();
 				}
-
 				return true;
 			}
-
 		});
-
 		return view;
 	}
 
@@ -67,19 +73,11 @@ public class EmailSignInFragment extends DialogFragment {
 		startActivity(intent);
 	}
 
-	public void authorizeSignin(Context context, String email, String password) {
-		mContext = context;
-		authorizeSignin(email, password);
-	}
-
-	private void authorizeSignin(String email, String password) {
+	private void authorizeSignin() {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
-		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
-		mEmail = email;
-		mPassword = password;
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(email, password, new Callback<SignInResponse>() {
+		service.login(mEmail, mPassword, new Callback<SignInResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
@@ -93,10 +91,7 @@ public class EmailSignInFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					SnapPreference pref = new SnapPreference(getActivity());
-					pref.put(SnapPreference.PREF_CURRENT_USER_ID, loginResponse.getId());
-					pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
-					pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
+					saveUserToPreferences(loginResponse.getId());
 
 					Toast.makeText(
 							getActivity(),
@@ -128,8 +123,15 @@ public class EmailSignInFragment extends DialogFragment {
 				}
 
 			}
+
 		});
 
+	}
+
+	private void saveUserToPreferences(int userId) {
+		pref.put(SnapPreference.PREF_CURRENT_USER_ID, userId);
+		pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
+		pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
 	}
 
 	@Override

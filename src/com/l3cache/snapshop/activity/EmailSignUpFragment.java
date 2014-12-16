@@ -46,14 +46,15 @@ public class EmailSignUpFragment extends DialogFragment {
 	private EditText passwordAgainField;
 	private String mEmail;
 	private String mPassword;
+	private SnapPreference pref;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
-		// Set screen name.
 		t.setScreenName(EmailSignUpFragment.class.getSimpleName());
-		// Send a screen view.
 		t.send(new HitBuilders.AppViewBuilder().build());
+
+		pref = new SnapPreference(getActivity());
 
 		View view = inflater.inflate(R.layout.fragment_sign_up_email, container, false);
 		signupButton = (Button) view.findViewById(R.id.button_sign_up);
@@ -143,7 +144,6 @@ public class EmailSignUpFragment extends DialogFragment {
 	private void authorizeSignin() {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
-		// 콜백함수에서 사용할 수 있도록 email을 지역변수에 저장
 		SnapShopService service = restAdapter.create(SnapShopService.class);
 		service.login(mEmail, mPassword, new Callback<SignInResponse>() {
 
@@ -159,10 +159,7 @@ public class EmailSignUpFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					SnapPreference pref = new SnapPreference(getActivity());
-					pref.put(SnapPreference.PREF_CURRENT_USER_ID, loginResponse.getId());
-					pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
-					pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
+					saveUserToPreferences(loginResponse.getId());
 					Toast.makeText(
 							getActivity(),
 							"Welcome " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
@@ -193,9 +190,21 @@ public class EmailSignUpFragment extends DialogFragment {
 				}
 
 			}
+
 		});
 
 	}
+
+	/**
+	 * 추후 자동로그인을 위해 현재 로그인 하는 사용자의 정보를 preferences에 저장
+	 * 
+	 * @param userId
+	 */
+	private void saveUserToPreferences(int userId) {
+		pref.put(SnapPreference.PREF_CURRENT_USER_ID, userId);
+		pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
+		pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
+	};
 
 	private void intentTabHostActivity() {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);
@@ -205,17 +214,15 @@ public class EmailSignUpFragment extends DialogFragment {
 	}
 
 	/**
-	 * method is used for checking valid email id format.
+	 * 사용자가 입력한 이메일 주소의 유효성 검사
 	 * 
 	 * @param email
-	 * @return boolean true for valid false for invalid
+	 * @return 유효할 경우 true, 유효하지 않을 경우 false
 	 */
 	public static boolean isEmailValid(String email) {
 		boolean isValid = false;
-
 		String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
 		CharSequence inputStr = email;
-
 		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(inputStr);
 		if (matcher.matches()) {

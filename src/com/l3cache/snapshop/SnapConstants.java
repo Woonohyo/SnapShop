@@ -13,13 +13,14 @@ public final class SnapConstants {
 	public static final String DEACTIVATE_REQUEST = "/app/users/delete";
 	public static final String READ_POST_REQUEST = "/app/posts/{pid}/read";
 	public static final String POST_DELETE_REQUEST = "/app/posts/delete/{pid}";
+	public static final String GCM_SENDER_ID = "447902358753";
 
 	public static final String MYSNAP_REQUEST(int uid) {
-		return "/app/users/" + uid + "/likes";
+		return "/app/posts/" + uid + "/likes";
 	}
 
 	public static final String MYPOST_REQUEST(int uid) {
-		return "/app/users/" + uid + "/posts";
+		return "/app/posts/" + uid + "/posts";
 	}
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -29,6 +30,10 @@ public final class SnapConstants {
 	public static final int EMAIL_ERROR = 22;
 	public static final int PASSWORD_ERROR = 23;
 	public static final int ACCESS_DENIED = 24;
+	public static final int ADULT_QUERY = 25;
+	public static final int ARGUMENT_ERROR = 26;
+	public static final int DATABASE_ERROR = 30;
+	public static final int API_ERROR = 31;
 
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	public static final int RESULT_LOAD_IMAGE = 200;

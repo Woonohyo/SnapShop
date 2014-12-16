@@ -125,12 +125,11 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 
 	private void parseJsonFeed(JSONObject response) {
 		try {
-			JSONObject jsonData = response.getJSONObject("response");
-			if (jsonData.getInt("total") == 0) {
+			if (response.getInt("total") == 0) {
 				Toast.makeText(getActivity(), "No My Snaps", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			JSONArray feedArray = jsonData.getJSONArray("data");
+			JSONArray feedArray = response.getJSONArray("data");
 
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);

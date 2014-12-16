@@ -12,7 +12,6 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -36,8 +35,8 @@ import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
 import com.l3cache.snapshop.photocrop.CropUtil;
+import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
-import com.l3cache.snapshop.retrofit.UploadResponse;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
@@ -133,6 +132,10 @@ public class UploadPostView extends Activity {
 						return true;
 					}
 
+					if (contentsEditText.getText().length() == 0) {
+						contentsEditText.setText(" ");
+					}
+
 					switch (handlerId) {
 					case SnapConstants.CAMERA_BUTTON:
 					case SnapConstants.GALLERY_BUTTON: {
@@ -207,7 +210,7 @@ public class UploadPostView extends Activity {
 		service.uploadSnap(new TypedString(titleEditText.getText().toString()), new TypedString(shopUrlEditText
 				.getText().toString()), new TypedString(contentsEditText.getText().toString()), imageTypedFile,
 				new TypedString(priceEditText.getText().toString()), pref.getValue(SnapPreference.PREF_CURRENT_USER_ID,
-						0), new Callback<UploadResponse>() {
+						0), new Callback<DefaultResponse>() {
 
 					@Override
 					public void failure(RetrofitError error) {
@@ -218,7 +221,7 @@ public class UploadPostView extends Activity {
 					}
 
 					@Override
-					public void success(UploadResponse uploadResponse, Response response) {
+					public void success(DefaultResponse uploadResponse, Response response) {
 						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
 							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
 									.show();
@@ -236,25 +239,25 @@ public class UploadPostView extends Activity {
 	private void upload(String imageUrl) {
 		service.uploadSnap(titleEditText.getText().toString(), shopUrlEditText.getText().toString(), contentsEditText
 				.getText().toString(), imageUrl, priceEditText.getText().toString(), pref.getValue(
-				SnapPreference.PREF_CURRENT_USER_ID, 0), new Callback<UploadResponse>() {
+				SnapPreference.PREF_CURRENT_USER_ID, 0), new Callback<DefaultResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
-				Log.i(TAG, error.getLocalizedMessage());
+				Log.i(TAG, "Error(url) - " + error.getLocalizedMessage());
 				Toast.makeText(getApplicationContext(), "Error(url) - " + error.getLocalizedMessage(),
 						Toast.LENGTH_LONG).show();
 				;
 			}
 
 			@Override
-			public void success(UploadResponse uploadResponse, Response response) {
-				Log.i(TAG, uploadResponse.getStatus() + "");
-				if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
+			public void success(DefaultResponse defResp, Response response) {
+				Log.i(TAG, defResp.getStatus() + "");
+				if (defResp.getStatus() == SnapConstants.SUCCESS) {
 					Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG).show();
 					didUploadFinishActivity();
-				} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
-					Toast.makeText(getApplicationContext(), "Error(url) - " + uploadResponse.getStatus(),
-							Toast.LENGTH_LONG).show();
+				} else if (defResp.getStatus() == SnapConstants.ERROR) {
+					Toast.makeText(getApplicationContext(), "Error(url) - " + defResp.getStatus(), Toast.LENGTH_LONG)
+							.show();
 				}
 			}
 

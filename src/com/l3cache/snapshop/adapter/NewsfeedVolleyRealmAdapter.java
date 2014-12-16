@@ -130,7 +130,6 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 
 			@Override
 			public void onClick(View v) {
-
 				if (restAdapter == null) {
 					restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 							.setConverter(new GsonConverter(new Gson())).build();
@@ -149,7 +148,6 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 				if (snapButton.isChecked()) {
 					service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), pid,
 							new Callback<DefaultResponse>() {
-
 								@Override
 								public void success(DefaultResponse defResp, Response resp) {
 									if (defResp.getStatus() == SnapConstants.SUCCESS) {
@@ -162,7 +160,6 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 												Toast.LENGTH_SHORT).show();
 										snapButton.setChecked(false);
 										snapButton.setTextColor(Color.parseColor("#000000"));
-
 									}
 								}
 

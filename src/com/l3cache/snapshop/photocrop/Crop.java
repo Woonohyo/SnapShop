@@ -31,7 +31,7 @@ public class Crop {
 	}
 
 	private Intent cropIntent;
-	
+
 	public Intent getIntent() {
 		return cropIntent;
 	}
