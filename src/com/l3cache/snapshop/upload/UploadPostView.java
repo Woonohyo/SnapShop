@@ -125,6 +125,10 @@ public class UploadPostView extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					initRestfit();
+					
+					if(priceEditText.getText().length() == 0) {
+						Toast.makeText(getApplicationContext(), "Please enter price of your item", Toast.LENGTH_SHORT).show();
+					}
 
 					switch (handlerId) {
 					case SnapConstants.CAMERA_BUTTON:

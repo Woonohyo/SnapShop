@@ -65,6 +65,8 @@ public class LoginView extends FragmentActivity {
 			mEmail = pref.getValue(SnapPreference.PREF_CURRENT_USER_EMAIL, null);
 			mPassword = pref.getValue(SnapPreference.PREF_CURRENT_USER_PASSWORD, null);
 			authorizeSignin();
+		} else {
+
 		}
 
 		Button signInEmailButton = (Button) findViewById(R.id.login_view_email_signin_button);

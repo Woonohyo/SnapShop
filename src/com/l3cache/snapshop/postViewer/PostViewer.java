@@ -5,44 +5,54 @@ import io.realm.Realm;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import org.apache.commons.validator.routines.UrlValidator;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.constants.SnapConstants;
 import com.l3cache.snapshop.data.NewsfeedData;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
-import com.l3cache.snapshop.search.SearchResultsView;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 
 public class PostViewer extends Activity {
 	private String TAG = PostViewer.class.getSimpleName();
+	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 	private FeedImageView feedImageView;
 	private TextView titleTextView;
 	private TextView userNameTextView;
 	private Button priceButton;
 	private TextView descTextView;
-
-	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	private ToggleButton snapButton;
+	private NewsfeedData currentData;
+	private int mPid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +68,10 @@ public class PostViewer extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_post_viewer);
 
-		// FadingActionBarHelper helper = new FadingActionBarHelper()
-		// .actionBarBackground(new
-		// ColorDrawable(getResources().getColor(R.color.snap_green)))
-		// .headerLayout(R.layout.header).contentLayout(R.layout.activity_post_viewer);
-		// setContentView(helper.createView(this));
-		// helper.initActionBar(this);
-
 		Realm realm = Realm.getInstance(this);
 		Bundle extras = getIntent().getExtras();
-		NewsfeedData currentData = realm.where(NewsfeedData.class).equalTo("pid", extras.getLong("pid")).findFirst();
+		currentData = realm.where(NewsfeedData.class).equalTo("pid", extras.getLong("pid")).findFirst();
+		mPid = currentData.getPid();
 		Log.i(TAG, currentData.toString());
 
 		feedImageView = (FeedImageView) findViewById(R.id.post_viewer_item_image_view);
@@ -84,6 +88,24 @@ public class PostViewer extends Activity {
 		format.setParseIntegerOnly(true);
 		String formattedPrice = format.format(Integer.parseInt(currentData.getPrice()));
 		priceButton.setText(formattedPrice);
+		priceButton.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					UrlValidator urlValidator = new UrlValidator();
+					if (urlValidator.isValid(currentData.getShopUrl())) {
+						Uri uri = Uri.parse(currentData.getShopUrl());
+						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+						startActivity(intent);
+						return true;
+					} else {
+						Toast.makeText(getApplicationContext(), "Invalid Shop URL", Toast.LENGTH_SHORT).show();
+						return true;
+					}
+				}
+				return false;
+			}
+		});
 
 		descTextView = (TextView) findViewById(R.id.post_viewer_description_text_view);
 		descTextView.setText((currentData.getContents().length() > 0 ? currentData.getContents() : "No Description"));
@@ -105,6 +127,94 @@ public class PostViewer extends Activity {
 					Log.i(TAG, error.getResponse() + "");
 				}
 
+			}
+		});
+
+		snapButton = (ToggleButton) findViewById(R.id.postviewer_snap_button);
+		if (currentData.getUserLike() == 1) {
+			snapButton.setChecked(true);
+			snapButton.setTextColor(Color.parseColor("#2DB400"));
+		}
+		snapButton.setOnTouchListener(new OnTouchListener() {
+			RestAdapter restAdapter;
+			SnapShopService service;
+			SnapPreference pref = new SnapPreference(getApplicationContext());
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					if (restAdapter == null) {
+						restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+								.setConverter(new GsonConverter(new Gson())).build();
+					}
+
+					if (service == null) {
+						service = restAdapter.create(SnapShopService.class);
+					}
+
+					if (snapButton.isChecked()) {
+						service.unSnapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), mPid,
+								new Callback<DefaultResponse>() {
+
+									@Override
+									public void failure(RetrofitError error) {
+										Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT)
+												.show();
+									}
+
+									@Override
+									public void success(DefaultResponse defResp, Response resp) {
+										if (defResp.getStatus() == SnapConstants.SUCCESS) {
+											Toast.makeText(getApplicationContext(), "Unsnap - " + mPid,
+													Toast.LENGTH_SHORT).show();
+											snapButton.setChecked(false);
+											snapButton.setTextColor(Color.parseColor("#000000"));
+											currentData.setUserLike(0);
+										} else {
+											Toast.makeText(getApplicationContext(),
+													"UnSnap Failed. Server Error - " + defResp.getStatus(),
+													Toast.LENGTH_SHORT).show();
+
+										}
+									}
+
+								});
+
+					} else {
+						service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), mPid,
+								new Callback<DefaultResponse>() {
+
+									@Override
+									public void failure(RetrofitError error) {
+										Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT)
+												.show();
+									}
+
+									@Override
+									public void success(DefaultResponse defResp, Response resp) {
+										if (defResp.getStatus() == SnapConstants.SUCCESS) {
+											Toast.makeText(getApplicationContext(), "Snap - " + mPid,
+													Toast.LENGTH_SHORT).show();
+											snapButton.setChecked(true);
+											snapButton.setTextColor(Color.parseColor("#2DB400"));
+											currentData.setUserLike(1);
+
+										} else {
+											Toast.makeText(getApplicationContext(),
+													"Snap Failed. Server Error - " + defResp.getStatus(),
+													Toast.LENGTH_SHORT).show();
+										}
+
+									}
+
+								});
+
+					}
+
+					return true;
+				}
+
+				return false;
 			}
 		});
 
