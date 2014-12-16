@@ -7,3 +7,7 @@ libs/
 .apt_generated/io/realm/
 SnapShopDoxygen
 Doxygen/
+.classpath
+.factorypath
+.project
+project.properties
