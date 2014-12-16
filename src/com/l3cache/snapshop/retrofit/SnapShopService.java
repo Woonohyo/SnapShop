@@ -13,10 +13,7 @@ import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
-import com.l3cache.snapshop.constants.SnapConstants;
-import com.l3cache.snapshop.login.SignInResponse;
-import com.l3cache.snapshop.login.SignUpResponse;
-import com.l3cache.snapshop.upload.UploadResponse;
+import com.l3cache.snapshop.SnapConstants;
 
 public interface SnapShopService {
 	// 로그인

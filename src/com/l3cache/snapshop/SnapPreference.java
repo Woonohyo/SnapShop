@@ -1,7 +1,5 @@
 package com.l3cache.snapshop;
 
-import com.l3cache.snapshop.data.User;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;

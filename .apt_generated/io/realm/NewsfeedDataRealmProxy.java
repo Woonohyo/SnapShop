@@ -1,7 +1,7 @@
 package io.realm;
 
 
-import com.l3cache.snapshop.data.*;
+import com.l3cache.snapshop.model.*;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;

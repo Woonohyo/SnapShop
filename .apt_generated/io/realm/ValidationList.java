@@ -7,7 +7,7 @@ import java.util.List;
 public class ValidationList {
 
     public static List<String> getProxyClasses() {
-        return Arrays.asList("com.l3cache.snapshop.data.User", "com.l3cache.snapshop.data.NewsfeedData");
+        return Arrays.asList("com.l3cache.snapshop.model.NewsfeedData", "com.l3cache.snapshop.model.User");
     }
 
 }

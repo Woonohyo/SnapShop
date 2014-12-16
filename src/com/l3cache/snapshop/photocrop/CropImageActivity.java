@@ -42,8 +42,8 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 
+import com.l3cache.snapshop.ExifUtils;
 import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.util.ExifUtils;
 
 /*
  * Modified from original in AOSP.
