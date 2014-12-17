@@ -15,5 +15,11 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 		// Start the service, keeping the device awake while it is launching.
 		startWakefulService(context, (intent.setComponent(comp)));
 		setResultCode(Activity.RESULT_OK);
+
+		/**
+		 * 새로운 포스트가 올라왔으므로 NewsfeedView를 새로고침한다
+		 */
+		Intent newPostIntent = new Intent("NEW_POST");
+		context.sendBroadcast(newPostIntent);
 	}
 }

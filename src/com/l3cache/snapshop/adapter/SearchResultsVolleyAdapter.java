@@ -15,17 +15,17 @@ import android.widget.TextView;
 
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.model.SearchResultsItem;
+import com.l3cache.snapshop.model.NaverSearchResult;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class SearchResultsVolleyAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater;
-	private ArrayList<SearchResultsItem> resultItems;
+	private ArrayList<NaverSearchResult> resultItems;
 	private ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-	public SearchResultsVolleyAdapter(Activity activity, ArrayList<SearchResultsItem> resultItems) {
+	public SearchResultsVolleyAdapter(Activity activity, ArrayList<NaverSearchResult> resultItems) {
 		this.activity = activity;
 		this.resultItems = resultItems;
 	}
@@ -63,16 +63,19 @@ public class SearchResultsVolleyAdapter extends BaseAdapter {
 
 		TextView mallNameTextView = (TextView) convertView.findViewById(R.id.searchresults_list_row_mallName_text_view);
 
-		SearchResultsItem item = resultItems.get(position);
+		NaverSearchResult item = resultItems.get(position);
 
 		itemNameTextView.setText(Html.fromHtml(item.getTitle()));
-		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
-		format.setParseIntegerOnly(true);
-		String formattedLowPrice = format.format(item.getLprice());
-		itemPriceTextView.setText(formattedLowPrice);
+		try {
+			NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
+			format.setParseIntegerOnly(true);
+			String formattedLowPrice = format.format(item.getLprice());
+			itemPriceTextView.setText(formattedLowPrice);
+		} catch (Exception e) {
+			itemPriceTextView.setText("0");
+		}
 		mallNameTextView.setText(item.getMallName());
-
-		// Feed image
+		
 		if (item.getImage() != null) {
 			feedImageView.setImageUrl(item.getImage(), imageLoader);
 			feedImageView.setVisibility(View.VISIBLE);

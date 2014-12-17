@@ -47,15 +47,15 @@ import com.l3cache.snapshop.adapter.EndlessScrollListener;
 import com.l3cache.snapshop.adapter.MyPostsAdapter;
 import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
-import com.l3cache.snapshop.model.NewsfeedData;
+import com.l3cache.snapshop.model.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
-import com.l3cache.snapshop.retrofit.NewsfeedRequest;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class MyPostsView extends Fragment {
 	private static final String TAG = MyPostsView.class.getSimpleName();
 	private GridView mGridView;
-	private ArrayList<NewsfeedData> mFeedItems;
+	private ArrayList<Newsfeed> mFeedItems;
 	private MyPostsAdapter mListAdapter;
 	private int mTotalResult;
 	SnapPreference pref;
@@ -74,7 +74,7 @@ public class MyPostsView extends Fragment {
 
 		View view = inflater.inflate(R.layout.activity_my_posts_view, container, false);
 		mGridView = (GridView) view.findViewById(R.id.my_posts_main_grid_view);
-		mFeedItems = new ArrayList<NewsfeedData>();
+		mFeedItems = new ArrayList<Newsfeed>();
 		mListAdapter = new MyPostsAdapter(getActivity(), mFeedItems);
 		mGridView.setAdapter(mListAdapter);
 		mGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -96,20 +96,16 @@ public class MyPostsView extends Fragment {
 				alt_bld.setMessage("Do you want to delete your post?").setCancelable(true)
 						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								Log.i(TAG,
-										"Deleting item pid - " + pid + " of user - "
-												+ pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 								service.deletePost(pid, pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0),
 										new Callback<DefaultResponse>() {
-
 											@Override
 											public void success(DefaultResponse defResp, retrofit.client.Response arg1) {
-												if (defResp.getStatus() == 10) {
+												if (defResp.getStatus() == SnapConstants.SUCCESS) {
 													Toast.makeText(getActivity(), "The post was deleted.",
 															Toast.LENGTH_SHORT).show();
 													mFeedItems.remove(mPosition);
 													mListAdapter.notifyDataSetChanged();
-												} else if (defResp.getStatus() == 20) {
+												} else if (defResp.getStatus() == SnapConstants.ERROR) {
 													Toast.makeText(getActivity(), "Deletion failed", Toast.LENGTH_SHORT)
 															.show();
 												}
@@ -190,7 +186,6 @@ public class MyPostsView extends Fragment {
 
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.i(TAG, "Error: " + error.getMessage());
 					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 				}
 			});
@@ -208,13 +203,10 @@ public class MyPostsView extends Fragment {
 			JSONArray feedArray = response.getJSONArray("data");
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
-				NewsfeedData item = new NewsfeedData();
-
+				Newsfeed item = new Newsfeed();
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
-				// url might be null sometimes
-				String feedUrl = feedObj.isNull("shopUrl") ? null : feedObj.getString("shopUrl");
-				item.setShopUrl(feedUrl);
+				item.setShopUrl(feedObj.getString("shopUrl"));
 				item.setContents(feedObj.getString("contents"));
 				item.setImageUrl(feedObj.getString("imgUrl"));
 				item.setNumLike(feedObj.getInt("numLike"));

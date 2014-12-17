@@ -21,10 +21,10 @@ public class GcmIntentService extends IntentService {
 	public static final int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
+	Context mContext;
 
 	public GcmIntentService() {
 		super("GcmIntentService");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

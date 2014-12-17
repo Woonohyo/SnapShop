@@ -12,17 +12,17 @@ import android.widget.TextView;
 
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.model.NewsfeedData;
+import com.l3cache.snapshop.model.Newsfeed;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class MyPostsAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater;
-	private ArrayList<NewsfeedData> feedItems;
+	private ArrayList<Newsfeed> feedItems;
 	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-	public MyPostsAdapter(Activity activity, ArrayList<NewsfeedData> feedItems) {
+	public MyPostsAdapter(Activity activity, ArrayList<Newsfeed> feedItems) {
 		this.activity = activity;
 		this.feedItems = feedItems;
 	}
@@ -53,7 +53,7 @@ public class MyPostsAdapter extends BaseAdapter {
 		if (imageLoader == null)
 			imageLoader = AppController.getInstance().getImageLoader();
 
-		NewsfeedData item = feedItems.get(position);
+		Newsfeed item = feedItems.get(position);
 
 		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.my_post_image_view);
 		TextView titleTextView = (TextView) convertView.findViewById(R.id.my_post_title_text_view);

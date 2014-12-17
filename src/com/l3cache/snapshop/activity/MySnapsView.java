@@ -1,5 +1,8 @@
 package com.l3cache.snapshop.activity;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.hardware.camera2.TotalCaptureResult;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,21 +31,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.internal.mr;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
+import com.l3cache.snapshop.SnapNetworkUtils;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.adapter.EndlessScrollListener;
 import com.l3cache.snapshop.adapter.MySnapsAdapter;
 import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
-import com.l3cache.snapshop.model.NewsfeedData;
-import com.l3cache.snapshop.retrofit.NewsfeedRequest;
+import com.l3cache.snapshop.model.Newsfeed;
+import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class MySnapsView extends Fragment implements OnItemClickListener {
 	private static final String TAG = MySnapsView.class.getSimpleName();
-	private GridView listView;
-	private MySnapsAdapter listAdapter;
-	private ArrayList<NewsfeedData> feedItems;
+	private GridView mGridView;
+	private MySnapsAdapter mSnapAdapter;
+	private ArrayList<Newsfeed> mFeedItems;
 	private int resultPageStart = 1;
 	protected int numOfTotalResult;
 	private static String URL_FEED;
@@ -48,27 +55,24 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
-		t.setScreenName(MySnapsView.class.getSimpleName());
-		t.send(new HitBuilders.AppViewBuilder().build());
+		registerGoogleAnalytics();
 
 		pref = new SnapPreference(getActivity());
 		URL_FEED = SnapConstants.SERVER_URL
 				+ SnapConstants.MYSNAP_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 
 		View view = inflater.inflate(R.layout.activity_my_snaps_view, container, false);
-		listView = (GridView) view.findViewById(R.id.my_snaps_main_grid_view);
-		feedItems = new ArrayList<NewsfeedData>();
-		listAdapter = new MySnapsAdapter(getActivity(), feedItems);
-		listView.setAdapter(listAdapter);
-		listView.setOnScrollListener(new EndlessScrollListener() {
+		mGridView = (GridView) view.findViewById(R.id.my_snaps_main_grid_view);
+		mFeedItems = new ArrayList<Newsfeed>();
+		mSnapAdapter = new MySnapsAdapter(getActivity(), mFeedItems);
+		mGridView.setAdapter(mSnapAdapter);
+		mGridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
-				if (numOfTotalResult < 10 || (page * 20) > numOfTotalResult) {
+				if (numOfTotalResult < 10 || ((page - 1) * 20) > numOfTotalResult) {
 					return;
 				}
-
 				fetchDataFromServer(page);
 			}
 		});
@@ -76,17 +80,36 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 		return view;
 	}
 
+	private void registerGoogleAnalytics() {
+		Tracker t = ((AppController) getActivity().getApplication()).getTracker(TrackerName.APP_TRACKER);
+		t.setScreenName(MySnapsView.class.getSimpleName());
+		t.send(new HitBuilders.AppViewBuilder().build());
+	}
+
+	/**
+	 * 디바이스가 네트워크에 연결되어 있을 경우, 서버로부터 새로운 데이터를 받아옵니다. 그렇지 않을 경우 NewsfeedView에서 이미
+	 * 받아놓은 Realm에 저장된 로컬 데이터 중 (userLike == 1)인 데이터만 가져와서 출력합니다.
+	 */
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		fetchDataFromServer(resultPageStart);
-		// fetchDataFromRealm(resultPageStart);
+		SnapNetworkUtils netUtils = new SnapNetworkUtils();
+		if (netUtils.isOnline(getActivity()))
+			fetchDataFromServer(resultPageStart);
+		else {
+			Realm realm = Realm.getInstance(getActivity());
+			RealmResults<Newsfeed> results = realm.where(Newsfeed.class).equalTo("userLike", 1)
+					.findAll("pid", false);
+			mFeedItems.addAll(results);
+			numOfTotalResult = mFeedItems.size();
+		}
 	}
 
 	private void fetchDataFromServer(int start) {
+		Uri.Builder builder = new Uri.Builder();
+		String targetUrl = builder.encodedPath(URL_FEED).appendQueryParameter("start", start + "").build().toString();
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
-		Entry entry = cache.get(URL_FEED);
+		Entry entry = cache.get(targetUrl);
 		if (entry != null) {
 			try {
 				String data = new String(entry.data, "UTF-8");
@@ -106,16 +129,19 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 			NewsfeedRequest jsonReq = new NewsfeedRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
-					Log.i(TAG, "Response: " + response.toString());
-					if (response != null) {
-						parseJsonFeed(response);
+					try {
+						int status = response.getInt("result");
+						if (response != null && status == SnapConstants.SUCCESS)
+							parseJsonFeed(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
+
 				}
 			}, new Response.ErrorListener() {
 
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.i(TAG, "Error: " + error.getMessage());
 					Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 				}
 			});
@@ -129,6 +155,8 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 				Toast.makeText(getActivity(), "No My Snaps", Toast.LENGTH_SHORT).show();
 				return;
 			}
+			numOfTotalResult = response.getInt("total");
+			Log.i(TAG, "Total - " + numOfTotalResult);
 			JSONArray feedArray = response.getJSONArray("data");
 
 			for (int i = 0; i < feedArray.length(); i++) {
@@ -137,13 +165,10 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 					continue;
 				}
 
-				NewsfeedData item = new NewsfeedData();
-
+				Newsfeed item = new Newsfeed();
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
-				// url might be null sometimes
-				String feedUrl = feedObj.isNull("shopUrl") ? null : feedObj.getString("shopUrl");
-				item.setShopUrl(feedUrl);
+				item.setShopUrl(feedObj.getString("shopUrl"));
 				item.setContents(feedObj.getString("contents"));
 				item.setImageUrl(feedObj.getString("imgUrl"));
 				item.setNumLike(feedObj.getInt("numLike"));
@@ -152,12 +177,11 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 				item.setWriter(feedObj.getString("writer"));
 				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));
-
-				feedItems.add(item);
+				mFeedItems.add(item);
 			}
 
 			// notify data changes to list adapater
-			listAdapter.notifyDataSetChanged();
+			mSnapAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -5,7 +5,7 @@ import io.realm.annotations.Index;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
-public class NewsfeedData extends RealmObject {
+public class Newsfeed extends RealmObject {
 	private int pid;
 	private String title;
 	private String shopUrl;
@@ -61,10 +61,10 @@ public class NewsfeedData extends RealmObject {
 
 	private String name;
 
-	public NewsfeedData() {
+	public Newsfeed() {
 	}
 
-	public NewsfeedData(String title, String shopUrl, String contents, String imageUrl, String price, int userId) {
+	public Newsfeed(String title, String shopUrl, String contents, String imageUrl, String price, int userId) {
 		this.title = title;
 		this.shopUrl = shopUrl;
 		this.contents = contents;

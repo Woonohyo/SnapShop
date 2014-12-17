@@ -1,6 +1,6 @@
 package com.l3cache.snapshop.model;
 
-public class MySnapData {
+public class MySnap {
 	private int pid;
 	private String title;
 	private String shopUrl;

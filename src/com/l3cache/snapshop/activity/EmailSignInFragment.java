@@ -77,7 +77,7 @@ public class EmailSignInFragment extends DialogFragment {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(mEmail, mPassword, new Callback<SignInResponse>() {
+		service.signIn(mEmail, mPassword, new Callback<SignInResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {

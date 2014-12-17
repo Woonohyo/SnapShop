@@ -36,7 +36,7 @@ import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
-import com.l3cache.snapshop.model.NewsfeedData;
+import com.l3cache.snapshop.model.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
@@ -51,18 +51,14 @@ public class PostViewer extends Activity {
 	private Button priceButton;
 	private TextView descTextView;
 	private ToggleButton snapButton;
-	private NewsfeedData currentData;
+	private Newsfeed currentData;
 	private int mPid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Get tracker.
 		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
-		// Set screen name.
 		t.setScreenName(PostViewer.class.getSimpleName());
-		// Send a screen view.
 		t.send(new HitBuilders.AppViewBuilder().build());
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,7 +66,7 @@ public class PostViewer extends Activity {
 
 		Realm realm = Realm.getInstance(this);
 		Bundle extras = getIntent().getExtras();
-		currentData = realm.where(NewsfeedData.class).equalTo("pid", extras.getLong("pid")).findFirst();
+		currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
 		mPid = currentData.getPid();
 		Log.i(TAG, currentData.toString());
 
@@ -216,6 +212,26 @@ public class PostViewer extends Activity {
 
 				return false;
 			}
+		});
+
+		service.readPost(currentData.getPid(), new Callback<DefaultResponse>() {
+			@Override
+			public void failure(RetrofitError error) {
+				// Toast.makeText(getApplicationContext(), "Network Error",
+				// Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void success(DefaultResponse defResp, Response resp) {
+				if (defResp.getStatus() == SnapConstants.SUCCESS) {
+					// Toast.makeText(getApplicationContext(), "Read",
+					// Toast.LENGTH_SHORT).show();
+				} else {
+					// Toast.makeText(getApplicationContext(), "Server Error",
+					// Toast.LENGTH_SHORT).show();
+				}
+			}
+
 		});
 
 	}

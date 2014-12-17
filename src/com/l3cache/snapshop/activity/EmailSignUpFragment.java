@@ -1,7 +1,5 @@
 package com.l3cache.snapshop.activity;
 
-import io.realm.Realm;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +10,6 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -34,9 +30,8 @@ import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
-import com.l3cache.snapshop.model.User;
+import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SignInResponse;
-import com.l3cache.snapshop.retrofit.SignUpResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 
 public class EmailSignUpFragment extends DialogFragment {
@@ -105,7 +100,7 @@ public class EmailSignUpFragment extends DialogFragment {
 				.setConverter(new GsonConverter(new Gson())).build();
 
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.signUp(mEmail, mPassword, new Callback<SignUpResponse>() {
+		service.signUp(mEmail, mPassword, new Callback<DefaultResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
@@ -113,14 +108,13 @@ public class EmailSignUpFragment extends DialogFragment {
 			}
 
 			@Override
-			public void success(SignUpResponse signupResponse, Response response) {
-				int status = signupResponse.getStatus();
+			public void success(DefaultResponse defResp, Response response) {
+				int status = defResp.getStatus();
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
 					authorizeSignin();
 					break;
-
 				}
 
 				case SnapConstants.EMAIL_DUPLICATION: {
@@ -145,7 +139,7 @@ public class EmailSignUpFragment extends DialogFragment {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.login(mEmail, mPassword, new Callback<SignInResponse>() {
+		service.signIn(mEmail, mPassword, new Callback<SignInResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {

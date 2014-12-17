@@ -31,13 +31,13 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.model.NewsfeedData;
+import com.l3cache.snapshop.model.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
-public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> implements OnTouchListener, ListAdapter {
+public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> implements OnTouchListener, ListAdapter {
 
 	private static final String TAG = NewsfeedVolleyRealmAdapter.class.getSimpleName();
 	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
@@ -48,21 +48,27 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 		Button priceButton;
 		TextView titleTextView;
 		ToggleButton snapButton;
+		TextView snapsNumberTextView;
+		TextView viewsNumberTextView;
 	}
 
-	public NewsfeedVolleyRealmAdapter(Context context, RealmResults<NewsfeedData> realmResults, boolean automaticUpdate) {
+	public NewsfeedVolleyRealmAdapter(Context context, RealmResults<Newsfeed> realmResults, boolean automaticUpdate) {
 		super(context, realmResults, automaticUpdate);
 	}
 
 	@Override
-	public NewsfeedData getItem(int position) {
+	public Newsfeed getItem(int position) {
 		return realmResults.get(position);
 	}
 
+	/**
+	 * ViewHolder 패턴을 이용하여 로딩 속도를 최적화합니다. 따라서, 개별 row 고유의 값을 설정할 때는 viewHolder
+	 * 객체가 생성된 다음에 해줘야 합니다.
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		MyViewHolder viewHolder;
-		NewsfeedData item = realmResults.get(position);
+		Newsfeed item = realmResults.get(position);
 
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.newsfeed_volley_list_row, parent, false);
@@ -72,6 +78,10 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 			viewHolder.priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
 			viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_title_text_view);
 			viewHolder.snapButton = (ToggleButton) convertView.findViewById(R.id.newsfeed_item_snap_toggle_button);
+			viewHolder.snapsNumberTextView = (TextView) convertView
+					.findViewById(R.id.newsfeed_item_snaps_number_text_view);
+			viewHolder.viewsNumberTextView = (TextView) convertView
+					.findViewById(R.id.newsfeed_item_view_number_text_view);
 			convertView.setTag(viewHolder);
 
 		} else {
@@ -93,8 +103,10 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 
 		viewHolder.writerTextView.setText(item.getWriter());
 		viewHolder.titleTextView.setText(item.getTitle());
+		viewHolder.snapsNumberTextView.setText("+ " + item.getNumLike());
+		viewHolder.viewsNumberTextView.setText((item.getRead() > 1 ? item.getRead() + " Views" : item.getRead()
+				+ " View"));
 
-		// Feed image
 		if (item.getImageUrl() != null) {
 			viewHolder.feedImageView.setImageUrl(item.getImageUrl(), imageLoader);
 			viewHolder.feedImageView.setVisibility(View.VISIBLE);
@@ -113,20 +125,24 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 
 		viewHolder.snapButton.setChecked((item.getUserLike() == 1 ? true : false));
 		if (viewHolder.snapButton.isChecked()) {
-			viewHolder.snapButton.setTextColor(Color.parseColor("#2DB400"));
+			viewHolder.snapButton.setTextColor(Color.parseColor(SnapConstants.COLOR_SNAP_GREEN));
 		} else {
-			viewHolder.snapButton.setTextColor(Color.parseColor("#000000"));
+			viewHolder.snapButton.setTextColor(Color.parseColor(SnapConstants.COLOR_BLACK));
 		}
 
+		/**
+		 * 개별 row 전체에 걸린 touchListener로 인해, 사용자가 터치하는 순간 ToggleButton의 값이 반전됩니다.
+		 * 즉, ON 되어 있는 버튼을 터치할 경우 OFF로 값이 변한 뒤에, ToggleButton에 별도로 걸린
+		 * ClickListener가 로직을 처리하게 됩니다.
+		 */
 		viewHolder.snapButton.setTag(position);
-		Log.i(TAG, "Setting button tag into " + getItem(position));
 		viewHolder.snapButton.setOnClickListener(new OnClickListener() {
 			RestAdapter restAdapter;
 			SnapShopService service;
 			SnapPreference pref = new SnapPreference(context);
 			int pid;
 			ToggleButton snapButton;
-			NewsfeedData currentItem;
+			Newsfeed currentItem;
 
 			@Override
 			public void onClick(View v) {
@@ -143,7 +159,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 
 				snapButton = (ToggleButton) v;
 				Realm realm = Realm.getInstance(context);
-				currentItem = realm.where(NewsfeedData.class).equalTo("pid", getItemId((int) v.getTag())).findFirst();
+				currentItem = realm.where(Newsfeed.class).equalTo("pid", getItemId((int) v.getTag())).findFirst();
 
 				if (snapButton.isChecked()) {
 					service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), pid,
@@ -153,13 +169,13 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 									if (defResp.getStatus() == SnapConstants.SUCCESS) {
 										Toast.makeText(context, "Snap - " + pid, Toast.LENGTH_SHORT).show();
 										snapButton.setChecked(true);
-										snapButton.setTextColor(Color.parseColor("#2DB400"));
+										snapButton.setTextColor(Color.parseColor(SnapConstants.COLOR_SNAP_GREEN));
 										currentItem.setUserLike(1);
 									} else {
 										Toast.makeText(context, "Snap Failed. Server Error - " + defResp.getStatus(),
 												Toast.LENGTH_SHORT).show();
 										snapButton.setChecked(false);
-										snapButton.setTextColor(Color.parseColor("#000000"));
+										snapButton.setTextColor(Color.parseColor(SnapConstants.COLOR_BLACK));
 									}
 								}
 
@@ -167,7 +183,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 								public void failure(RetrofitError err) {
 									Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
 									snapButton.setChecked(false);
-									snapButton.setTextColor(Color.parseColor("#000000"));
+									snapButton.setTextColor(Color.parseColor(SnapConstants.COLOR_BLACK));
 								}
 							});
 
@@ -209,15 +225,10 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<NewsfeedData> i
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_UP) {
-			Log.i(TAG, "NOOOOOOO");
-			return false;
-		}
-
 		return false;
 	}
 
-	public RealmResults<NewsfeedData> getRealmResults() {
+	public RealmResults<Newsfeed> getRealmResults() {
 		return realmResults;
 	}
 

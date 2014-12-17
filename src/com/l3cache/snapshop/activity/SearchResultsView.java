@@ -46,8 +46,8 @@ import com.l3cache.snapshop.adapter.EndlessScrollListener;
 import com.l3cache.snapshop.adapter.SearchResultsVolleyAdapter;
 import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.controller.AppController.TrackerName;
-import com.l3cache.snapshop.model.SearchResultsItem;
-import com.l3cache.snapshop.retrofit.SearchRequest;
+import com.l3cache.snapshop.model.NaverSearchResult;
+import com.l3cache.snapshop.volley.SearchRequest;
 
 public class SearchResultsView extends Activity implements OnItemClickListener, OnItemSelectedListener {
 
@@ -57,7 +57,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	private final String SORT_ASC = "asc";
 	private final String SORT_DESC = "dsc";
 	private final String SORT_RECENT = "date";
-	private ArrayList<SearchResultsItem> resultItems = new ArrayList<SearchResultsItem>();
+	private ArrayList<NaverSearchResult> resultItems = new ArrayList<NaverSearchResult>();
 	private int resultPageStart = 1;
 	private int numOfTotalResult;
 	private int numOfResultDisplay = 20;
@@ -200,7 +200,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-				SearchResultsItem item = new SearchResultsItem();
+				NaverSearchResult item = new NaverSearchResult();
 				String image = feedObj.isNull("image") ? null : feedObj.getString("image");
 				item.setImage(image);
 				item.setTitle(feedObj.getString("title"));
@@ -271,7 +271,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		SearchResultsItem item = resultItems.get(position);
+		NaverSearchResult item = resultItems.get(position);
 		Intent uploadIntent = new Intent(this, UploadPostView.class);
 		uploadIntent.putExtra("image", item.getImage());
 		uploadIntent.putExtra("handler", SnapConstants.INTERNET_BUTTON);

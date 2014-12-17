@@ -5,7 +5,7 @@ public final class SnapConstants {
 	public static final String SERVER_URL = "http://125.209.199.221:8080";
 	public static final String NEWSFEED_REQUEST = "/app/posts/";
 	public static final String SEARCH_REQUEST = "/search/shop";
-	public static final String LOGIN_REQUEST = "/app/users/login";
+	public static final String SIGNIN_REQUEST = "/app/users/login";
 	public static final String SIGNUP_REQUEST = "/app/users/new";
 	public static final String NEW_NAVER_POST_REQUEST = "/app/posts/newurl";
 	public static final String NEW_CUSTOM_POST_REQUEST = "/app/posts/new";
@@ -22,6 +22,13 @@ public final class SnapConstants {
 	public static final String MYPOST_REQUEST(int uid) {
 		return "/app/posts/" + uid + "/posts";
 	}
+	
+	public static final String READ_POST_REQUEST(int pid) {
+		return "/app/posts/" + pid + "/read";
+	}
+
+	public static final String COLOR_SNAP_GREEN = "#2DB400";
+	public static final String COLOR_BLACK = "#000000";
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int SUCCESS = 10;

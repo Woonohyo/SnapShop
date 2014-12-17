@@ -49,5 +49,6 @@
     <string name="crop__pick_error">No image sources available</string>
     <string name="crop__done">Done</string>
     <string name="crop__cancel">Cancel</string>
+    <string name="title_facebook_login">Log in with Facebook</string>
 
 </resources>

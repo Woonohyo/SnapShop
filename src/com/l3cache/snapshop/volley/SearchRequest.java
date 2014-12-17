@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.retrofit;
+package com.l3cache.snapshop.volley;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -15,16 +15,15 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
-public class NewsfeedRequest extends Request<JSONObject> {
+public class SearchRequest extends Request<JSONObject> {
 	private Map<String, String> mParams = new HashMap<String, String>();
 	private Listener<JSONObject> mListener;
 
-	public NewsfeedRequest(int method, String url, ErrorListener listener) {
+	public SearchRequest(int method, String url, ErrorListener listener) {
 		super(method, url, listener);
-		// TODO Auto-generated constructor stub
 	}
 
-	public NewsfeedRequest(String url, Map<String, String> params, Listener<JSONObject> responseListener,
+	public SearchRequest(String url, Map<String, String> params, Listener<JSONObject> responseListener,
 			ErrorListener errorListener) {
 		super(Method.POST, url, errorListener);
 		mListener = responseListener;
@@ -42,7 +41,7 @@ public class NewsfeedRequest extends Request<JSONObject> {
 			return Response.error(new ParseError(je));
 		}
 	}
-
+	
 	@Override
 	protected Map<String, String> getParams() {
 		return mParams;
@@ -52,4 +51,5 @@ public class NewsfeedRequest extends Request<JSONObject> {
 	protected void deliverResponse(JSONObject response) {
 		mListener.onResponse(response);
 	}
+
 }

@@ -33,13 +33,43 @@
             android:textSize="@dimen/feed_item_profile_name"
             android:textStyle="normal" />
 
-        <TextView
-            android:id="@+id/newsfeed_item_writer_text_view"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="writer"
-            android:textColor="@color/timestamp"
-            android:textSize="@dimen/feed_item_timestamp" />
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/newsfeed_item_writer_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="writer"
+                android:textColor="@color/timestamp"
+                android:textSize="@dimen/feed_item_timestamp" />
+
+            <TextView
+                android:id="@+id/newsfeed_item_snaps_number_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ 1214"
+                android:textColor="@color/timestamp"
+                android:textSize="@dimen/feed_item_timestamp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+            </View>
+
+            <TextView
+                android:id="@+id/newsfeed_item_view_number_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1214 Views"
+                android:textColor="@color/timestamp"
+                android:textSize="@dimen/feed_item_timestamp" />
+        </LinearLayout>
         
     </LinearLayout>
 
@@ -59,7 +89,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:textOff="Snap"
-            android:textOn="Snap'd"
+            android:textOn="Snap&apos;d"
             android:textSize="13sp"
             android:textStyle="bold" >
         </ToggleButton>

@@ -1,6 +1,6 @@
 package com.l3cache.snapshop.model;
 
-public class SearchResultsItem {
+public class NaverSearchResult {
 	private String title;
 	private String link;
 	private String image;
@@ -10,7 +10,7 @@ public class SearchResultsItem {
 	private long productId;
 	private int productType;
 
-	public SearchResultsItem() {
+	public NaverSearchResult() {
 
 	}
 

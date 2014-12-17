@@ -132,10 +132,6 @@ public class UploadPostView extends Activity {
 						return true;
 					}
 
-					if (contentsEditText.getText().length() == 0) {
-						contentsEditText.setText(" ");
-					}
-
 					switch (handlerId) {
 					case SnapConstants.CAMERA_BUTTON:
 					case SnapConstants.GALLERY_BUTTON: {

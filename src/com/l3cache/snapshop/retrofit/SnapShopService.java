@@ -17,7 +17,7 @@ import com.l3cache.snapshop.SnapConstants;
 
 public interface SnapShopService {
 	/**
-	 * 로그인 요청
+	 * SIGN IN 요청
 	 * 
 	 * @param email
 	 *            로그인하려는 사용자의 이메일 주소
@@ -26,8 +26,8 @@ public interface SnapShopService {
 	 * @param cb
 	 *            성공/실패 여부 처리를 위한 콜백<SignInResponse>
 	 */
-	@GET(SnapConstants.LOGIN_REQUEST)
-	void login(@Query("email") String email, @Query("password") String password, Callback<SignInResponse> cb);
+	@GET(SnapConstants.SIGNIN_REQUEST)
+	void signIn(@Query("email") String email, @Query("password") String password, Callback<SignInResponse> cb);
 
 	/**
 	 * 회원가입 요청
@@ -40,7 +40,7 @@ public interface SnapShopService {
 	 *            성공/실패 여부 처리를 위한 콜백<SignUpResponse>
 	 */
 	@POST(SnapConstants.SIGNUP_REQUEST)
-	void signUp(@Query("email") String email, @Query("password") String password, Callback<SignUpResponse> cb);
+	void signUp(@Query("email") String email, @Query("password") String password, Callback<DefaultResponse> cb);
 
 	/**
 	 * 네이버 쇼핑 API를 검색 결과를 이용하여 새 포스트 작성
