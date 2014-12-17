@@ -1,7 +1,7 @@
 #NHN NEXT 2014-3 RealProject - SnapShop
 ======================
 ##Doxygen<br>
-[HTML](http://woonohyo.github.io/SnapShop)<br>
+[HTML](http://woonohyo.github.io/SnapShop/namespaces.html)<br>
 <br>
 <br>
 ##Storyboard, View-API, Structure Analysis<br>
