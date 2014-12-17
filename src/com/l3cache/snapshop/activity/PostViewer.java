@@ -65,9 +65,14 @@ public class PostViewer extends Activity {
 		t.setScreenName(PostViewer.class.getSimpleName());
 		t.send(new HitBuilders.AppViewBuilder().build());
 
+		realm = Realm.getInstance(this);
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+				.setConverter(new GsonConverter(new Gson())).build();
+		SnapShopService service = restAdapter.create(SnapShopService.class);
+
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_post_viewer);
-		
+
 		Bundle extras = getIntent().getExtras();
 		currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
 		mPid = currentData.getPid();
@@ -83,11 +88,11 @@ public class PostViewer extends Activity {
 
 		snapsNumberTextView = (TextView) findViewById(R.id.post_viewer_item_snaps_number_text_view);
 		snapsNumberTextView.setText("+ " + currentData.getNumLike());
+
 		viewsNumberTextView = (TextView) findViewById(R.id.post_viewer_item_view_number_text_view);
 		viewsNumberTextView.setText((currentData.getRead() > 1 ? currentData.getRead() + " Views" : currentData
 				.getRead() + " View"));
 
-		realm = Realm.getInstance(this);
 		/**
 		 * Snap/UnSnap의 변경 될 경우 화면도 갱신합니다
 		 */
@@ -97,12 +102,11 @@ public class PostViewer extends Activity {
 			public void onChange() {
 				Log.i(TAG, "Realm Changed");
 				snapsNumberTextView.setText("+ " + currentData.getNumLike());
+				viewsNumberTextView.setText((currentData.getRead() > 1 ? currentData.getRead() + " Views" : currentData
+						.getRead() + " View"));
 			}
 		});
 
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
-				.setConverter(new GsonConverter(new Gson())).build();
-		SnapShopService service = restAdapter.create(SnapShopService.class);
 		service.readPost(currentData.getPid(), new Callback<DefaultResponse>() {
 			@Override
 			public void failure(RetrofitError error) {
