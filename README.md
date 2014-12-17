@@ -5,7 +5,7 @@
 <br>
 <br>
 ##Storyboard, View-API, Structure Analysis<br>
-[PDF](https://github.com/Woonohyo/SnapShop/blob/master/Project_Documentation.pdf?raw=true)<br>
+[PDF (18MB)](https://github.com/Woonohyo/SnapShop/blob/master/Project_Documentation.pdf?raw=true)<br>
 <br>
 <br>
 ### Storyboard
