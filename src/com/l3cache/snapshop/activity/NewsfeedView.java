@@ -77,18 +77,21 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_RECENT = 1;
 	private final int SORT_POPULAR = 2;
 	private PullToRefreshGridView mGridView;
-	private int mSortInto = SORT_RECOMMENDED;
-	private NewsfeedVolleyRealmAdapter mNewsfeedVolleyRealmAdapter;
+	private int sortInto = SORT_RECOMMENDED;
+	private NewsfeedVolleyRealmAdapter newsfeedAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
 	private int totalResults = 0;
-	private Spinner mSortSpinner;
-	private EndlessScrollListener mEndlessScrollListener;
-	private OnItemClickListener mGridViewItemClickListener;
+	private Spinner sortSpinner;
+	private EndlessScrollListener endlessScrollListener;
+	private OnItemClickListener gridViewItemClickListener;
 	private OnTouchListener newPostButtonTouchListener;
 	private SnapNetworkUtils netUtils = new SnapNetworkUtils();
 	private Realm realm;
-	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+	/**
+	 * GCM으로부터 Notification이 온 경우 gridview를 새로고침한다.
+	 */
+	private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			clearRealm();
@@ -102,23 +105,25 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		t.setScreenName(NewsfeedView.class.getSimpleName());
 		t.send(new HitBuilders.AppViewBuilder().build());
 
+		realm = Realm.getInstance(getActivity());
+
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
 		mGridView = (PullToRefreshGridView) view.findViewById(R.id.newsfeed_main_gridView);
 		initEndlessScrollListener();
-		mGridView.setOnScrollListener(mEndlessScrollListener);
+		mGridView.setOnScrollListener(endlessScrollListener);
 		initGridViewItemClickListener();
-		mGridView.setOnItemClickListener(mGridViewItemClickListener);
+		mGridView.setOnItemClickListener(gridViewItemClickListener);
 		// mGridView.setOnRefreshListener(new OnRefreshListener<GridView>() {
 		// @Override
 		// public void onRefresh(PullToRefreshBase<GridView> refreshView) {
 		// }
 		// });
 
-		mSortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
+		sortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
 				R.array.snaps_sort_array, android.R.layout.simple_spinner_dropdown_item);
-		mSortSpinner.setAdapter(spinnerAdapter);
-		mSortSpinner.setOnItemSelectedListener(this);
+		sortSpinner.setAdapter(spinnerAdapter);
+		sortSpinner.setOnItemSelectedListener(this);
 
 		initNewPostButtonTouchListener();
 
@@ -135,28 +140,25 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		galleryButton.setOnTouchListener(newPostButtonTouchListener);
 		internetButton.setOnTouchListener(newPostButtonTouchListener);
 
-		realm = Realm.getInstance(getActivity());
-
 		return view;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mNewsfeedVolleyRealmAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(Newsfeed.class)
-				.findAll(), true);
-		mGridView.setAdapter(mNewsfeedVolleyRealmAdapter);
-		
+		newsfeedAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(Newsfeed.class).findAll(), true);
+		mGridView.setAdapter(newsfeedAdapter);
+
 		if (netUtils.isOnline(getActivity())) {
 			clearRealm();
 			fetchDataFromServer(1);
 		}
-		
+
 		realm.addChangeListener(new RealmChangeListener() {
 			@Override
 			public void onChange() {
 				Log.i(TAG, "Realm Changed");
-				mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
+				newsfeedAdapter.notifyDataSetChanged();
 			}
 		});
 	}
@@ -164,8 +166,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
-		getActivity().registerReceiver(mMessageReceiver, new IntentFilter("NEW_POST"));
+		newsfeedAdapter.notifyDataSetChanged();
+		getActivity().registerReceiver(messageReceiver, new IntentFilter("NEW_POST"));
 	}
 
 	/**
@@ -213,7 +215,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	 * @brief GridView에 물릴 ClickListener 초기화
 	 */
 	private void initGridViewItemClickListener() {
-		mGridViewItemClickListener = new OnItemClickListener() {
+		gridViewItemClickListener = new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getActivity(), PostViewer.class);
@@ -229,7 +231,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	 * @brief GridView에 물릴 EndlessScrhollListener 초기화
 	 */
 	private void initEndlessScrollListener() {
-		mEndlessScrollListener = new EndlessScrollListener() {
+		endlessScrollListener = new EndlessScrollListener() {
 			private int mLastFirstVisibleItem;
 
 			@Override
@@ -249,11 +251,11 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				// 스크롤을 내리는 경우
 				if (mLastFirstVisibleItem < firstVisibleItem) {
 					menuButton.setVisibility(View.INVISIBLE);
-					mSortSpinner.setVisibility(View.INVISIBLE);
+					sortSpinner.setVisibility(View.INVISIBLE);
 				}
 				// 스크롤을 올리는 경우
 				if (mLastFirstVisibleItem > firstVisibleItem) {
-					mSortSpinner.setVisibility(View.VISIBLE);
+					sortSpinner.setVisibility(View.VISIBLE);
 					menuButton.setVisibility(View.VISIBLE);
 				}
 				mLastFirstVisibleItem = firstVisibleItem;
@@ -298,7 +300,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		/**
-		 * @brief 업로드를 무사히 마친 경우, 서버로부터 데이터를 다시 받아 온다.
+		 * @brief 업로드를 무사히 마친 경우, 뉴스피드 데이터를 갱신한다.
 		 */
 		if (requestCode == SnapConstants.REQUEST_UPLOAD) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -341,8 +343,8 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		if (mNewsfeedVolleyRealmAdapter != null) {
-			mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
+		if (newsfeedAdapter != null) {
+			newsfeedAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -354,7 +356,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	 * 카메라를 통한 포스트 작성 시, 출력할 파일을 생성한다.
 	 * 
 	 * @param type
-	 *            파일 유형
+	 *            파일 유형. 당연히 이미지 파일.
 	 * @return 외부 저장소에 임시 이름으로 저장한 미디어 File
 	 */
 	private static File getOutputMediaFile(int type) {
@@ -396,11 +398,14 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		SnapPreference pref = new SnapPreference(getActivity());
 		Uri.Builder builder = new Uri.Builder();
 		String tempUrl = SnapConstants.SERVER_URL + "/app/posts";
-		builder.encodedPath(URL_FEED).appendQueryParameter("sort", mSortInto + "")
+		builder.encodedPath(URL_FEED).appendQueryParameter("sort", sortInto + "")
 				.appendQueryParameter("start", offset + "")
 				.appendQueryParameter("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");
 		Cache cache = AppController.getInstance().getRequestQueue().getCache();
 		Entry entry = cache.get(builder.build().toString());
+		/**
+		 * Volley 해당 URL이 캐시가 되어 있을 경우
+		 */
 		if (entry != null) {
 			try {
 				String data = new String(entry.data, "UTF-8");
@@ -413,9 +418,13 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		} else {
+		}
+		/**
+		 * Volley 캐시가 되어 있지 않은 경우 새로운 네트워크 요청을 생성한다.
+		 */
+		else {
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("sort", mSortInto + "");
+			params.put("sort", sortInto + "");
 			params.put("start", offset + "");
 			params.put("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");
 			Log.i(TAG, params.toString());
@@ -476,28 +485,28 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		}
 
 		realm.where(Newsfeed.class).findAll().sort("pid", RealmResults.SORT_ORDER_DESCENDING);
-		mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
+		newsfeedAdapter.notifyDataSetChanged();
 		realm.commitTransaction();
 
 	}
 
 	/**
-	 * 포스트 목록 정렬을 위한 mSortSpinner 선택 시 분기 처리
+	 * 포스트 목록 정렬을 위한 sortSpinner 선택 시 분기 처리
 	 */
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		String sortBy = parent.getItemAtPosition(position).toString();
-		int currentSort = this.mSortInto;
+		int currentSort = this.sortInto;
 		if (sortBy.equals("Recommended")) {
-			this.mSortInto = SORT_RECOMMENDED;
+			this.sortInto = SORT_RECOMMENDED;
 		} else if (sortBy.equals("Recent")) {
-			this.mSortInto = SORT_RECENT;
+			this.sortInto = SORT_RECENT;
 
 		} else if (sortBy.equals("Popular")) {
-			this.mSortInto = SORT_POPULAR;
+			this.sortInto = SORT_POPULAR;
 		}
 
-		if (currentSort != this.mSortInto) {
+		if (currentSort != this.sortInto) {
 			if (netUtils.isOnline(getActivity())) {
 				clearRealm();
 				reloadDataFromServer();
@@ -508,10 +517,10 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	}
 
 	/**
-	 * 새로운 페이징을 위해 EndlessScrollListener를 초기화 하고, 서버로부터 데이터를 1페이지부터 다시 받아온다.
+	 * 새로운 페이지 카운트를 위해 EndlessScrollListener를 초기화 하고, 서버에서 데이터를 1페이지부터 다시 받아온다.
 	 */
 	private void reloadDataFromServer() {
-		mEndlessScrollListener.reset();
+		endlessScrollListener.reset();
 		fetchDataFromServer(1);
 	}
 

@@ -59,7 +59,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	private final String SORT_DESC = "dsc";
 	private final String SORT_RECENT = "date";
 	private ArrayList<NaverSearchResult> resultItems = new ArrayList<NaverSearchResult>();
-	private int resultPageStart = 1;
 	private int numOfTotalResult;
 	private int numOfResultDisplay = 20;
 	private String sortInto = SORT_SIMILARITY;
@@ -70,8 +69,8 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	private SearchView searchView;
 	private Spinner mSortSpinner;
 	private TextView totalResultTextView;
-	private LinearLayout mToolBar;
-	private EndlessScrollListener mEndlessScrollListener;
+	private LinearLayout toolBar;
+	private EndlessScrollListener endlessScrollListener;
 	Handler handler = new Handler();
 
 	@Override
@@ -87,13 +86,13 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 		setContentView(R.layout.activity_search_results);
 		setTitle("SnapShop Search");
-		mToolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
+		toolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
 		listView = (ListView) findViewById(R.id.search_results_listView);
 		listView.setOnItemClickListener(this);
 		searchResultsViewVolleyAdapter = new SearchResultsVolleyAdapter(this, resultItems);
 		listView.setAdapter(searchResultsViewVolleyAdapter);
 
-		mEndlessScrollListener = new EndlessScrollListener() {
+		endlessScrollListener = new EndlessScrollListener() {
 			private int mLastFirstVisibleItem;
 
 			@Override
@@ -108,21 +107,26 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-				// 스크롤을 내리는 경우
+				/**
+				 * 스크롤을 내리는 경우 상단의 ToolBar를 제거한다.
+				 */
 				if (mLastFirstVisibleItem < firstVisibleItem) {
-					mToolBar.setVisibility(View.INVISIBLE);
+					toolBar.setVisibility(View.INVISIBLE);
 				}
-				// 스크롤을 올리는 경우
+
+				/**
+				 * 스크롤을 올리는 경우 상단의 ToolBar를 표시한다.
+				 */
 				if (mLastFirstVisibleItem > firstVisibleItem) {
-					mToolBar.setVisibility(View.VISIBLE);
+					toolBar.setVisibility(View.VISIBLE);
 				}
 				mLastFirstVisibleItem = firstVisibleItem;
 			}
 		};
 
-		listView.setOnScrollListener(mEndlessScrollListener);
+		listView.setOnScrollListener(endlessScrollListener);
 
-		mToolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
+		toolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
 
 		mSortSpinner = (Spinner) findViewById(R.id.search_results_sort_spinner);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.search_sort_array,
@@ -134,27 +138,21 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String oldSortInto = sortInto;
 				switch (position) {
-				case 0: {
+				case 0:
 					sortInto = SORT_SIMILARITY;
 					break;
-				}
 
-				case 1: {
+				case 1:
 					sortInto = SORT_ASC;
 					break;
-				}
 
-				case 2: {
+				case 2:
 					sortInto = SORT_DESC;
 					break;
 
-				}
-
-				case 3: {
+				case 3:
 					sortInto = SORT_RECENT;
 					break;
-
-				}
 				}
 
 				if (oldSortInto.equals(sortInto)) {
@@ -180,7 +178,9 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 				.appendQueryParameter("sort", sortInto).build().toString();
 		Entry entry = cache.get(targetUrl);
 		if (entry != null) {
-			// fetch the data from cache
+			/**
+			 * 캐시된 데이터를 가져온다.
+			 */
 			try {
 				String data = new String(entry.data, "UTF-8");
 				try {
@@ -193,7 +193,9 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			}
 
 		} else {
-			// making fresh volley request and getting json
+			/**
+			 * 새로운 Volley 리퀘스트를 생성하고, json데이터를 받아온다.
+			 */
 			params = new HashMap<String, String>();
 			params.put("query", query);
 			params.put("display", numOfResultDisplay + "");
@@ -246,7 +248,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 				resultItems.add(item);
 			}
 
-			// notify data changes to list adapater
 			searchResultsViewVolleyAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -279,7 +280,6 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
@@ -290,23 +290,14 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	private void reloadData() {
 		resultItems.clear();
 		searchResultsViewVolleyAdapter.notifyDataSetChanged();
-		mEndlessScrollListener.reset();
+		endlessScrollListener.reset();
 		fetchDataFromServer(1);
 		searchView.clearFocus();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
+	/**
+	 * 개별 item을 선택한 경우, 해당 item의 정보를 토대로 UploadPostView 시작
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		NaverSearchResult item = resultItems.get(position);
@@ -319,6 +310,9 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 		startActivityForResult(uploadIntent, SnapConstants.REQUEST_UPLOAD);
 	}
 
+	/**
+	 * UploadPostView가 업로드에 성공하고 종료된 경우, SearchResultsView(현재) 액티비티를 같이 종료한다.
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "Request: " + requestCode + " Result: " + resultCode);

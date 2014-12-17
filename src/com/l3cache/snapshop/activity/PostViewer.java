@@ -53,11 +53,11 @@ public class PostViewer extends Activity {
 	private TextView descTextView;
 	private ToggleButton snapButton;
 	private Newsfeed currentData;
-	private int mPid;
+	private int pid;
 	private Realm realm;
 	private TextView snapsNumberTextView;
 	private TextView viewsNumberTextView;
-	private RealmChangeListener mRealmChangeListener;
+	private RealmChangeListener realmChangeListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class PostViewer extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
-		mPid = currentData.getPid();
+		pid = currentData.getPid();
 
 		feedImageView = (FeedImageView) findViewById(R.id.post_viewer_item_image_view);
 		feedImageView.setImageUrl(currentData.getImageUrl(), imageLoader);
@@ -97,8 +97,8 @@ public class PostViewer extends Activity {
 		/**
 		 * Snap/UnSnap의 변경 될 경우 화면도 갱신합니다
 		 */
-		if (mRealmChangeListener == null)
-			mRealmChangeListener = new RealmChangeListener() {
+		if (realmChangeListener == null)
+			realmChangeListener = new RealmChangeListener() {
 
 				@Override
 				public void onChange() {
@@ -109,7 +109,7 @@ public class PostViewer extends Activity {
 					}
 				}
 			};
-		realm.addChangeListener(mRealmChangeListener);
+		realm.addChangeListener(realmChangeListener);
 		service.readPost(currentData.getPid(), new Callback<DefaultResponse>() {
 			@Override
 			public void failure(RetrofitError error) {
@@ -134,6 +134,10 @@ public class PostViewer extends Activity {
 		format.setParseIntegerOnly(true);
 		String formattedPrice = format.format(Integer.parseInt(currentData.getPrice()));
 		priceButton.setText(formattedPrice);
+
+		/**
+		 * priceButton을 터치하면 해당 아이템의 온라인 쇼핑몰로 이동한다.
+		 */
 		priceButton.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -153,6 +157,9 @@ public class PostViewer extends Activity {
 			}
 		});
 
+		/**
+		 * 아이템의 상세 설명을 표시하는 곳
+		 */
 		descTextView = (TextView) findViewById(R.id.post_viewer_description_text_view);
 		descTextView.setText((currentData.getContents().length() > 0 ? currentData.getContents() : "No Description"));
 
@@ -179,7 +186,7 @@ public class PostViewer extends Activity {
 					}
 
 					if (snapButton.isChecked()) {
-						service.unSnapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), mPid,
+						service.unSnapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), pid,
 								new Callback<DefaultResponse>() {
 
 									@Override
@@ -191,7 +198,7 @@ public class PostViewer extends Activity {
 									@Override
 									public void success(DefaultResponse defResp, Response resp) {
 										if (defResp.getStatus() == SnapConstants.SUCCESS) {
-											Toast.makeText(getApplicationContext(), "Unsnap - " + mPid,
+											Toast.makeText(getApplicationContext(), "Unsnap - " + pid,
 													Toast.LENGTH_SHORT).show();
 											snapButton.setChecked(false);
 											snapButton.setTextColor(Color.parseColor("#000000"));
@@ -210,7 +217,7 @@ public class PostViewer extends Activity {
 								});
 
 					} else {
-						service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), mPid,
+						service.snapPost(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0), pid,
 								new Callback<DefaultResponse>() {
 
 									@Override
@@ -222,8 +229,8 @@ public class PostViewer extends Activity {
 									@Override
 									public void success(DefaultResponse defResp, Response resp) {
 										if (defResp.getStatus() == SnapConstants.SUCCESS) {
-											Toast.makeText(getApplicationContext(), "Snap - " + mPid,
-													Toast.LENGTH_SHORT).show();
+											Toast.makeText(getApplicationContext(), "Snap - " + pid, Toast.LENGTH_SHORT)
+													.show();
 											snapButton.setChecked(true);
 											snapButton.setTextColor(Color.parseColor("#2DB400"));
 											realm.beginTransaction();
@@ -278,7 +285,10 @@ public class PostViewer extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		realm.removeChangeListener(mRealmChangeListener);
+		/**
+		 * 뉴스피드를 갱신할 경우 현재 사용하는 Realm 데이터가 삭제되므로, 더 이상 변경에 대한 listening이 불필요.
+		 */
+		realm.removeChangeListener(realmChangeListener);
 		overridePendingTransition(R.anim.slide_right_to_left_in, R.anim.slide_right_to_left_out);
 	}
 }

@@ -75,10 +75,28 @@ public class SnapPreference {
 		}
 	}
 
+	/**
+	 * 사용자가 직접 Sign Out하는 경우, 저장되어 있는 사용자 정보 삭제
+	 */
 	public void removeCurrentUser() {
 		SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();
 		editor.remove(PREF_CURRENT_USER_EMAIL).remove(PREF_CURRENT_USER_ID).remove(PREF_CURRENT_USER_PASSWORD);
+		editor.commit();
+	}
+
+	/**
+	 * 추후 자동로그인을 위해 현재 로그인하는 사용자의 정보를 저장
+	 * @param uid
+	 * @param email
+	 * @param password
+	 */
+	public void persistCurrentUser(int uid, String email, String password) {
+		SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
+		SharedPreferences.Editor editor = pref.edit();
+		editor.putInt(PREF_CURRENT_USER_ID, uid);
+		editor.putString(PREF_CURRENT_USER_EMAIL, email);
+		editor.putString(PREF_CURRENT_USER_PASSWORD, password);
 		editor.commit();
 	}
 }

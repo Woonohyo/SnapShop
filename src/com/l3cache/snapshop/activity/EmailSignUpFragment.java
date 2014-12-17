@@ -39,8 +39,8 @@ public class EmailSignUpFragment extends DialogFragment {
 	private EditText passwordField;
 	private Button signupButton;
 	private EditText passwordAgainField;
-	private String mEmail;
-	private String mPassword;
+	private String email;
+	private String password;
 	private SnapPreference pref;
 
 	@Override
@@ -68,23 +68,35 @@ public class EmailSignUpFragment extends DialogFragment {
 						return true;
 					}
 
+					/**
+					 * 사용자가 입력한 Email 주소의 유효성 여부를 판단합니다.
+					 */
 					if (isEmailValid(emailField.getText().toString()) == false) {
 						Toast.makeText(getActivity(), "Invalid Email Address", Toast.LENGTH_LONG).show();
 						return true;
 					}
 
+					/**
+					 * 사용자가 입력한 비밀번호의 길이가 최소 7인지 확인합니다.
+					 */
 					if (passwordField.getText().toString().length() <= 6) {
 						Toast.makeText(getActivity(), "Password is too short (minimum 7)", Toast.LENGTH_LONG).show();
 						return true;
 					}
+
+					/**
+					 * 사용자가 입력한 두 비밀번호가 서로 일치하는지 확인합니다.
+					 */
 					if (passwordField.getText().toString().equals(passwordAgainField.getText().toString()) == false) {
 						Toast.makeText(getActivity(), "Password does not match", Toast.LENGTH_LONG).show();
 						return true;
 					}
 
-					// 이메일 및 비밀번호 조건 만족 후 실제 회원가입 진행
-					mEmail = emailField.getText().toString();
-					mPassword = passwordField.getText().toString();
+					/**
+					 * 이메일 및 비밀번호 조건 만족 시, 서버에 회원가입 요청
+					 */
+					email = emailField.getText().toString();
+					password = passwordField.getText().toString();
 					authorizeSignup();
 					return true;
 				}
@@ -100,7 +112,7 @@ public class EmailSignUpFragment extends DialogFragment {
 				.setConverter(new GsonConverter(new Gson())).build();
 
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.signUp(mEmail, mPassword, new Callback<DefaultResponse>() {
+		service.signUp(email, password, new Callback<DefaultResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
@@ -112,6 +124,9 @@ public class EmailSignUpFragment extends DialogFragment {
 				int status = defResp.getStatus();
 
 				switch (status) {
+				/**
+				 * 회원가입에 성공한 경우, 해당 데이터를 가지고 signin을 진행
+				 */
 				case SnapConstants.SUCCESS: {
 					authorizeSignin();
 					break;
@@ -139,12 +154,11 @@ public class EmailSignUpFragment extends DialogFragment {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.signIn(mEmail, mPassword, new Callback<SignInResponse>() {
+		service.signIn(email, password, new Callback<SignInResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
-				Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
-				Log.i("Login", error.toString());
+				Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_LONG).show();
 			}
 
 			@Override
@@ -153,7 +167,7 @@ public class EmailSignUpFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					saveUserToPreferences(loginResponse.getId());
+					pref.persistCurrentUser(loginResponse.getId(), email, password);
 					Toast.makeText(
 							getActivity(),
 							"Welcome " + pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0) + " - "
@@ -179,8 +193,6 @@ public class EmailSignUpFragment extends DialogFragment {
 					break;
 				}
 
-				default:
-					break;
 				}
 
 			}
@@ -188,17 +200,6 @@ public class EmailSignUpFragment extends DialogFragment {
 		});
 
 	}
-
-	/**
-	 * 추후 자동로그인을 위해 현재 로그인 하는 사용자의 정보를 preferences에 저장
-	 * 
-	 * @param userId
-	 */
-	private void saveUserToPreferences(int userId) {
-		pref.put(SnapPreference.PREF_CURRENT_USER_ID, userId);
-		pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
-		pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
-	};
 
 	private void intentTabHostActivity() {
 		Intent intent = new Intent(getActivity(), MainTabHostView.class);

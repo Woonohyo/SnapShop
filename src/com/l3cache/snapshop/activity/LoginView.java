@@ -41,7 +41,7 @@ public class LoginView extends FragmentActivity {
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private GoogleCloudMessaging gcm;
 	private String regid;
-	Context context;
+	private Context context;
 	private SnapPreference pref;
 	private String mEmail;
 	private String mPassword;
@@ -98,7 +98,7 @@ public class LoginView extends FragmentActivity {
 			if (regid.isEmpty()) {
 				registerInBackground();
 			}
-			
+
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK Found");
 		}

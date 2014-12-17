@@ -45,9 +45,9 @@ import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class MySnapsView extends Fragment implements OnItemClickListener {
 	private static final String TAG = MySnapsView.class.getSimpleName();
-	private GridView mGridView;
-	private MySnapsAdapter mSnapAdapter;
-	private ArrayList<Newsfeed> mFeedItems;
+	private GridView gridView;
+	private MySnapsAdapter snapsAdapter;
+	private ArrayList<Newsfeed> feedItems;
 	private int resultPageStart = 1;
 	protected int numOfTotalResult;
 	private static String URL_FEED;
@@ -62,11 +62,11 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 				+ SnapConstants.MYSNAP_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 
 		View view = inflater.inflate(R.layout.activity_my_snaps_view, container, false);
-		mGridView = (GridView) view.findViewById(R.id.my_snaps_main_grid_view);
-		mFeedItems = new ArrayList<Newsfeed>();
-		mSnapAdapter = new MySnapsAdapter(getActivity(), mFeedItems);
-		mGridView.setAdapter(mSnapAdapter);
-		mGridView.setOnScrollListener(new EndlessScrollListener() {
+		gridView = (GridView) view.findViewById(R.id.my_snaps_main_grid_view);
+		feedItems = new ArrayList<Newsfeed>();
+		snapsAdapter = new MySnapsAdapter(getActivity(), feedItems);
+		gridView.setAdapter(snapsAdapter);
+		gridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
@@ -100,8 +100,8 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 			Realm realm = Realm.getInstance(getActivity());
 			RealmResults<Newsfeed> results = realm.where(Newsfeed.class).equalTo("userLike", 1)
 					.findAll("pid", false);
-			mFeedItems.addAll(results);
-			numOfTotalResult = mFeedItems.size();
+			feedItems.addAll(results);
+			numOfTotalResult = feedItems.size();
 		}
 	}
 
@@ -177,11 +177,11 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 				item.setWriter(feedObj.getString("writer"));
 				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));
-				mFeedItems.add(item);
+				feedItems.add(item);
 			}
 
 			// notify data changes to list adapater
-			mSnapAdapter.notifyDataSetChanged();
+			snapsAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

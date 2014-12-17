@@ -11,10 +11,11 @@ import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
 public class UploadPostView extends Activity {
+	private String TAG = UploadPostView.class.getSimpleName();
 	private ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 	private EditText titleEditText;
 	private EditText contentsEditText;
@@ -48,27 +50,20 @@ public class UploadPostView extends Activity {
 	private EditText priceEditText;
 	private EditText shopUrlEditText;
 	private Button uploadingButton;
-	private String mImageUrl;
+	private String imageUrl;
 	private TypedFile imageTypedFile;
-	private String TAG = UploadPostView.class.getSimpleName();
 	private int handlerId;
 	private RestAdapter restAdapter;
 	private SnapShopService service;
 	private SnapPreference pref;
-	private Context mContext;
+	private Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = this;
+		context = this;
 		setContentView(R.layout.activity_upload_snap_view);
-
-		// Get tracker.
-		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
-		// Set screen name.
-		t.setScreenName(UploadPostView.class.getSimpleName());
-		// Send a screen view.
-		t.send(new HitBuilders.AppViewBuilder().build());
+		trackActivity(UploadPostView.class.getSimpleName());
 
 		pref = new SnapPreference(getApplicationContext());
 
@@ -80,8 +75,6 @@ public class UploadPostView extends Activity {
 		uploadingButton = (Button) findViewById(R.id.upload_snap_button_upload);
 
 		handlerId = getIntent().getExtras().getInt("handler");
-		Log.i(TAG, "Image handler - " + handlerId);
-
 		switch (handlerId) {
 		case SnapConstants.CAMERA_BUTTON: {
 			break;
@@ -112,8 +105,8 @@ public class UploadPostView extends Activity {
 			Log.i(TAG, "INTERNET!");
 			Bundle extras = getIntent().getExtras();
 			titleEditText.setText(extras.getString("title"));
-			mImageUrl = extras.getString("image");
-			uploadingImageView.setImageUrl(mImageUrl, imageLoader);
+			imageUrl = extras.getString("image");
+			uploadingImageView.setImageUrl(imageUrl, imageLoader);
 			priceEditText.setText(extras.getInt("price") + "");
 			shopUrlEditText.setText(extras.getString("shopUrl"));
 			break;
@@ -126,12 +119,18 @@ public class UploadPostView extends Activity {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					initRestfit();
 
+					/**
+					 * 포스트의 가격 입력은 필수
+					 */
 					if (priceEditText.getText().length() == 0) {
 						Toast.makeText(getApplicationContext(), "What's price of your item?", Toast.LENGTH_SHORT)
 								.show();
 						return true;
 					}
 
+					/**
+					 * 카메라와 갤러리 모두 CropActivity에 의해 Crop된 이미지를 업로드하게 된다.
+					 */
 					switch (handlerId) {
 					case SnapConstants.CAMERA_BUTTON:
 					case SnapConstants.GALLERY_BUTTON: {
@@ -141,7 +140,7 @@ public class UploadPostView extends Activity {
 					}
 
 					case SnapConstants.INTERNET_BUTTON: {
-						upload(mImageUrl);
+						upload(imageUrl);
 						break;
 					}
 					}
@@ -153,33 +152,10 @@ public class UploadPostView extends Activity {
 
 	}
 
-	public int exifOrientationToDegrees(int exifOrientation) {
-		if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-			return 90;
-		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-			return 180;
-		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-			return 270;
-		}
-		return 0;
-	}
-
-	public Bitmap rotate(Bitmap bitmap, int degrees) {
-		if (degrees != 0 && bitmap != null) {
-			Matrix m = new Matrix();
-			m.setRotate(degrees, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
-
-			try {
-				Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
-				if (bitmap != converted) {
-					bitmap.recycle();
-					bitmap = converted;
-				}
-			} catch (OutOfMemoryError ex) {
-				// 메모리가 부족하여 회전을 시키지 못할 경우 그냥 원본을 반환합니다.
-			}
-		}
-		return bitmap;
+	private void trackActivity(String screenName) {
+		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
+		t.setScreenName(screenName);
+		t.send(new HitBuilders.AppViewBuilder().build());
 	}
 
 	public String getPathFromUri(Uri uri) {
@@ -260,8 +236,30 @@ public class UploadPostView extends Activity {
 		});
 	}
 
+	/**
+	 * 업로드에 성공한 경우, 상위 액티비티(SearchResultView)를 함께 종료하고, NewsfeedView로 돌아가기 위해
+	 * resultCode를 설정한다.
+	 */
 	private void didUploadFinishActivity() {
-		((Activity) mContext).setResult(RESULT_OK);
+		((Activity) context).setResult(RESULT_OK);
 		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		Builder d = new AlertDialog.Builder(this);
+		d.setMessage("Do you want to cancel the current post?");
+		d.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+			}
+		});
+		d.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		d.show();
 	}
 }

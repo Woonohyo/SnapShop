@@ -54,10 +54,10 @@ import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class MyPostsView extends Fragment {
 	private static final String TAG = MyPostsView.class.getSimpleName();
-	private GridView mGridView;
-	private ArrayList<Newsfeed> mFeedItems;
-	private MyPostsAdapter mListAdapter;
-	private int mTotalResult;
+	private GridView gridView;
+	private ArrayList<Newsfeed> feedItems;
+	private MyPostsAdapter postsAdapter;
+	private int numOfTotalResult;
 	SnapPreference pref;
 
 	private static String URL_FEED = null;
@@ -73,11 +73,11 @@ public class MyPostsView extends Fragment {
 				+ SnapConstants.MYPOST_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 
 		View view = inflater.inflate(R.layout.activity_my_posts_view, container, false);
-		mGridView = (GridView) view.findViewById(R.id.my_posts_main_grid_view);
-		mFeedItems = new ArrayList<Newsfeed>();
-		mListAdapter = new MyPostsAdapter(getActivity(), mFeedItems);
-		mGridView.setAdapter(mListAdapter);
-		mGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+		gridView = (GridView) view.findViewById(R.id.my_posts_main_grid_view);
+		feedItems = new ArrayList<Newsfeed>();
+		postsAdapter = new MyPostsAdapter(getActivity(), feedItems);
+		gridView.setAdapter(postsAdapter);
+		gridView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 					.setConverter(new GsonConverter(new Gson())).build();
 			SnapShopService service = restAdapter.create(SnapShopService.class);
@@ -103,8 +103,8 @@ public class MyPostsView extends Fragment {
 												if (defResp.getStatus() == SnapConstants.SUCCESS) {
 													Toast.makeText(getActivity(), "The post was deleted.",
 															Toast.LENGTH_SHORT).show();
-													mFeedItems.remove(mPosition);
-													mListAdapter.notifyDataSetChanged();
+													feedItems.remove(mPosition);
+													postsAdapter.notifyDataSetChanged();
 												} else if (defResp.getStatus() == SnapConstants.ERROR) {
 													Toast.makeText(getActivity(), "Deletion failed", Toast.LENGTH_SHORT)
 															.show();
@@ -135,10 +135,13 @@ public class MyPostsView extends Fragment {
 			}
 		});
 
-		mGridView.setOnScrollListener(new EndlessScrollListener() {
+		gridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
+				if (numOfTotalResult < 10 || ((page - 1) * 20) > numOfTotalResult) {
+					return;
+				}
 				fetchDataFromServer(page);
 			}
 		});
@@ -199,7 +202,7 @@ public class MyPostsView extends Fragment {
 				Toast.makeText(getActivity(), "No My Posts", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			mTotalResult = response.getInt("total");
+			numOfTotalResult = response.getInt("total");
 			JSONArray feedArray = response.getJSONArray("data");
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
@@ -215,11 +218,11 @@ public class MyPostsView extends Fragment {
 				item.setWriter(feedObj.getString("writer"));
 				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));
-				mFeedItems.add(item);
+				feedItems.add(item);
 			}
 
 			// notify data changes to list adapater
-			mListAdapter.notifyDataSetChanged();
+			postsAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

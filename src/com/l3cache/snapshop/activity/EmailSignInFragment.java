@@ -34,8 +34,8 @@ import com.l3cache.snapshop.retrofit.SnapShopService;
 public class EmailSignInFragment extends DialogFragment {
 	EditText emailField;
 	EditText passwordField;
-	String mEmail;
-	String mPassword;
+	String email;
+	String password;
 	SnapPreference pref;
 
 	@Override
@@ -57,8 +57,8 @@ public class EmailSignInFragment extends DialogFragment {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					mEmail = emailField.getText().toString();
-					mPassword = passwordField.getText().toString();
+					email = emailField.getText().toString();
+					password = passwordField.getText().toString();
 					authorizeSignin();
 				}
 				return true;
@@ -77,7 +77,7 @@ public class EmailSignInFragment extends DialogFragment {
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 				.setConverter(new GsonConverter(new Gson())).build();
 		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.signIn(mEmail, mPassword, new Callback<SignInResponse>() {
+		service.signIn(email, password, new Callback<SignInResponse>() {
 
 			@Override
 			public void failure(RetrofitError error) {
@@ -91,7 +91,7 @@ public class EmailSignInFragment extends DialogFragment {
 
 				switch (status) {
 				case SnapConstants.SUCCESS: {
-					saveUserToPreferences(loginResponse.getId());
+					pref.persistCurrentUser(loginResponse.getId(), email, password);
 
 					Toast.makeText(
 							getActivity(),
@@ -126,12 +126,6 @@ public class EmailSignInFragment extends DialogFragment {
 
 		});
 
-	}
-
-	private void saveUserToPreferences(int userId) {
-		pref.put(SnapPreference.PREF_CURRENT_USER_ID, userId);
-		pref.put(SnapPreference.PREF_CURRENT_USER_PASSWORD, mPassword);
-		pref.put(SnapPreference.PREF_CURRENT_USER_EMAIL, mEmail);
 	}
 
 	@Override
