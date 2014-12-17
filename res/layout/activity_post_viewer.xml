@@ -53,14 +53,44 @@
                     android:textStyle="bold" >
                 </TextView>
 
-                <TextView
-                    android:id="@+id/post_viewer_item_user_text_view"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:text="This is User Email!!!"
-                    android:textColor="@color/textLightGray"
-                    android:textSize="14sp" />
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp" >
+
+                    <TextView
+                        android:id="@+id/post_viewer_item_user_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="This is User Email!!!"
+                        android:textColor="@color/textLightGray"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/post_viewer_item_snaps_number_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+ 1214"
+                        android:textColor="@color/textLightGray"
+                        android:textSize="@dimen/feed_item_timestamp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" >
+                    </View>
+
+                    <TextView
+                        android:id="@+id/post_viewer_item_view_number_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1214 Views"
+                        android:textColor="@color/textLightGray"
+                        android:textSize="@dimen/feed_item_timestamp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -108,7 +138,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:textOff="Snap"
-            android:textOn="Snap'd"
+            android:textOn="Snap&apos;d"
             android:textSize="13sp"
             android:textStyle="bold" >
         </ToggleButton>

@@ -10,12 +10,11 @@
     <color name="feed_item_bg">#ffffff</color>
     <color name="feed_item_border">#c2c3c8</color>
     <color name="link">#0a80d1</color>
-    <color name="timestamp">#a0a3a7</color>
+    <color name="textLightGray">#a0a3a7</color>
     <color name="facebookBlue">#3B5998</color>
     <color name="twitterBlue">#4099FF</color>
     <color name="hintColorGray">#AAAAAA</color>
     <color name="textColorGray">#333333</color>
-    <color name="textLightGray">#888888</color>
     <color name="background">#e5e5e5</color>
     <color name="half_black">#808080</color>
     <color name="white_pressed">#f1f1f1</color>

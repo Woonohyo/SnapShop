@@ -1,6 +1,7 @@
 package com.l3cache.snapshop.activity;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -53,6 +54,9 @@ public class PostViewer extends Activity {
 	private ToggleButton snapButton;
 	private Newsfeed currentData;
 	private int mPid;
+	private Realm realm;
+	private TextView snapsNumberTextView;
+	private TextView viewsNumberTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +67,10 @@ public class PostViewer extends Activity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_post_viewer);
-
-		Realm realm = Realm.getInstance(this);
+		
 		Bundle extras = getIntent().getExtras();
 		currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
 		mPid = currentData.getPid();
-		Log.i(TAG, currentData.toString());
 
 		feedImageView = (FeedImageView) findViewById(R.id.post_viewer_item_image_view);
 		feedImageView.setImageUrl(currentData.getImageUrl(), imageLoader);
@@ -78,6 +80,47 @@ public class PostViewer extends Activity {
 
 		userNameTextView = (TextView) findViewById(R.id.post_viewer_item_user_text_view);
 		userNameTextView.setText(currentData.getWriter());
+
+		snapsNumberTextView = (TextView) findViewById(R.id.post_viewer_item_snaps_number_text_view);
+		snapsNumberTextView.setText("+ " + currentData.getNumLike());
+		viewsNumberTextView = (TextView) findViewById(R.id.post_viewer_item_view_number_text_view);
+		viewsNumberTextView.setText((currentData.getRead() > 1 ? currentData.getRead() + " Views" : currentData
+				.getRead() + " View"));
+
+		realm = Realm.getInstance(this);
+		/**
+		 * Snap/UnSnap의 변경 될 경우 화면도 갱신합니다
+		 */
+		realm.addChangeListener(new RealmChangeListener() {
+
+			@Override
+			public void onChange() {
+				Log.i(TAG, "Realm Changed");
+				snapsNumberTextView.setText("+ " + currentData.getNumLike());
+			}
+		});
+
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+				.setConverter(new GsonConverter(new Gson())).build();
+		SnapShopService service = restAdapter.create(SnapShopService.class);
+		service.readPost(currentData.getPid(), new Callback<DefaultResponse>() {
+			@Override
+			public void failure(RetrofitError error) {
+				Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void success(DefaultResponse defResp, Response resp) {
+				if (defResp.getStatus() == SnapConstants.SUCCESS) {
+					realm.beginTransaction();
+					currentData.setRead(currentData.getRead() + 1);
+					realm.commitTransaction();
+				} else {
+					Log.e(TAG, "Server Error - " + defResp.getStatus());
+				}
+			}
+
+		});
 
 		priceButton = (Button) findViewById(R.id.postviewer_price_button);
 		NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("ko_KR"));
@@ -105,26 +148,6 @@ public class PostViewer extends Activity {
 
 		descTextView = (TextView) findViewById(R.id.post_viewer_description_text_view);
 		descTextView.setText((currentData.getContents().length() > 0 ? currentData.getContents() : "No Description"));
-
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
-				.setConverter(new GsonConverter(new Gson())).build();
-		SnapShopService service = restAdapter.create(SnapShopService.class);
-		service.readPost(extras.getLong("pid"), new Callback<DefaultResponse>() {
-
-			@Override
-			public void success(DefaultResponse defaultResponse, Response response) {
-				Log.i(TAG, defaultResponse.getStatus() + "");
-
-			}
-
-			@Override
-			public void failure(RetrofitError error) {
-				if (error.getResponse() != null) {
-					Log.i(TAG, error.getResponse() + "");
-				}
-
-			}
-		});
 
 		snapButton = (ToggleButton) findViewById(R.id.postviewer_snap_button);
 		if (currentData.getUserLike() == 1) {
@@ -165,7 +188,10 @@ public class PostViewer extends Activity {
 													Toast.LENGTH_SHORT).show();
 											snapButton.setChecked(false);
 											snapButton.setTextColor(Color.parseColor("#000000"));
+											realm.beginTransaction();
 											currentData.setUserLike(0);
+											currentData.setNumLike(currentData.getNumLike() - 1);
+											realm.commitTransaction();
 										} else {
 											Toast.makeText(getApplicationContext(),
 													"UnSnap Failed. Server Error - " + defResp.getStatus(),
@@ -193,7 +219,10 @@ public class PostViewer extends Activity {
 													Toast.LENGTH_SHORT).show();
 											snapButton.setChecked(true);
 											snapButton.setTextColor(Color.parseColor("#2DB400"));
+											realm.beginTransaction();
 											currentData.setUserLike(1);
+											currentData.setNumLike(currentData.getNumLike() + 1);
+											realm.commitTransaction();
 
 										} else {
 											Toast.makeText(getApplicationContext(),
@@ -212,26 +241,6 @@ public class PostViewer extends Activity {
 
 				return false;
 			}
-		});
-
-		service.readPost(currentData.getPid(), new Callback<DefaultResponse>() {
-			@Override
-			public void failure(RetrofitError error) {
-				// Toast.makeText(getApplicationContext(), "Network Error",
-				// Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void success(DefaultResponse defResp, Response resp) {
-				if (defResp.getStatus() == SnapConstants.SUCCESS) {
-					// Toast.makeText(getApplicationContext(), "Read",
-					// Toast.LENGTH_SHORT).show();
-				} else {
-					// Toast.makeText(getApplicationContext(), "Server Error",
-					// Toast.LENGTH_SHORT).show();
-				}
-			}
-
 		});
 
 	}

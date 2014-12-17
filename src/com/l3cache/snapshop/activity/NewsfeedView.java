@@ -143,18 +143,22 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		realm.addChangeListener(new RealmChangeListener() {
-			@Override
-			public void onChange() {
-			}
-		});
 		mNewsfeedVolleyRealmAdapter = new NewsfeedVolleyRealmAdapter(getActivity(), realm.where(Newsfeed.class)
 				.findAll(), true);
 		mGridView.setAdapter(mNewsfeedVolleyRealmAdapter);
+		
 		if (netUtils.isOnline(getActivity())) {
 			clearRealm();
 			fetchDataFromServer(1);
 		}
+		
+		realm.addChangeListener(new RealmChangeListener() {
+			@Override
+			public void onChange() {
+				Log.i(TAG, "Realm Changed");
+				mNewsfeedVolleyRealmAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	@Override
@@ -447,8 +451,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				for (int i = 0; i < feedArray.length(); i++) {
 					JSONObject feedObj = (JSONObject) feedArray.get(i);
 					if (realm.where(Newsfeed.class).equalTo("pid", feedObj.getInt("pid")).findFirst() != null) {
-						realm.where(Newsfeed.class).equalTo("pid", feedObj.getInt("pid")).findFirst()
-								.removeFromRealm();
+						realm.where(Newsfeed.class).equalTo("pid", feedObj.getInt("pid")).findFirst().removeFromRealm();
 					}
 					Newsfeed item = realm.createObject(Newsfeed.class);
 					item.setPid(feedObj.getInt("pid"));

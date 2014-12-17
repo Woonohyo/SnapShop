@@ -63,7 +63,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 
 	/**
 	 * ViewHolder 패턴을 이용하여 로딩 속도를 최적화합니다. 따라서, 개별 row 고유의 값을 설정할 때는 viewHolder
-	 * 객체가 생성된 다음에 해줘야 합니다.
+	 * 객체를 생성한 다음에 해줘야 합니다.
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -143,6 +143,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 			int pid;
 			ToggleButton snapButton;
 			Newsfeed currentItem;
+			Realm realm = Realm.getInstance(context);
 
 			@Override
 			public void onClick(View v) {
@@ -158,7 +159,6 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 				pid = (int) getItemId((int) v.getTag());
 
 				snapButton = (ToggleButton) v;
-				Realm realm = Realm.getInstance(context);
 				currentItem = realm.where(Newsfeed.class).equalTo("pid", getItemId((int) v.getTag())).findFirst();
 
 				if (snapButton.isChecked()) {
@@ -170,7 +170,10 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 										Toast.makeText(context, "Snap - " + pid, Toast.LENGTH_SHORT).show();
 										snapButton.setChecked(true);
 										snapButton.setTextColor(Color.parseColor(SnapConstants.COLOR_SNAP_GREEN));
+										realm.beginTransaction();
 										currentItem.setUserLike(1);
+										currentItem.setNumLike(currentItem.getNumLike() + 1);
+										realm.commitTransaction();
 									} else {
 										Toast.makeText(context, "Snap Failed. Server Error - " + defResp.getStatus(),
 												Toast.LENGTH_SHORT).show();
@@ -196,8 +199,11 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 									if (defResp.getStatus() == SnapConstants.SUCCESS) {
 										Toast.makeText(context, "Unsnap - " + pid, Toast.LENGTH_SHORT).show();
 										snapButton.setChecked(false);
-										currentItem.setUserLike(0);
 										snapButton.setTextColor(Color.parseColor("#000000"));
+										realm.beginTransaction();
+										currentItem.setUserLike(0);
+										currentItem.setNumLike(currentItem.getNumLike() - 1);
+										realm.commitTransaction();
 									} else {
 										Toast.makeText(context, "Unsnap Failed. Server Error - " + defResp.getStatus(),
 												Toast.LENGTH_SHORT).show();
