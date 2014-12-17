@@ -1,0 +1,5 @@
+<map id="com.l3cache.snapshop.activity.SearchResultsView" name="com.l3cache.snapshop.activity.SearchResultsView">
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_search_results_volley_adapter.html" title="com.l3cache.snapshop.adapter.\lSearchResultsVolleyAdapter" alt="" coords="909,192,1120,233"/>
+<area shape="rect" id="node8" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader" alt="" coords="545,143,745,184"/>
+<area shape="rect" id="node10" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_image_request_factory.html" title="com.l3cache.snapshop.volley.\lImageRequestFactory" alt="" coords="61,128,261,169"/>
+</map>

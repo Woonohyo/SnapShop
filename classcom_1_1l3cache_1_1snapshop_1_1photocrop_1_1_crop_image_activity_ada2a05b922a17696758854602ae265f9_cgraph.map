@@ -1,0 +1,6 @@
+<map id="com.l3cache.snapshop.photocrop.CropImageActivity.decodeRegionCrop" name="com.l3cache.snapshop.photocrop.CropImageActivity.decodeRegionCrop">
+<area shape="rect" id="node2" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#a5698b1ef60e9e6e6638e0f1ed04769d5" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.clearImageView" alt="" coords="313,5,543,46"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_log.html#a8a275c5481dde9f83287a06b06a2fbcf" title="com.l3cache.snapshop.photocrop.\lLog.e" alt="" coords="315,70,541,111"/>
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#a4e5f144d7518046bd252ac6b901b1eb2" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.setResultException" alt="" coords="304,135,552,177"/>
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#a695804002129a7189ec40de18f173dae" title="com.l3cache.snapshop.photocrop.\lCropUtil.closeSilently" alt="" coords="315,201,541,242"/>
+</map>

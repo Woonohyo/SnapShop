@@ -1,0 +1,5 @@
+<map id="com.l3cache.snapshop.volley.ExtendedImageLoader.onGetImageSuccess" name="com.l3cache.snapshop.volley.ExtendedImageLoader.onGetImageSuccess">
+<area shape="rect" id="node2" href="$classcom_1_1l3cache_1_1snapshop_1_1_exif_utils.html#a1bf5d349602963d9f5725a7c0dac6a28" title="com.l3cache.snapshop.Exif\lUtils.rotateBitmap" alt="" coords="373,5,557,46"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html#a9b031360fe1212a836a552a5137a698f" title="com.l3cache.snapshop.volley.\lExtendedImageLoader.batchResponse" alt="" coords="339,70,592,111"/>
+<area shape="rect" id="node4" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader_1_1_image_listener.html#a24be33b3e263b0b709ea9673afd80070" title="com.l3cache.snapshop.volley.\lExtendedImageLoader.ImageListener.on\lResponse" alt="" coords="640,63,904,119"/>
+</map>

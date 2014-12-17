@@ -1,0 +1,11 @@
+<map id="com.l3cache.snapshop.activity.NewsfeedView.onActivityResult" name="com.l3cache.snapshop.activity.NewsfeedView.onActivityResult">
+<area shape="rect" id="node2" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_newsfeed_view.html#ac6776ff53084bf16454b051b9d2608dd" title="com.l3cache.snapshop.activity.\lNewsfeedView.beginCrop" alt="" coords="286,103,493,145"/>
+<area shape="rect" id="node7" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_newsfeed_view.html#a0d41707eff90bb35789fd09b60534c7e" title="com.l3cache.snapshop.activity.\lNewsfeedView.handleCrop" alt="" coords="286,201,493,242"/>
+<area shape="rect" id="node10" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_newsfeed_view.html#ad66effe9fee43b895657926153971a3a" title="com.l3cache.snapshop.activity.\lNewsfeedView.reloadDataFromServer" alt="" coords="265,266,514,307"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop.html#a9529e0572eafbbdfab235e7c414ebc59" title="com.l3cache.snapshop.photocrop.\lCrop.output" alt="" coords="563,5,789,46"/>
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop.html#a78b3837a8924441adc629b80e763d8b0" title="com.l3cache.snapshop.photocrop.\lCrop.asSquare" alt="" coords="563,70,789,111"/>
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop.html#a238fbc8d734e55b72632979f6924edba" title="com.l3cache.snapshop.photocrop.\lCrop.start" alt="" coords="563,135,789,177"/>
+<area shape="rect" id="node6" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop.html#a77f980a56fde34b12d3990037dd59d34" title="com.l3cache.snapshop.photocrop.\lCrop.getIntent" alt="" coords="838,135,1063,177"/>
+<area shape="rect" id="node8" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop.html#a9d48d97998c9abba5672366c1a6dd23a" title="com.l3cache.snapshop.photocrop.\lCrop.getOutput" alt="" coords="563,201,789,242"/>
+<area shape="rect" id="node9" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop.html#aa22291f8d1aeb1ae97f5a900505db872" title="com.l3cache.snapshop.photocrop.\lCrop.getError" alt="" coords="563,266,789,307"/>
+</map>

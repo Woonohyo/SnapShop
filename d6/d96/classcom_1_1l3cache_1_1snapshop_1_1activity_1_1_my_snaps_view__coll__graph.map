@@ -1,0 +1,6 @@
+<map id="com.l3cache.snapshop.activity.MySnapsView" name="com.l3cache.snapshop.activity.MySnapsView">
+<area shape="rect" id="node5" href="$d9/d30/classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_my_snaps_adapter.html" title="com.l3cache.snapshop.adapter.\lMySnapsAdapter" alt="" coords="909,170,1120,211"/>
+<area shape="rect" id="node10" href="$d7/dd9/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader" alt="" coords="545,141,745,182"/>
+<area shape="rect" id="node12" href="$d4/ddf/interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_image_request_factory.html" title="com.l3cache.snapshop.volley.\lImageRequestFactory" alt="" coords="61,57,261,98"/>
+<area shape="rect" id="node17" href="$db/d57/classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html" title="com.l3cache.snapshop.Snap\lPreference" alt="" coords="918,307,1111,349"/>
+</map>

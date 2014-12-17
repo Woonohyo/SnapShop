@@ -1,0 +1,5 @@
+<map id="com.l3cache.snapshop.photocrop.CropImageView.onTouchEvent" name="com.l3cache.snapshop.photocrop.CropImageView.onTouchEvent">
+<area shape="rect" id="node2" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_view.html#a563ba9be26120ca109d6ceceef34aaf7" title="com.l3cache.snapshop.photocrop.\lCropImageView.centerBasedOnHighlightView" alt="" coords="280,11,573,53"/>
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_view.html#a12295463827e1daabb92fca3b855c63e" title="com.l3cache.snapshop.photocrop.\lCropImageView.ensureVisible" alt="" coords="622,70,847,111"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_view.html#a5a9eeb092fc816c0cd1eb46f5fea41c7" title="com.l3cache.snapshop.photocrop.\lCropImageView.zoomTo" alt="" coords="622,5,847,46"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="com.l3cache.snapshop.activity.LoginView.onCreate" name="com.l3cache.snapshop.activity.LoginView.onCreate">
+<area shape="rect" id="node2" href="$classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html#a21ffd3d60823965118400d5d34af229a" title="com.l3cache.snapshop.Snap\lPreference.getValue" alt="" coords="533,30,726,71"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#ab9828da5f458fc87c71ebd371a1c2fe3" title="com.l3cache.snapshop.activity.\lLoginView.authorizeSignin" alt="" coords="265,187,471,229"/>
+<area shape="rect" id="node8" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#a329c41d4adb64dcc0f6653ba2aaee836" title="com.l3cache.snapshop.activity.\lLoginView.checkPlayServices" alt="" coords="265,122,471,163"/>
+<area shape="rect" id="node9" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#abaa71051b5a0c4f49f32910d790027b6" title="com.l3cache.snapshop.activity.\lLoginView.getRegistrationId" alt="" coords="265,5,471,46"/>
+<area shape="rect" id="node10" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#ab64604231f559cd079b32ff070da0128" title="com.l3cache.snapshop.activity.\lLoginView.registerInBackground" alt="" coords="261,305,475,346"/>
+<area shape="rect" id="node4" href="$interfacecom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_snap_shop_service.html#ad1cc55113ec5236578eb14cf81e4f6f4" title="com.l3cache.snapshop.retrofit.\lSnapShopService.login" alt="" coords="527,161,731,202"/>
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_sign_in_response.html#a96b59eaaf90e0022a61e90e7d6eadd34" title="com.l3cache.snapshop.retrofit.\lSignInResponse.getStatus" alt="" coords="527,226,731,267"/>
+<area shape="rect" id="node6" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#a0beaa75b44a8605a2fa548b806ab279f" title="com.l3cache.snapshop.activity.\lLoginView.intentTabHostActivity" alt="" coords="523,291,735,333"/>
+<area shape="rect" id="node7" href="$classcom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_sign_in_response.html#a2a4f794406116c39733e3667a17f9dbe" title="com.l3cache.snapshop.retrofit.\lSignInResponse.getId" alt="" coords="527,95,731,137"/>
+<area shape="rect" id="node11" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#a87e4cc879dee5b3fcb67b5b34fe43847" title="com.l3cache.snapshop.activity.\lLoginView.storeRegistrationId" alt="" coords="526,357,733,398"/>
+<area shape="rect" id="node12" href="$classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html#ad758c8806dc90f763dad128eecd58bc5" title="com.l3cache.snapshop.Snap\lPreference.put" alt="" coords="785,357,978,398"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="com.l3cache.snapshop.photocrop.CropImageActivity.saveImage" name="com.l3cache.snapshop.photocrop.CropImageActivity.saveImage">
+<area shape="rect" id="node2" href="$d7/d5f/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#aa362658bf9280bdd0bb189be744c214c" title="com.l3cache.snapshop.photocrop.\lCropUtil.startBackgroundJob" alt="" coords="281,122,506,163"/>
+<area shape="rect" id="node3" href="$df/d63/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#abe9c2228b5c870fde6741e3519c35246" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.saveOutput" alt="" coords="281,187,506,229"/>
+<area shape="rect" id="node4" href="$d3/daa/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_log.html#a159ad18361381dec3ae5e0e1001380f8" title="com.l3cache.snapshop.photocrop.\lLog.i" alt="" coords="566,5,791,46"/>
+<area shape="rect" id="node5" href="$df/d63/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#a4e5f144d7518046bd252ac6b901b1eb2" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.setResultException" alt="" coords="555,70,803,111"/>
+<area shape="rect" id="node6" href="$d3/daa/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_log.html#a8a275c5481dde9f83287a06b06a2fbcf" title="com.l3cache.snapshop.photocrop.\lLog.e" alt="" coords="851,191,1077,233"/>
+<area shape="rect" id="node7" href="$d7/d5f/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#a695804002129a7189ec40de18f173dae" title="com.l3cache.snapshop.photocrop.\lCropUtil.closeSilently" alt="" coords="566,187,791,229"/>
+<area shape="rect" id="node8" href="$d7/d5f/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#a555c52e391b78cc5ea6e3c6eb6375618" title="com.l3cache.snapshop.photocrop.\lCropUtil.copyExifRotation" alt="" coords="566,253,791,294"/>
+<area shape="rect" id="node9" href="$d7/d5f/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#aada1b9676238658b34b872ea810b2330" title="com.l3cache.snapshop.photocrop.\lCropUtil.getFromMediaUri" alt="" coords="566,318,791,359"/>
+<area shape="rect" id="node10" href="$df/d63/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#a3a45cd210f385dac421ad22f8f315300" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.setResultUri" alt="" coords="566,383,791,425"/>
+</map>

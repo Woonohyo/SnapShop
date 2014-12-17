@@ -1,0 +1,13 @@
+<map id="com.l3cache.snapshop.activity.NewsfeedView.parseJsonFeed" name="com.l3cache.snapshop.activity.NewsfeedView.parseJsonFeed">
+<area shape="rect" id="node2" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#af84f1774ca74d1e84bc6c89a605b2e51" title="com.l3cache.snapshop.model.\lNewsfeedData.setPid" alt="" coords="261,5,464,46"/>
+<area shape="rect" id="node3" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#adf913f64e0f3ab0d2906682228ab1b77" title="com.l3cache.snapshop.model.\lNewsfeedData.setTitle" alt="" coords="261,70,464,111"/>
+<area shape="rect" id="node4" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a521e85dad663fdfcf8e11c1ea9b43ed9" title="com.l3cache.snapshop.model.\lNewsfeedData.setShopUrl" alt="" coords="261,135,464,177"/>
+<area shape="rect" id="node5" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a8adb58677049de0a4375c55a842430d8" title="com.l3cache.snapshop.model.\lNewsfeedData.setContents" alt="" coords="261,201,464,242"/>
+<area shape="rect" id="node6" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a052281059dbda6f0ffa23d336ea1fdf2" title="com.l3cache.snapshop.model.\lNewsfeedData.setImageUrl" alt="" coords="261,266,464,307"/>
+<area shape="rect" id="node7" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a915b06623ff3d4b74fc34efbf9a529cf" title="com.l3cache.snapshop.model.\lNewsfeedData.setNumLike" alt="" coords="261,331,464,373"/>
+<area shape="rect" id="node8" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a5774d2c7a43ce664e0d8dbb84ad41660" title="com.l3cache.snapshop.model.\lNewsfeedData.setPrice" alt="" coords="261,397,464,438"/>
+<area shape="rect" id="node9" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a637883d1911fec7c806e889ec0fa8a7a" title="com.l3cache.snapshop.model.\lNewsfeedData.setWriteDate" alt="" coords="261,462,464,503"/>
+<area shape="rect" id="node10" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a375b30156641ee597964ea6740006858" title="com.l3cache.snapshop.model.\lNewsfeedData.setWriter" alt="" coords="261,527,464,569"/>
+<area shape="rect" id="node11" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#ac97c991f242b670ed747a25a112e0c99" title="com.l3cache.snapshop.model.\lNewsfeedData.setUserLike" alt="" coords="261,593,464,634"/>
+<area shape="rect" id="node12" href="$d5/de2/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html#a12ac1681976d19879d9d32589ddc8852" title="com.l3cache.snapshop.model.\lNewsfeedData.setRead" alt="" coords="261,658,464,699"/>
+</map>

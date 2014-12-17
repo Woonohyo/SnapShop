@@ -1,0 +1,7 @@
+<map id="com.l3cache.snapshop.fab.FloatingActionsMenu.init" name="com.l3cache.snapshop.fab.FloatingActionsMenu.init">
+<area shape="rect" id="node2" href="$d8/d5b/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html#a5bbf0d8878ede1a623a192b21dfcf6b1" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.getColor" alt="" coords="263,5,463,46"/>
+<area shape="rect" id="node3" href="$d8/d5b/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html#a6b60f7342502faa3e90db0d54a77dbea" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.createAddButton" alt="" coords="238,70,487,111"/>
+<area shape="rect" id="node4" href="$d8/d5b/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html#aeffe2bf3d14c3288836ba4213c877027" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.toggle" alt="" coords="536,70,723,111"/>
+<area shape="rect" id="node5" href="$d8/d5b/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html#a99ecfa800124adcf369427ff4e0899b0" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.collapse" alt="" coords="771,37,970,78"/>
+<area shape="rect" id="node6" href="$d8/d5b/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html#a53b91a6675f38d6964415c214ef85e63" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.expand" alt="" coords="774,102,967,143"/>
+</map>

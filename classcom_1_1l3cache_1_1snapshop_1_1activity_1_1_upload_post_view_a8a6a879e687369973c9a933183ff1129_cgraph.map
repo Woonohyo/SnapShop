@@ -1,0 +1,6 @@
+<map id="com.l3cache.snapshop.activity.UploadPostView.upload" name="com.l3cache.snapshop.activity.UploadPostView.upload">
+<area shape="rect" id="node2" href="$interfacecom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_snap_shop_service.html#aec15ab774fdad222aa23922dd652e149" title="com.l3cache.snapshop.retrofit.\lSnapShopService.uploadSnap" alt="" coords="290,5,494,46"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html#a21ffd3d60823965118400d5d34af229a" title="com.l3cache.snapshop.Snap\lPreference.getValue" alt="" coords="295,70,489,111"/>
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_upload_response.html#a297be085aa6ae0b8ca8c9a87728ed7cb" title="com.l3cache.snapshop.retrofit.\lUploadResponse.getStatus" alt="" coords="290,135,494,177"/>
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_upload_post_view.html#a393117378d31e6fa452b5d654bf16933" title="com.l3cache.snapshop.activity.\lUploadPostView.didUploadFinishActivity" alt="" coords="261,201,523,242"/>
+</map>

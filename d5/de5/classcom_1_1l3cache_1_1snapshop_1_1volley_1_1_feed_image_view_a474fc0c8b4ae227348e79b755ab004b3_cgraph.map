@@ -1,0 +1,5 @@
+<map id="com.l3cache.snapshop.volley.FeedImageView.onDetachedFromWindow" name="com.l3cache.snapshop.volley.FeedImageView.onDetachedFromWindow">
+<area shape="rect" id="node2" href="$dd/df0/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader_1_1_image_container.html#a0589b93294a6e36abb2f914e2e8cb435" title="com.l3cache.snapshop.volley.\lExtendedImageLoader.ImageContainer.cancel\lRequest" alt="" coords="326,5,623,61"/>
+<area shape="rect" id="node4" href="$d5/de5/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_feed_image_view.html#ad5ba8aac9001249ce037a32b5acc80df" title="com.l3cache.snapshop.volley.\lFeedImageView.setImageBitmap" alt="" coords="365,86,584,127"/>
+<area shape="rect" id="node3" href="$d1/d79/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader_1_1_batched_image_request.html#ab042aea3c89bc5dbb6f9b51a65e8df8b" title="com.l3cache.snapshop.volley.\lExtendedImageLoader.BatchedImage\lRequest.removeContainerAndCancelIfNecessary" alt="" coords="673,5,986,61"/>
+</map>

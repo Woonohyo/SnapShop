@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['naversearchresult',['NaverSearchResult',['../df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#a4b7024244762562110c392534d8cd2f0',1,'com::l3cache::snapshop::model::NaverSearchResult']]],
+  ['newsfeed',['Newsfeed',['../da/d80/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed.html#a5cd78b7504d8d43ea21a84487d39787f',1,'com.l3cache.snapshop.model.Newsfeed.Newsfeed()'],['../da/d80/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed.html#a7eebd869b65bb2ead7914b1e72ab9005',1,'com.l3cache.snapshop.model.Newsfeed.Newsfeed(String title, String shopUrl, String contents, String imageUrl, String price, int userId)']]],
+  ['newsfeedrequest',['NewsfeedRequest',['../d6/d9d/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_newsfeed_request.html#aacc3f03332f37c3137f051e160ca83a1',1,'com.l3cache.snapshop.volley.NewsfeedRequest.NewsfeedRequest(int method, String url, ErrorListener listener)'],['../d6/d9d/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_newsfeed_request.html#a8a2bdb7024652e1d2df9ad0c29d2a4e6',1,'com.l3cache.snapshop.volley.NewsfeedRequest.NewsfeedRequest(String url, Map&lt; String, String &gt; params, Listener&lt; JSONObject &gt; responseListener, ErrorListener errorListener)']]],
+  ['newsfeedvolleyrealmadapter',['NewsfeedVolleyRealmAdapter',['../db/d53/classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_newsfeed_volley_realm_adapter.html#a7ce8410d2f6a5bf9a36ae34d5a23a32f',1,'com::l3cache::snapshop::adapter::NewsfeedVolleyRealmAdapter']]]
+];

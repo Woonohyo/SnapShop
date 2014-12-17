@@ -1,0 +1,6 @@
+<map id="com.l3cache.snapshop.photocrop.CropImageActivity.startCrop" name="com.l3cache.snapshop.photocrop.CropImageActivity.startCrop">
+<area shape="rect" id="node2" href="$d7/d5f/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#aa362658bf9280bdd0bb189be744c214c" title="com.l3cache.snapshop.photocrop.\lCropUtil.startBackgroundJob" alt="" coords="281,5,506,46"/>
+<area shape="rect" id="node3" href="$d0/d5c/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity_1_1_cropper.html#a0af6abc2a76ba28801b132eda263cbf4" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.Cropper.crop" alt="" coords="281,70,506,111"/>
+<area shape="rect" id="node4" href="$d0/d5c/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity_1_1_cropper.html#aa7a8c5b82343762d50b9934df93b87d4" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.Cropper.makeDefault" alt="" coords="555,70,815,111"/>
+<area shape="rect" id="node5" href="$dc/dc9/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_view.html#a3df2980d14e4e0498dd92947840476b5" title="com.l3cache.snapshop.photocrop.\lCropImageView.add" alt="" coords="865,70,1090,111"/>
+</map>

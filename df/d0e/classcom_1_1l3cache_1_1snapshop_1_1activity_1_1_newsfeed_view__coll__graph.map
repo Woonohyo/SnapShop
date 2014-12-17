@@ -1,0 +1,11 @@
+<map id="com.l3cache.snapshop.activity.NewsfeedView" name="com.l3cache.snapshop.activity.NewsfeedView">
+<area shape="rect" id="node4" href="$d8/d5b/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu" alt="" coords="1133,114,1317,155"/>
+<area shape="rect" id="node6" href="$dd/ddc/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu_1_1_rotating_drawable.html" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.RotatingDrawable" alt="" coords="661,57,917,98"/>
+<area shape="rect" id="node8" href="$d9/d60/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_add_floating_action_button.html" title="com.l3cache.snapshop.fab.\lAddFloatingActionButton" alt="" coords="697,122,881,163"/>
+<area shape="rect" id="node9" href="$d4/db5/classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_action_button.html" title="com.l3cache.snapshop.fab.\lFloatingActionButton" alt="" coords="219,122,403,163"/>
+<area shape="rect" id="node15" href="$dd/db9/classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_endless_scroll_listener.html" title="com.l3cache.snapshop.adapter.\lEndlessScrollListener" alt="" coords="1120,282,1331,323"/>
+<area shape="rect" id="node23" href="$db/d53/classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_newsfeed_volley_realm_adapter.html" title="com.l3cache.snapshop.adapter.\lNewsfeedVolleyRealmAdapter" alt="" coords="1120,462,1331,503"/>
+<area shape="rect" id="node21" href="$d5/d9d/classcom_1_1l3cache_1_1snapshop_1_1_snap_network_utils.html" title="com.l3cache.snapshop.Snap\lNetworkUtils" alt="" coords="1129,630,1322,671"/>
+<area shape="rect" id="node26" href="$d7/dd9/classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader" alt="" coords="689,574,889,615"/>
+<area shape="rect" id="node28" href="$d4/ddf/interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_image_request_factory.html" title="com.l3cache.snapshop.volley.\lImageRequestFactory" alt="" coords="211,490,411,531"/>
+</map>

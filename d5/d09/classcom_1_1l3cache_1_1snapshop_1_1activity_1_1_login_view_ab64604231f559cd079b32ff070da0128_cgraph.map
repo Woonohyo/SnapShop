@@ -1,0 +1,4 @@
+<map id="com.l3cache.snapshop.activity.LoginView.registerInBackground" name="com.l3cache.snapshop.activity.LoginView.registerInBackground">
+<area shape="rect" id="node2" href="$d5/d09/classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_login_view.html#a87e4cc879dee5b3fcb67b5b34fe43847" title="com.l3cache.snapshop.activity.\lLoginView.storeRegistrationId" alt="" coords="267,5,474,46"/>
+<area shape="rect" id="node3" href="$db/d57/classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html#ad758c8806dc90f763dad128eecd58bc5" title="com.l3cache.snapshop.Snap\lPreference.put" alt="" coords="523,5,717,46"/>
+</map>

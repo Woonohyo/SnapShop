@@ -1,0 +1,9 @@
+<map id="com.l3cache.snapshop.activity.PostViewer" name="com.l3cache.snapshop.activity.PostViewer">
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1model_1_1_newsfeed_data.html" title="com.l3cache.snapshop.model.\lNewsfeedData" alt="" coords="1077,122,1280,163"/>
+<area shape="rect" id="node6" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader" alt="" coords="689,269,889,310"/>
+<area shape="rect" id="node13" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_feed_image_view.html" title="com.l3cache.snapshop.volley.\lFeedImageView" alt="" coords="1079,187,1279,229"/>
+<area shape="rect" id="node8" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_image_request_factory.html" title="com.l3cache.snapshop.volley.\lImageRequestFactory" alt="" coords="211,213,411,254"/>
+<area shape="rect" id="node15" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader_1_1_image_container.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader.ImageContainer" alt="" coords="661,107,917,149"/>
+<area shape="rect" id="node16" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader_1_1_image_listener.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader.ImageListener" alt="" coords="188,45,433,86"/>
+<area shape="rect" id="node19" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_feed_image_view_1_1_response_observer.html" title="com.l3cache.snapshop.volley.\lFeedImageView.ResponseObserver" alt="" coords="671,173,908,214"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="com.l3cache.snapshop.activity.SearchResultsView.parseJsonFeed" name="com.l3cache.snapshop.activity.SearchResultsView.parseJsonFeed">
+<area shape="rect" id="node2" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#ac4e257f5167e1c44a6d735cfb9a4008e" title="com.l3cache.snapshop.model.\lNaverSearchResult.setImage" alt="" coords="296,5,499,46"/>
+<area shape="rect" id="node3" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#ae091fb9d29a397fb92b6cddd7eca64d4" title="com.l3cache.snapshop.model.\lNaverSearchResult.setTitle" alt="" coords="296,70,499,111"/>
+<area shape="rect" id="node4" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#ac1d085e2ab5daf1e2960579b0b63f295" title="com.l3cache.snapshop.model.\lNaverSearchResult.setLprice" alt="" coords="296,135,499,177"/>
+<area shape="rect" id="node5" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#a5546265f0adf0357502c5c6063930003" title="com.l3cache.snapshop.model.\lNaverSearchResult.setHprice" alt="" coords="296,201,499,242"/>
+<area shape="rect" id="node6" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#a508b9bf22e673d96534a84b930c3287d" title="com.l3cache.snapshop.model.\lNaverSearchResult.setMallName" alt="" coords="288,266,507,307"/>
+<area shape="rect" id="node7" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#ace450a3f8b464f438521e0eb594afcc6" title="com.l3cache.snapshop.model.\lNaverSearchResult.setLink" alt="" coords="296,331,499,373"/>
+<area shape="rect" id="node8" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#a382b9f4c086444c7639d3e406e7f7b47" title="com.l3cache.snapshop.model.\lNaverSearchResult.setProductId" alt="" coords="289,397,505,438"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="com.l3cache.snapshop.activity.SearchResultsView.onItemClick" name="com.l3cache.snapshop.activity.SearchResultsView.onItemClick">
+<area shape="rect" id="node2" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#aa61a5eedf1273a00df19b3253bf177ff" title="com.l3cache.snapshop.model.\lNaverSearchResult.getImage" alt="" coords="264,5,467,46"/>
+<area shape="rect" id="node3" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#ab49d8aa0226b5d2c8ec5f907808f4735" title="com.l3cache.snapshop.model.\lNaverSearchResult.getLink" alt="" coords="264,70,467,111"/>
+<area shape="rect" id="node4" href="$df/dd1/classcom_1_1l3cache_1_1snapshop_1_1model_1_1_naver_search_result.html#ad31e41b49981e042f71fd59ecebe13ea" title="com.l3cache.snapshop.model.\lNaverSearchResult.getLprice" alt="" coords="264,135,467,177"/>
+</map>

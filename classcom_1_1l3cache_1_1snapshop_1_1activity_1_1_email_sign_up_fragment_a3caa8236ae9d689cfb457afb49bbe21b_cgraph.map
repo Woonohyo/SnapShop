@@ -1,0 +1,8 @@
+<map id="com.l3cache.snapshop.activity.EmailSignUpFragment.authorizeSignin" name="com.l3cache.snapshop.activity.EmailSignUpFragment.authorizeSignin">
+<area shape="rect" id="node2" href="$interfacecom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_snap_shop_service.html#ad1cc55113ec5236578eb14cf81e4f6f4" title="com.l3cache.snapshop.retrofit.\lSnapShopService.login" alt="" coords="326,5,530,46"/>
+<area shape="rect" id="node3" href="$classcom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_sign_in_response.html#a96b59eaaf90e0022a61e90e7d6eadd34" title="com.l3cache.snapshop.retrofit.\lSignInResponse.getStatus" alt="" coords="326,70,530,111"/>
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html#ad758c8806dc90f763dad128eecd58bc5" title="com.l3cache.snapshop.Snap\lPreference.put" alt="" coords="331,135,525,177"/>
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1retrofit_1_1_sign_in_response.html#a2a4f794406116c39733e3667a17f9dbe" title="com.l3cache.snapshop.retrofit.\lSignInResponse.getId" alt="" coords="326,201,530,242"/>
+<area shape="rect" id="node6" href="$classcom_1_1l3cache_1_1snapshop_1_1_snap_preference.html#a21ffd3d60823965118400d5d34af229a" title="com.l3cache.snapshop.Snap\lPreference.getValue" alt="" coords="331,266,525,307"/>
+<area shape="rect" id="node7" href="$classcom_1_1l3cache_1_1snapshop_1_1activity_1_1_email_sign_up_fragment.html#a998e64704e0e0ef8d0d34d951c94e36b" title="com.l3cache.snapshop.activity.\lEmailSignUpFragment.intentTabHost\lActivity" alt="" coords="307,332,549,388"/>
+</map>

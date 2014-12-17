@@ -1,0 +1,5 @@
+<map id="com.l3cache.snapshop.activity.MyPostsView" name="com.l3cache.snapshop.activity.MyPostsView">
+<area shape="rect" id="node5" href="$classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_my_posts_adapter.html" title="com.l3cache.snapshop.adapter.\lMyPostsAdapter" alt="" coords="909,197,1120,238"/>
+<area shape="rect" id="node9" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader" alt="" coords="545,323,745,365"/>
+<area shape="rect" id="node11" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_image_request_factory.html" title="com.l3cache.snapshop.volley.\lImageRequestFactory" alt="" coords="61,239,261,281"/>
+</map>

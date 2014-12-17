@@ -1,0 +1,6 @@
+<map id="com.l3cache.snapshop.photocrop.CropImageActivity.calculateBitmapSampleSize" name="com.l3cache.snapshop.photocrop.CropImageActivity.calculateBitmapSampleSize">
+<area shape="rect" id="node2" href="$d7/d5f/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_util.html#a695804002129a7189ec40de18f173dae" title="com.l3cache.snapshop.photocrop.\lCropUtil.closeSilently" alt="" coords="359,5,585,46"/>
+<area shape="rect" id="node3" href="$df/d63/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#a515f4758afe86ea4e43cd44a44c671fd" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.getMaxImageSize" alt="" coords="352,70,592,111"/>
+<area shape="rect" id="node5" href="$d3/daa/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_log.html#a159ad18361381dec3ae5e0e1001380f8" title="com.l3cache.snapshop.photocrop.\lLog.i" alt="" coords="359,135,585,177"/>
+<area shape="rect" id="node4" href="$df/d63/classcom_1_1l3cache_1_1snapshop_1_1photocrop_1_1_crop_image_activity.html#a92415b21172cebe479f84d240973d04e" title="com.l3cache.snapshop.photocrop.\lCropImageActivity.getMaxTextureSize" alt="" coords="641,70,890,111"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="com.l3cache.snapshop.activity.NewsfeedView" name="com.l3cache.snapshop.activity.NewsfeedView">
+<area shape="rect" id="node4" href="$classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu.html" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu" alt="" coords="1133,142,1317,183"/>
+<area shape="rect" id="node6" href="$classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_actions_menu_1_1_rotating_drawable.html" title="com.l3cache.snapshop.fab.\lFloatingActionsMenu.RotatingDrawable" alt="" coords="661,57,917,98"/>
+<area shape="rect" id="node8" href="$classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_add_floating_action_button.html" title="com.l3cache.snapshop.fab.\lAddFloatingActionButton" alt="" coords="697,122,881,163"/>
+<area shape="rect" id="node9" href="$classcom_1_1l3cache_1_1snapshop_1_1fab_1_1_floating_action_button.html" title="com.l3cache.snapshop.fab.\lFloatingActionButton" alt="" coords="219,122,403,163"/>
+<area shape="rect" id="node14" href="$classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_endless_scroll_listener.html" title="com.l3cache.snapshop.adapter.\lEndlessScrollListener" alt="" coords="1120,259,1331,301"/>
+<area shape="rect" id="node22" href="$classcom_1_1l3cache_1_1snapshop_1_1adapter_1_1_newsfeed_volley_realm_adapter.html" title="com.l3cache.snapshop.adapter.\lNewsfeedVolleyRealmAdapter" alt="" coords="1120,439,1331,481"/>
+<area shape="rect" id="node20" href="$classcom_1_1l3cache_1_1snapshop_1_1_snap_network_utils.html" title="com.l3cache.snapshop.Snap\lNetworkUtils" alt="" coords="1129,607,1322,649"/>
+<area shape="rect" id="node25" href="$classcom_1_1l3cache_1_1snapshop_1_1volley_1_1_extended_image_loader.html" title="com.l3cache.snapshop.volley.\lExtendedImageLoader" alt="" coords="689,551,889,593"/>
+<area shape="rect" id="node27" href="$interfacecom_1_1l3cache_1_1snapshop_1_1volley_1_1_image_request_factory.html" title="com.l3cache.snapshop.volley.\lImageRequestFactory" alt="" coords="211,467,411,509"/>
+</map>
