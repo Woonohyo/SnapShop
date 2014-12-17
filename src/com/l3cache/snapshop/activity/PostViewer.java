@@ -57,6 +57,7 @@ public class PostViewer extends Activity {
 	private Realm realm;
 	private TextView snapsNumberTextView;
 	private TextView viewsNumberTextView;
+	private RealmChangeListener mRealmChangeListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,17 +97,19 @@ public class PostViewer extends Activity {
 		/**
 		 * Snap/UnSnap의 변경 될 경우 화면도 갱신합니다
 		 */
-		realm.addChangeListener(new RealmChangeListener() {
+		if (mRealmChangeListener == null)
+			mRealmChangeListener = new RealmChangeListener() {
 
-			@Override
-			public void onChange() {
-				Log.i(TAG, "Realm Changed");
-				snapsNumberTextView.setText("+ " + currentData.getNumLike());
-				viewsNumberTextView.setText((currentData.getRead() > 1 ? currentData.getRead() + " Views" : currentData
-						.getRead() + " View"));
-			}
-		});
-
+				@Override
+				public void onChange() {
+					if (currentData != null) {
+						snapsNumberTextView.setText("+ " + currentData.getNumLike());
+						viewsNumberTextView.setText((currentData.getRead() > 1 ? currentData.getRead() + " Views"
+								: currentData.getRead() + " View"));
+					}
+				}
+			};
+		realm.addChangeListener(mRealmChangeListener);
 		service.readPost(currentData.getPid(), new Callback<DefaultResponse>() {
 			@Override
 			public void failure(RetrofitError error) {
@@ -275,6 +278,7 @@ public class PostViewer extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		realm.removeChangeListener(mRealmChangeListener);
 		overridePendingTransition(R.anim.slide_right_to_left_in, R.anim.slide_right_to_left_out);
 	}
 }

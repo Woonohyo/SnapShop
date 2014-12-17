@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,7 +50,7 @@ import com.l3cache.snapshop.controller.AppController.TrackerName;
 import com.l3cache.snapshop.model.NaverSearchResult;
 import com.l3cache.snapshop.volley.SearchRequest;
 
-public class SearchResultsView extends Activity implements OnItemClickListener, OnItemSelectedListener {
+public class SearchResultsView extends Activity implements OnItemClickListener {
 
 	private final String TAG = SearchResultsView.class.getSimpleName();
 	private static final String URL_FEED = SnapConstants.SERVER_URL + SnapConstants.SEARCH_REQUEST;
@@ -61,7 +62,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	private int resultPageStart = 1;
 	private int numOfTotalResult;
 	private int numOfResultDisplay = 20;
-	private String sortingBy = SORT_SIMILARITY;
+	private String sortInto = SORT_SIMILARITY;
 	private ListView listView;
 	private static String query;
 	private SearchResultsVolleyAdapter searchResultsViewVolleyAdapter;
@@ -70,6 +71,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 	private Spinner mSortSpinner;
 	private TextView totalResultTextView;
 	private LinearLayout mToolBar;
+	private EndlessScrollListener mEndlessScrollListener;
 	Handler handler = new Handler();
 
 	@Override
@@ -90,7 +92,10 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 		listView.setOnItemClickListener(this);
 		searchResultsViewVolleyAdapter = new SearchResultsVolleyAdapter(this, resultItems);
 		listView.setAdapter(searchResultsViewVolleyAdapter);
-		listView.setOnScrollListener(new EndlessScrollListener(5, 1) {
+
+		mEndlessScrollListener = new EndlessScrollListener() {
+			private int mLastFirstVisibleItem;
+
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
 				if (numOfTotalResult < 10 || ((page - 1) * 20) > numOfTotalResult) {
@@ -99,7 +104,25 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 				Log.i(TAG, "Loading page " + page);
 				fetchDataFromServer(page);
 			}
-		});
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+				// 스크롤을 내리는 경우
+				if (mLastFirstVisibleItem < firstVisibleItem) {
+					mToolBar.setVisibility(View.INVISIBLE);
+				}
+				// 스크롤을 올리는 경우
+				if (mLastFirstVisibleItem > firstVisibleItem) {
+					mToolBar.setVisibility(View.VISIBLE);
+				}
+				mLastFirstVisibleItem = firstVisibleItem;
+			}
+		};
+
+		listView.setOnScrollListener(mEndlessScrollListener);
+
+		mToolBar = (LinearLayout) findViewById(R.id.search_results_tool_bar);
 
 		mSortSpinner = (Spinner) findViewById(R.id.search_results_sort_spinner);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.search_sort_array,
@@ -109,25 +132,35 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				String oldSortInto = sortInto;
 				switch (position) {
 				case 0: {
+					sortInto = SORT_SIMILARITY;
 					break;
 				}
 
 				case 1: {
+					sortInto = SORT_ASC;
 					break;
 				}
 
 				case 2: {
+					sortInto = SORT_DESC;
 					break;
 
 				}
 
 				case 3: {
+					sortInto = SORT_RECENT;
 					break;
 
 				}
 				}
+
+				if (oldSortInto.equals(sortInto)) {
+					return;
+				}
+				reloadData();
 			}
 
 			@Override
@@ -144,7 +177,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 		Uri.Builder builder = new Uri.Builder();
 		String targetUrl = builder.encodedPath(URL_FEED).appendQueryParameter("query", query)
 				.appendQueryParameter("display", numOfResultDisplay + "").appendQueryParameter("start", offset + "")
-				.appendQueryParameter("sort", sortingBy).build().toString();
+				.appendQueryParameter("sort", sortInto).build().toString();
 		Entry entry = cache.get(targetUrl);
 		if (entry != null) {
 			// fetch the data from cache
@@ -165,7 +198,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 			params.put("query", query);
 			params.put("display", numOfResultDisplay + "");
 			params.put("start", offset + "");
-			params.put("sort", sortingBy);
+			params.put("sort", sortInto);
 
 			SearchRequest searchReq = new SearchRequest(URL_FEED, params, new Response.Listener<JSONObject>() {
 				@Override
@@ -240,10 +273,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 			public boolean onQueryTextSubmit(String query) {
 				Log.i("Search", "Query Submitted: " + query);
 				SearchResultsView.query = query;
-				resultItems.clear();
-				searchResultsViewVolleyAdapter.notifyDataSetChanged();
-				fetchDataFromServer(resultPageStart);
-				searchView.clearFocus();
+				reloadData();
 				return false;
 			}
 
@@ -255,6 +285,14 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 		});
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void reloadData() {
+		resultItems.clear();
+		searchResultsViewVolleyAdapter.notifyDataSetChanged();
+		mEndlessScrollListener.reset();
+		fetchDataFromServer(1);
+		searchView.clearFocus();
 	}
 
 	@Override
@@ -293,15 +331,4 @@ public class SearchResultsView extends Activity implements OnItemClickListener, 
 		}
 	}
 
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		Log.i(TAG, parent.getItemAtPosition(position).toString());
-
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-		// TODO Auto-generated method stub
-
-	}
 }
