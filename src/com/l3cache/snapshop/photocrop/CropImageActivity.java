@@ -420,6 +420,7 @@ public class CropImageActivity extends MonitoredActivity {
 				if (outputStream != null) {
 					croppedImage = Bitmap.createScaledBitmap(croppedImage, 500, 500, true);
 					croppedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+					Log.i("Size of croppedImage - " + croppedImage.getByteCount());
 				}
 			} catch (IOException e) {
 				setResultException(e);
@@ -471,5 +472,4 @@ public class CropImageActivity extends MonitoredActivity {
 	private void setResultException(Throwable throwable) {
 		setResult(Crop.RESULT_ERROR, new Intent().putExtra(Crop.Extra.ERROR, throwable));
 	}
-
 }

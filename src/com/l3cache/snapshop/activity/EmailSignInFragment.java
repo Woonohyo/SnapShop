@@ -50,8 +50,6 @@ public class EmailSignInFragment extends DialogFragment {
 		Button signinButton = (Button) view.findViewById(R.id.button_sign_in);
 		emailField = (EditText) view.findViewById(R.id.editText_email);
 		passwordField = (EditText) view.findViewById(R.id.editText_password);
-		emailField.setText("test@test.com");
-		passwordField.setText("test");
 		signinButton.setOnTouchListener(new OnTouchListener() {
 
 			@Override

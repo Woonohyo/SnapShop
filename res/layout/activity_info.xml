@@ -33,6 +33,14 @@
         android:layout_weight="1" >
     </View>
 
+    <TextView
+        android:id="@+id/info_version_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center|center_horizontal" >
+    </TextView>
+
     <Button
         android:id="@+id/info_signout_button"
         android:layout_width="match_parent"
@@ -41,12 +49,12 @@
         android:text="Sign Out"
         android:textColor="@color/white"
         android:textSize="20sp" />
-    
-        <Button
+
+    <Button
         android:id="@+id/info_deactivate_button"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@drawable/info_deactivate_button"
         android:text="Deactivate Account"
         android:textColor="@color/white"

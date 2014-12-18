@@ -1,7 +1,6 @@
 package com.l3cache.snapshop;
 
 public final class SnapConstants {
-
 	public static final String SERVER_URL = "http://125.209.199.221:8080";
 	public static final String NEWSFEED_REQUEST = "/app/posts/";
 	public static final String SEARCH_REQUEST = "/search/shop";
@@ -22,7 +21,7 @@ public final class SnapConstants {
 	public static final String MYPOST_REQUEST(int uid) {
 		return "/app/posts/" + uid + "/posts";
 	}
-	
+
 	public static final String READ_POST_REQUEST(int pid) {
 		return "/app/posts/" + pid + "/read";
 	}
@@ -50,5 +49,4 @@ public final class SnapConstants {
 	public static final int INTERNET_BUTTON = 1003;
 
 	public static final int REQUEST_UPLOAD = 263;
-
 }

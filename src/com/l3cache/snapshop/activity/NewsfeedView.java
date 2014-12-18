@@ -77,7 +77,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_RECENT = 1;
 	private final int SORT_POPULAR = 2;
 	private PullToRefreshGridView mGridView;
-	private int sortInto = SORT_RECOMMENDED;
+	private int sortInto = SORT_RECENT;
 	private NewsfeedVolleyRealmAdapter newsfeedAdapter;
 	private Uri fileUri;
 	private FloatingActionsMenu menuButton;
@@ -124,6 +124,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 				R.array.snaps_sort_array, android.R.layout.simple_spinner_dropdown_item);
 		sortSpinner.setAdapter(spinnerAdapter);
 		sortSpinner.setOnItemSelectedListener(this);
+		sortSpinner.setSelection(1);
 
 		initNewPostButtonTouchListener();
 

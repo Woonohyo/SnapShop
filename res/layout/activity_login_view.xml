@@ -50,13 +50,14 @@
             android:textColor="#FF0000"
             android:textSize="@dimen/sign_in_button_font_size"
             android:textStyle="bold" />
-        -->
+        
 
         <com.facebook.widget.LoginButton
             android:id="@+id/login_view_facebook_signin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
+            -->
     </LinearLayout>
 
     <LinearLayout
@@ -73,7 +74,7 @@
             android:background="#00000000"
             android:text="Sign In with Email"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/login_view_sign_up_button"
@@ -83,7 +84,7 @@
             android:background="#00000000"
             android:text="Create Account"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

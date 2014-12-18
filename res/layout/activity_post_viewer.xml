@@ -94,10 +94,13 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/post_viewer_description_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/post_viewer_title_container"
-                android:layout_margin="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_parent_rounded_corner"
                 android:orientation="vertical"
                 android:padding="15dp" >
@@ -111,10 +114,40 @@
                 <TextView
                     android:id="@+id/post_viewer_description_text_view"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
+                    android:layout_height="200dp"
                     android:lineSpacingExtra="10dp"
                     android:paddingTop="10dp"
                     android:text="This is a description of a item" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/post_viewer_description_container"
+                android:layout_margin="15dp"
+                android:background="@drawable/bg_parent_rounded_corner"
+                android:orientation="vertical"
+                android:padding="15dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/post_viewer_comment_number_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="123"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Comments"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
