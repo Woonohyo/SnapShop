@@ -46,6 +46,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -55,7 +56,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapNetworkUtils;
@@ -76,7 +76,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private final int SORT_RECOMMENDED = 0;
 	private final int SORT_RECENT = 1;
 	private final int SORT_POPULAR = 2;
-	private PullToRefreshGridView mGridView;
+	private GridView mGridView;
 	private int sortInto = SORT_RECENT;
 	private NewsfeedVolleyRealmAdapter newsfeedAdapter;
 	private Uri fileUri;
@@ -108,7 +108,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		realm = Realm.getInstance(getActivity());
 
 		View view = inflater.inflate(R.layout.activity_newsfeed, container, false);
-		mGridView = (PullToRefreshGridView) view.findViewById(R.id.newsfeed_main_gridView);
+		mGridView = (GridView) view.findViewById(R.id.newsfeed_main_gridView);
 		initEndlessScrollListener();
 		mGridView.setOnScrollListener(endlessScrollListener);
 		initGridViewItemClickListener();

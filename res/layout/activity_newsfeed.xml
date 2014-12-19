@@ -6,7 +6,7 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical" >
 
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+    <GridView
         android:id="@+id/newsfeed_main_gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         android:paddingBottom="15dp"
         android:paddingTop="40dp"
         android:verticalSpacing="15dp" >
-    </com.handmark.pulltorefresh.library.PullToRefreshGridView>
+    </GridView>
 
     <Spinner
         android:id="@+id/newsfeed_spinner_sort"

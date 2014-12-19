@@ -1,21 +1,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp" >
+    android:animateLayoutChanges="true"
+    android:orientation="vertical" >
 
     <GridView
         android:id="@+id/newsfeed_main_gridView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/feed_bg"
+        android:clipToPadding="false"
         android:horizontalSpacing="15dp"
-        android:numColumns="auto_fit"
+        android:numColumns="2"
+        android:paddingBottom="15dp"
+        android:paddingTop="40dp"
         android:verticalSpacing="15dp" >
     </GridView>
 
-    
+    <Spinner
+        android:id="@+id/newsfeed_spinner_sort"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:dropDownSelector="@color/white"
+        android:focusable="false" />
+
     <com.l3cache.snapshop.fab.FloatingActionsMenu
         android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
@@ -26,6 +38,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:focusable="false"
         fab:fab_addButtonColorNormal="@color/snap_green"
         fab:fab_addButtonColorPressed="@color/white_pressed"
         fab:fab_addButtonPlusIconColor="@color/white"
@@ -35,6 +48,7 @@
             android:id="@+id/newsfeed_internet_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="false"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/new_snap_internet" />
@@ -43,6 +57,7 @@
             android:id="@+id/newsfeed_gallery_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="false"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/new_snap_gallery" />
@@ -51,6 +66,7 @@
             android:id="@+id/newsfeed_camera_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="false"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/new_snap_camera" />

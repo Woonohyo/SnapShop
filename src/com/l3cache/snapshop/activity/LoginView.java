@@ -102,7 +102,6 @@ public class LoginView extends FragmentActivity {
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK Found");
 		}
-		Log.i(TAG, regid);
 	}
 
 	private String getRegistrationId() {
