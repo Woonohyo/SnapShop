@@ -398,7 +398,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private void fetchDataFromServer(int offset) {
 		SnapPreference pref = new SnapPreference(getActivity());
 		Uri.Builder builder = new Uri.Builder();
-		String tempUrl = SnapConstants.SERVER_URL + "/app/posts";
 		builder.encodedPath(URL_FEED).appendQueryParameter("sort", sortInto + "")
 				.appendQueryParameter("start", offset + "")
 				.appendQueryParameter("id", pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 1) + "");

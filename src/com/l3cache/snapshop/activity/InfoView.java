@@ -11,6 +11,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
@@ -19,6 +20,7 @@ public class InfoView extends Fragment {
 
 	private TextView emailTextView;
 	private Button signoutButton;
+	private Button deactivateButton;
 	private SnapPreference pref;
 	private TextView versionTextView;
 
@@ -50,8 +52,22 @@ public class InfoView extends Fragment {
 					Intent intent = new Intent(getActivity(), LoginView.class);
 					getActivity().finish();
 					startActivity(intent);
+					return true;
 				}
 
+				return false;
+			}
+		});
+
+		deactivateButton = (Button) view.findViewById(R.id.info_deactivate_button);
+		deactivateButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					Toast.makeText(getActivity(), "가입할 땐 자유지만 탈퇴할 땐 아니란다", Toast.LENGTH_SHORT).show();
+					return true;
+				}
 				return false;
 			}
 		});
