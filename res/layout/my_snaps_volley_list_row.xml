@@ -21,14 +21,13 @@
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:scaleType="fitXY" />
-
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/my_snaps_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@id/my_snap_image_container"
         android:background="#AA000000"
         android:orientation="vertical"
         android:padding="5dp" >
@@ -51,6 +50,24 @@
             android:text="writer"
             android:textColor="@color/textLightGray"
             android:textSize="@dimen/feed_item_timestamp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_snaps_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/my_snaps_text_container"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/my_snaps_unsnap_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/my_posts_delete_button"
+            android:text="UnSnap"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 
 </RelativeLayout>
