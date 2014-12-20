@@ -152,17 +152,16 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 
 	private void parseJsonFeed(JSONObject response) {
 		Realm realm = Realm.getInstance(getActivity());
-		realm.beginTransaction();
 		try {
 			if (response.getInt("total") == 0) {
 				Toast.makeText(getActivity(), "No My Snaps", Toast.LENGTH_SHORT).show();
-				realm.commitTransaction();
 				return;
 			}
 			numOfTotalResult = response.getInt("total");
 			Log.i(TAG, "Total - " + numOfTotalResult);
 			JSONArray feedArray = response.getJSONArray("data");
 
+			realm.beginTransaction();
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
 				if (feedObj.getInt("like") == 0) {
