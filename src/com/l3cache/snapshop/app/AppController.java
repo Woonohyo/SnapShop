@@ -1,4 +1,4 @@
-package com.l3cache.snapshop;
+package com.l3cache.snapshop.app;
 
 import java.util.HashMap;
 
@@ -11,6 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.R.xml;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.LruBitmapCache;
 

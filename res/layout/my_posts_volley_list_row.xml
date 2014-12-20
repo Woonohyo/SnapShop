@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/my_posts_image_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
         android:orientation="vertical" >
 
         <com.l3cache.snapshop.volley.FeedImageView
@@ -34,7 +34,7 @@
             android:id="@+id/my_post_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|left"
+            android:gravity="center_vertical|start"
             android:lines="1"
             android:text="title of item"
             android:textColor="@color/white"

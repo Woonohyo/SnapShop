@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/my_snap_image_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="160dp"
         android:background="@drawable/bg_parent_rounded_corner"
         android:orientation="vertical" >
 
@@ -66,6 +66,8 @@
             android:layout_weight="1"
             android:background="@drawable/my_posts_delete_button"
             android:text="UnSnap"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:textColor="@color/white"
             android:textSize="15sp" />
     </LinearLayout>

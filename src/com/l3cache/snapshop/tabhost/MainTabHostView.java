@@ -38,12 +38,10 @@ public class MainTabHostView extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.i(TAG, "OnResume");
 	}
 
 	@Override
 	public void onBackPressed() {
-		Log.i(TAG, "On Back Pressed");
 		moveTaskToBack(true);
 	}
 }

@@ -26,11 +26,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
-import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.AppController.TrackerName;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.retrofit.SignInResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.tabhost.MainTabHostView;
@@ -189,8 +189,7 @@ public class LoginView extends FragmentActivity {
 	 * 로그인 성공 시, MainTabHostView 액티비티를 시작한다.
 	 */
 	private void intentTabHostActivity() {
-		Intent intent = new Intent(this, MainTabHostView.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		Intent intent = new Intent("com.l3cache.snapshop.tabhost.MainTabHostView");
 		startActivity(intent);
 	}
 
@@ -205,7 +204,6 @@ public class LoginView extends FragmentActivity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-
 		AppEventsLogger.deactivateApp(this);
 	}
 

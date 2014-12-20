@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
+import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 

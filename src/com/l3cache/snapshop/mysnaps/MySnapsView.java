@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.hardware.camera2.TotalCaptureResult;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,13 +33,14 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.internal.mr;
-import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.AppController.TrackerName;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.newsfeed.Newsfeed;
+import com.l3cache.snapshop.postviewer.PostViewer;
 import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
@@ -65,6 +67,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 		feedItems = new ArrayList<Newsfeed>();
 		snapsAdapter = new MySnapsAdapter(getActivity(), feedItems);
 		gridView.setAdapter(snapsAdapter);
+		gridView.setOnItemClickListener(this);
 		gridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
@@ -97,8 +100,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 			fetchDataFromServer(resultPageStart);
 		else {
 			Realm realm = Realm.getInstance(getActivity());
-			RealmResults<Newsfeed> results = realm.where(Newsfeed.class).equalTo("userLike", 1)
-					.findAll("pid", false);
+			RealmResults<Newsfeed> results = realm.where(Newsfeed.class).equalTo("userLike", 1).findAll("pid", false);
 			feedItems.addAll(results);
 			numOfTotalResult = feedItems.size();
 		}
@@ -188,7 +190,11 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
+		Intent intent = new Intent();
+		intent.setAction("com.l3cache.snapshop.postviewer.PostViewer");
+		intent.putExtra("pid", id);
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
 
 	}
 }

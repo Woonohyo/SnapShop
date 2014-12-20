@@ -56,11 +56,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.AppController.TrackerName;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
@@ -199,8 +199,9 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 						break;
 					}
 					case SnapConstants.INTERNET_BUTTON: {
-						Intent intent = new Intent(getActivity(), SearchResultsView.class);
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						Intent intent = new Intent();
+						intent.setAction("com.l3cache.snapshop.naversearch.SearchResultsView");
+						// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivityForResult(intent, SnapConstants.REQUEST_UPLOAD);
 						break;
 					}
@@ -220,7 +221,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		gridViewItemClickListener = new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(getActivity(), PostViewer.class);
+				Intent intent = new Intent("com.l3cache.snapshop.postviewer.PostViewer");
 				intent.putExtra("pid", id);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);

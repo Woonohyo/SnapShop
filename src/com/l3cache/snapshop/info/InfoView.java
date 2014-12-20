@@ -50,9 +50,7 @@ public class InfoView extends Fragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_UP) {
 					pref.removeCurrentUser();
-					Intent intent = new Intent(getActivity(), LoginView.class);
 					getActivity().finish();
-					startActivity(intent);
 					return true;
 				}
 

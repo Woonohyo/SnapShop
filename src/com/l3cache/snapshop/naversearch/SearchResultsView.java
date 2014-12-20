@@ -41,10 +41,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
-import com.l3cache.snapshop.AppController.TrackerName;
+import com.l3cache.snapshop.app.AppController;
+import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.upload.UploadPostView;
 import com.l3cache.snapshop.volley.SearchRequest;
@@ -300,7 +300,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		NaverSearchResult item = resultItems.get(position);
-		Intent uploadIntent = new Intent(this, UploadPostView.class);
+		Intent uploadIntent = new Intent("com.l3cache.snapshop.upload.UploadPostView");
 		uploadIntent.putExtra("image", item.getImage());
 		uploadIntent.putExtra("handler", SnapConstants.INTERNET_BUTTON);
 		uploadIntent.putExtra("shopUrl", item.getLink());
