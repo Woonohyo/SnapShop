@@ -47,11 +47,15 @@
         <EditText
             android:id="@+id/upload_snap_editText_contents"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/upload_item_margin"
             android:background="@drawable/upload_snap_edit_text"
             android:ems="10"
             android:hint="Optional note"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="2000"
+            android:maxLines="6"
+            android:minHeight="@dimen/upload_item_edit_text_height"
             android:textColor="@color/textColorGray"
             android:textColorHint="@color/hintColorGray"
             android:textSize="@dimen/upload_item_text_size" />
@@ -72,11 +76,15 @@
         <EditText
             android:id="@+id/upload_snap_editText_link"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/upload_item_edit_text_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/upload_item_margin"
             android:background="@drawable/upload_snap_edit_text"
             android:ems="10"
             android:hint="Optional Web link"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="2000"
+            android:maxLines="2"
+            android:minHeight="@dimen/upload_item_edit_text_height"
             android:textColor="@color/textColorGray"
             android:textColorHint="@color/hintColorGray"
             android:textSize="@dimen/upload_item_text_size" />
