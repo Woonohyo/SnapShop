@@ -21,6 +21,7 @@ import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,10 +42,10 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.l3cache.snapshop.AppController;
+import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.newsfeed.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
@@ -91,7 +92,6 @@ public class MyPostsView extends Fragment {
 				AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
 				pid = (int) id;
 				mPosition = position;
-
 				alt_bld.setMessage("Do you want to delete your post?").setCancelable(true)
 						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
@@ -225,5 +225,14 @@ public class MyPostsView extends Fragment {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(TAG, "Result - " + resultCode);
+	}
+
+	public void notifyDataSetChange() {
+
 	}
 }
