@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/feed_bg"
     android:orientation="vertical" >
  
 
     <LinearLayout
+        android:id="@+id/my_snap_image_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_parent_rounded_corner"
         android:orientation="vertical" >
- 
 
         <com.l3cache.snapshop.volley.FeedImageView
             android:id="@+id/my_snap_image_view"
@@ -21,36 +21,36 @@
             android:paddingLeft="1dp"
             android:paddingRight="1dp"
             android:scaleType="fitXY" />
-        
 
-        <LinearLayout
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_snaps_text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#AA000000"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/my_snap_title_text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-             >
+            android:lines="1"
+            android:text="title of item"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/my_snap_title_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="title of item"
-                android:lines="1"
-                android:textSize="13sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/my_snap_writer_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="writer"
-                android:textColor="@color/textLightGray"
-                android:textSize="@dimen/feed_item_timestamp" />
-        
-        </LinearLayout>
+        <TextView
+            android:id="@+id/my_snap_writer_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="writer"
+            android:textColor="@color/textLightGray"
+            android:textSize="@dimen/feed_item_timestamp" />
     </LinearLayout>
 
 </RelativeLayout>

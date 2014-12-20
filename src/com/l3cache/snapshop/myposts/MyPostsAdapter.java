@@ -59,6 +59,9 @@ public class MyPostsAdapter extends BaseAdapter {
 		TextView titleTextView = (TextView) convertView.findViewById(R.id.my_post_title_text_view);
 		titleTextView.setText(item.getTitle());
 
+		TextView snapsTextView = (TextView) convertView.findViewById(R.id.my_post_snaps_text_view);
+		snapsTextView.setText("+ " + item.getNumLike());
+
 		// Feed image
 		if (item.getImageUrl() != null) {
 			feedImageView.setImageUrl(item.getImageUrl(), imageLoader);

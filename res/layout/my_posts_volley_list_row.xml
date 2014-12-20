@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_parent_rounded_corner" >
 
     <LinearLayout
+        android:id="@+id/my_posts_image_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -20,17 +21,69 @@
         </com.l3cache.snapshop.volley.FeedImageView>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/my_post_title_text_view"
+    <LinearLayout
+        android:id="@+id/my_posts_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@id/my_posts_image_container"
         android:background="#AA000000"
-        android:gravity="center_vertical|center_horizontal"
-        android:lines="1"
-        android:padding="5dp"
-        android:text="title of item"
-        android:textColor="@color/white"
-        android:textSize="13sp" />
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/my_post_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:lines="1"
+            android:text="title of item"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </View>
+
+        <TextView
+            android:id="@+id/my_post_snaps_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:lines="1"
+            android:text="+ 1214"
+            android:textColor="@color/snap_green"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_posts_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/my_posts_text_container"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/my_posts_edit_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/my_posts_edit_button"
+            android:text="Edit"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/my_posts_delete_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/my_posts_delete_button"
+            android:padding="5dp"
+            android:text="Delete"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
 
 </RelativeLayout>

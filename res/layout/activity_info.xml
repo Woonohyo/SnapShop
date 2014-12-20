@@ -45,7 +45,7 @@
         android:id="@+id/info_signout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/info_signout_button"
+        android:background="@drawable/snap_green_button"
         android:text="Sign Out"
         android:textColor="@color/white"
         android:textSize="20sp" />
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/info_deactivate_button"
+        android:background="@drawable/snap_red_button"
         android:text="Deactivate Account"
         android:textColor="@color/white"
         android:textSize="20sp" />

@@ -28,7 +28,7 @@ public class MainTabHostView extends FragmentActivity {
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
 		mTabHost.addTab(
-				mTabHost.newTabSpec("newsfeed").setIndicator("FEEDS", getResources().getDrawable(R.drawable.news)),
+				mTabHost.newTabSpec("newsfeed").setIndicator("FEED", getResources().getDrawable(R.drawable.news)),
 				NewsfeedView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("favorite").setIndicator("SNAPS"), MySnapsView.class, null);
 		mTabHost.addTab(mTabHost.newTabSpec("myPost").setIndicator("POSTS"), MyPostsView.class, null);
