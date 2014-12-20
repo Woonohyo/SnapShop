@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.adapter;
+package com.l3cache.snapshop.naversearch;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.model.NaverSearchResult;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;

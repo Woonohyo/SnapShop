@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.controller;
+package com.l3cache.snapshop;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package com.l3cache.snapshop;
+package com.l3cache.snapshop.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

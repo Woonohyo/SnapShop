@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.upload;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +30,11 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.AppController.TrackerName;
+import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.photocrop.CropUtil;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;

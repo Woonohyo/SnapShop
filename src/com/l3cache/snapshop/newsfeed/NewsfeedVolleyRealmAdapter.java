@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.adapter;
+package com.l3cache.snapshop.newsfeed;
 
 import io.realm.Realm;
 import io.realm.RealmBaseAdapter;
@@ -27,10 +27,10 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.controller.AppController;
 import com.l3cache.snapshop.model.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;

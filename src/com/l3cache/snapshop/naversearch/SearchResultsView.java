@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.naversearch;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -41,13 +41,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
-import com.l3cache.snapshop.adapter.EndlessScrollListener;
-import com.l3cache.snapshop.adapter.SearchResultsVolleyAdapter;
-import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.AppController.TrackerName;
+import com.l3cache.snapshop.AppController.TrackerName;
+import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.model.NaverSearchResult;
+import com.l3cache.snapshop.upload.UploadPostView;
 import com.l3cache.snapshop.volley.SearchRequest;
 
 public class SearchResultsView extends Activity implements OnItemClickListener {

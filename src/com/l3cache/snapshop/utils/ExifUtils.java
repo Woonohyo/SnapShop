@@ -1,4 +1,4 @@
-package com.l3cache.snapshop;
+package com.l3cache.snapshop.utils;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;

@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.mysnaps;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,15 +32,14 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.internal.mr;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
-import com.l3cache.snapshop.SnapNetworkUtils;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.adapter.EndlessScrollListener;
-import com.l3cache.snapshop.adapter.MySnapsAdapter;
-import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.AppController.TrackerName;
+import com.l3cache.snapshop.AppController.TrackerName;
+import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.model.Newsfeed;
+import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class MySnapsView extends Fragment implements OnItemClickListener {

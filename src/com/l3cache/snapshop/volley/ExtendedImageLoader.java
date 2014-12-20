@@ -31,7 +31,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.l3cache.snapshop.ExifUtils;
+import com.l3cache.snapshop.utils.ExifUtils;
 
 /**
  * Helper that handles loading and caching images from remote URLs.

@@ -8,7 +8,7 @@
  * 화면 좌측 하단에 있는 FloatingActionButton을 통해 카메라/갤러리/검색을 통한 새로운 포스트 작성이 가능하다.
  */
 
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.newsfeed;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -56,18 +56,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
-import com.l3cache.snapshop.SnapNetworkUtils;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.adapter.EndlessScrollListener;
-import com.l3cache.snapshop.adapter.NewsfeedVolleyRealmAdapter;
-import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.AppController.TrackerName;
+import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
+import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.model.Newsfeed;
+import com.l3cache.snapshop.naversearch.SearchResultsView;
 import com.l3cache.snapshop.photocrop.Crop;
+import com.l3cache.snapshop.postviewer.PostViewer;
+import com.l3cache.snapshop.upload.UploadPostView;
+import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class NewsfeedView extends Fragment implements OnItemSelectedListener {

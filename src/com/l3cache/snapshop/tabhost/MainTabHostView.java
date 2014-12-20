@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.tabhost;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +9,10 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.R.drawable;
 import com.l3cache.snapshop.R.id;
 import com.l3cache.snapshop.R.layout;
+import com.l3cache.snapshop.info.InfoView;
+import com.l3cache.snapshop.myposts.MyPostsView;
+import com.l3cache.snapshop.mysnaps.MySnapsView;
+import com.l3cache.snapshop.newsfeed.NewsfeedView;
 
 public class MainTabHostView extends FragmentActivity {
 	private FragmentTabHost mTabHost;

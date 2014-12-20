@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.info;
 
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapPreference;
+import com.l3cache.snapshop.login.LoginView;
 
 public class InfoView extends Fragment {
 

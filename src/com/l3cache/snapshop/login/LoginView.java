@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.login;
 
 import io.realm.Realm;
 import retrofit.Callback;
@@ -26,13 +26,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.AppController.TrackerName;
+import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.retrofit.SignInResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.tabhost.MainTabHostView;
 
 public class LoginView extends FragmentActivity {
 	public static final String EXTRA_MESSAGE = "message";

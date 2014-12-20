@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.activity;
+package com.l3cache.snapshop.login;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -23,13 +23,14 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
-import com.l3cache.snapshop.controller.AppController;
-import com.l3cache.snapshop.controller.AppController.TrackerName;
+import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.retrofit.SignInResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.tabhost.MainTabHostView;
 
 public class EmailSignInFragment extends DialogFragment {
 	EditText emailField;

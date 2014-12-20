@@ -14,7 +14,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.R.drawable;
 import com.l3cache.snapshop.SnapConstants;
-import com.l3cache.snapshop.activity.LoginView;
+import com.l3cache.snapshop.login.LoginView;
 
 public class GcmIntentService extends IntentService {
 	private final String TAG = GcmIntentService.class.getSimpleName();
