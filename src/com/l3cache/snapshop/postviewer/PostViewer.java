@@ -76,6 +76,7 @@ public class PostViewer extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
+		
 		pid = currentData.getPid();
 
 		feedImageView = (FeedImageView) findViewById(R.id.post_viewer_item_image_view);

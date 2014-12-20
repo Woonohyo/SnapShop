@@ -151,6 +151,8 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 	}
 
 	private void parseJsonFeed(JSONObject response) {
+		Realm realm = Realm.getInstance(getActivity());
+		realm.beginTransaction();
 		try {
 			if (response.getInt("total") == 0) {
 				Toast.makeText(getActivity(), "No My Snaps", Toast.LENGTH_SHORT).show();
@@ -166,7 +168,8 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 					continue;
 				}
 
-				Newsfeed item = new Newsfeed();
+//				Newsfeed item = new Newsfeed();
+				Newsfeed item = realm.createObject(Newsfeed.class);
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
 				item.setShopUrl(feedObj.getString("shopUrl"));
@@ -185,7 +188,9 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 			snapsAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
+			realm.commitTransaction();
 		}
+		realm.commitTransaction();
 	}
 
 	@Override

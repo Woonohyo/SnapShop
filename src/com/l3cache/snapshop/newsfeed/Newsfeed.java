@@ -1,7 +1,6 @@
 package com.l3cache.snapshop.newsfeed;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Index;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
@@ -62,15 +61,6 @@ public class Newsfeed extends RealmObject {
 	private String name;
 
 	public Newsfeed() {
-	}
-
-	public Newsfeed(String title, String shopUrl, String contents, String imageUrl, String price, int userId) {
-		this.title = title;
-		this.shopUrl = shopUrl;
-		this.contents = contents;
-		this.imageUrl = imageUrl;
-		this.price = price;
-		this.userId = userId;
 	}
 
 	public String getName() {
@@ -136,5 +126,4 @@ public class Newsfeed extends RealmObject {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
 }
