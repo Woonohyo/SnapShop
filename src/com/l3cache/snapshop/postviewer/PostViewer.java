@@ -257,6 +257,8 @@ public class PostViewer extends Activity {
 				return false;
 			}
 		});
+		
+		
 
 	}
 

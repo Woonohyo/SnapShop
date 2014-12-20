@@ -156,6 +156,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 		try {
 			if (response.getInt("total") == 0) {
 				Toast.makeText(getActivity(), "No My Snaps", Toast.LENGTH_SHORT).show();
+				realm.commitTransaction();
 				return;
 			}
 			numOfTotalResult = response.getInt("total");
@@ -168,7 +169,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 					continue;
 				}
 
-//				Newsfeed item = new Newsfeed();
+				// Newsfeed item = new Newsfeed();
 				Newsfeed item = realm.createObject(Newsfeed.class);
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));

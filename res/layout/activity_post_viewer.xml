@@ -144,10 +144,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" Comments"
+                        android:text=" Comments (not implemented yet)"
                         android:textStyle="bold" />
                 </LinearLayout>
-                
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
