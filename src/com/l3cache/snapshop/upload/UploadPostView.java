@@ -13,12 +13,14 @@ import retrofit.mime.TypedString;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,6 +59,7 @@ public class UploadPostView extends Activity {
 	private SnapShopService service;
 	private SnapPreference pref;
 	private Context context;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,32 +182,68 @@ public class UploadPostView extends Activity {
 	}
 
 	private void upload(TypedFile imageFile) {
-		service.uploadSnap(new TypedString(titleEditText.getText().toString()), new TypedString(shopUrlEditText
-				.getText().toString()), new TypedString(contentsEditText.getText().toString()), imageTypedFile,
-				new TypedString(priceEditText.getText().toString()), pref.getValue(SnapPreference.PREF_CURRENT_USER_ID,
-						0), new Callback<DefaultResponse>() {
+
+		final Handler handler = new Handler();
+
+		new Thread() {
+			public void run() {
+				handler.post(new Runnable() {
 
 					@Override
-					public void failure(RetrofitError error) {
-						Log.i(TAG, error.getLocalizedMessage());
-						Toast.makeText(getApplicationContext(), "Error(image) - " + error.getLocalizedMessage(),
-								Toast.LENGTH_LONG).show();
-						;
+					public void run() {
+						progressDialog = ProgressDialog.show(UploadPostView.this, "", "Uploading...");
 					}
-
-					@Override
-					public void success(DefaultResponse uploadResponse, Response response) {
-						if (uploadResponse.getStatus() == SnapConstants.SUCCESS) {
-							Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!", Toast.LENGTH_LONG)
-									.show();
-							didUploadFinishActivity();
-						} else if (uploadResponse.getStatus() == SnapConstants.ERROR) {
-							Toast.makeText(getApplicationContext(), "Error(image) - " + uploadResponse.getStatus(),
-									Toast.LENGTH_LONG).show();
-						}
-					}
-
 				});
+
+				RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
+						.setConverter(new GsonConverter(new Gson())).build();
+				SnapShopService service = restAdapter.create(SnapShopService.class);
+
+				service.uploadSnap(new TypedString(titleEditText.getText().toString()), new TypedString(shopUrlEditText
+						.getText().toString()), new TypedString(contentsEditText.getText().toString()), imageTypedFile,
+						new TypedString(priceEditText.getText().toString()), pref.getValue(
+								SnapPreference.PREF_CURRENT_USER_ID, 0), new Callback<DefaultResponse>() {
+
+							@Override
+							public void failure(RetrofitError error) {
+								handler.post(new Runnable() {
+
+									@Override
+									public void run() {
+										progressDialog.cancel();
+
+									}
+								});
+								Log.i(TAG, error.getLocalizedMessage());
+								Toast.makeText(getApplicationContext(),
+										"Error(image) - " + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+								;
+							}
+
+							@Override
+							public void success(DefaultResponse uploadResponse, Response response) {
+								final int status = uploadResponse.getStatus();
+								handler.post(new Runnable() {
+
+									@Override
+									public void run() {
+										progressDialog.cancel();
+										if (status == SnapConstants.SUCCESS) {
+											Toast.makeText(getApplicationContext(), "Your Snap Successfully Added!",
+													Toast.LENGTH_LONG).show();
+											didUploadFinishActivity();
+										} else if (status == SnapConstants.ERROR) {
+											Toast.makeText(getApplicationContext(), "Error(image) - " + status,
+													Toast.LENGTH_LONG).show();
+										}
+
+									}
+								});
+							}
+
+						});
+			}
+		}.start();
 
 	}
 
