@@ -64,7 +64,6 @@ import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
-import com.l3cache.snapshop.model.Newsfeed;
 import com.l3cache.snapshop.naversearch.SearchResultsView;
 import com.l3cache.snapshop.photocrop.Crop;
 import com.l3cache.snapshop.postviewer.PostViewer;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.l3cache.snapshop.AppController;
 import com.l3cache.snapshop.R;
-import com.l3cache.snapshop.model.Newsfeed;
+import com.l3cache.snapshop.newsfeed.Newsfeed;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 

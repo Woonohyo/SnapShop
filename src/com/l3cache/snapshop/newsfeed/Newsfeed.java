@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.model;
+package com.l3cache.snapshop.newsfeed;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;

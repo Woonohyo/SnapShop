@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.model;
+package com.l3cache.snapshop.mysnaps;
 
 public class MySnap {
 	private int pid;

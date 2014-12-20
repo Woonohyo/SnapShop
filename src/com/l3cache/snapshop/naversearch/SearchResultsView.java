@@ -46,7 +46,6 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
-import com.l3cache.snapshop.model.NaverSearchResult;
 import com.l3cache.snapshop.upload.UploadPostView;
 import com.l3cache.snapshop.volley.SearchRequest;
 

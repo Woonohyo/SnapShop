@@ -1,4 +1,4 @@
-package com.l3cache.snapshop.model;
+package com.l3cache.snapshop.naversearch;
 
 public class NaverSearchResult {
 	private String title;

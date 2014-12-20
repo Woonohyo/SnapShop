@@ -38,7 +38,7 @@ import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
-import com.l3cache.snapshop.model.Newsfeed;
+import com.l3cache.snapshop.newsfeed.Newsfeed;
 import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
