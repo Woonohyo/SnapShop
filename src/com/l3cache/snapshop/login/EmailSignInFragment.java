@@ -67,7 +67,7 @@ public class EmailSignInFragment extends DialogFragment {
 	}
 
 	private void intentTabHostActivity() {
-		Intent intent = new Intent(getActivity(), MainTabHostView.class);
+		Intent intent = new Intent("com.l3cache.snapshop.tabhost.MainTabHostView");
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 	}

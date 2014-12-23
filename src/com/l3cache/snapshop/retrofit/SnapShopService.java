@@ -140,4 +140,10 @@ public interface SnapShopService {
 	 */
 	@DELETE(SnapConstants.POST_DELETE_REQUEST)
 	void deletePost(@Path("pid") int pid, @Query("uid") int uid, Callback<DefaultResponse> cb);
+
+	@GET(SnapConstants.TOTAL_SNAP_PRICE_REQUEST)
+	void totalSnapPrice(@Path("uid") int uid, Callback<TotalPriceResponse> cb);
+
+	@GET(SnapConstants.TOTAL_POST_PRICE_REQUEST)
+	void totalPostPrice(@Path("uid") int uid, Callback<TotalPriceResponse> cb);
 }

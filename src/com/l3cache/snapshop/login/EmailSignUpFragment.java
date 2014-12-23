@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,7 +32,6 @@ import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SignInResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
-import com.l3cache.snapshop.tabhost.MainTabHostView;
 
 public class EmailSignUpFragment extends DialogFragment {
 	private EditText emailField;
@@ -203,7 +201,7 @@ public class EmailSignUpFragment extends DialogFragment {
 	}
 
 	private void intentTabHostActivity() {
-		Intent intent = new Intent(getActivity(), MainTabHostView.class);
+		Intent intent = new Intent("com.l3cache.snapshop.tabhost.MainTabHostView");
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		startActivity(intent);
 

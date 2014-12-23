@@ -1,12 +1,10 @@
 package com.l3cache.snapshop.login;
 
-import io.realm.Realm;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -33,7 +31,6 @@ import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.retrofit.SignInResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
-import com.l3cache.snapshop.tabhost.MainTabHostView;
 
 public class LoginView extends FragmentActivity {
 	public static final String EXTRA_MESSAGE = "message";
