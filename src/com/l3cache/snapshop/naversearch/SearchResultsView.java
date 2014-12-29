@@ -250,6 +250,7 @@ public class SearchResultsView extends Activity implements OnItemClickListener {
 			searchResultsViewVolleyAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
+			totalResultTextView.setText("");
 			Toast toast = Toast.makeText(SearchResultsView.this, "검색 결과가 없습니다!", Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();

@@ -70,6 +70,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/my_posts_edit_button"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:text="Edit"
             android:textColor="@color/white"
             android:textSize="15sp" />
@@ -80,6 +82,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/my_posts_delete_button"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:text="Delete"
             android:textColor="@color/white"
             android:textSize="15sp" />

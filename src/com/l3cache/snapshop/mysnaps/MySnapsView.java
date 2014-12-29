@@ -194,6 +194,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 		Intent intent = new Intent();
 		intent.setAction("com.l3cache.snapshop.postviewer.PostViewer");
 		intent.putExtra("pid", id);
+		intent.putExtra("class", SnapConstants.CLASS_MYSNAP);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
 

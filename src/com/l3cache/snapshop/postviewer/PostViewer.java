@@ -37,6 +37,8 @@ import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.app.AppController.TrackerName;
+import com.l3cache.snapshop.myposts.MyPost;
+import com.l3cache.snapshop.mysnaps.MySnap;
 import com.l3cache.snapshop.newsfeed.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
@@ -52,8 +54,8 @@ public class PostViewer extends Activity {
 	private Button priceButton;
 	private TextView descTextView;
 	private ToggleButton snapButton;
-	private Newsfeed currentData;
 	private int pid;
+	private Newsfeed currentData;
 	private Realm realm;
 	private TextView snapsNumberTextView;
 	private TextView viewsNumberTextView;
@@ -74,9 +76,41 @@ public class PostViewer extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_post_viewer);
 
+		realm.beginTransaction();
 		Bundle extras = getIntent().getExtras();
+		switch (extras.getInt("class")) {
+		case SnapConstants.CLASS_NEWSFEED: {
+			currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
+			break;
+		}
+		case SnapConstants.CLASS_MYSNAP: {
+			MySnap snapData = realm.where(MySnap.class).equalTo("pid", extras.getLong("pid")).findFirst();
+			Newsfeed newData = realm.createObject(Newsfeed.class);
+			newData.setPid(snapData.getPid());
+			newData.setImageUrl(snapData.getImageUrl());
+			newData.setWriter(snapData.getWriter());
+			newData.setTitle(snapData.getTitle());
+			newData.setNumLike(snapData.getNumLike());
+			newData.setRead(snapData.getRead());
+			newData.setPrice(snapData.getPrice());
+			break;
+		}
+		case SnapConstants.CLASS_MYPOST: {
+			MyPost postData = realm.where(MyPost.class).equalTo("pid", extras.getLong("pid")).findFirst();
+			Newsfeed newData = realm.createObject(Newsfeed.class);
+			newData.setPid(postData.getPid());
+			newData.setImageUrl(postData.getImageUrl());
+			newData.setWriter(postData.getWriter());
+			newData.setTitle(postData.getTitle());
+			newData.setNumLike(postData.getNumLike());
+			newData.setRead(postData.getRead());
+			newData.setPrice(postData.getPrice());
+			break;
+		}
+		}
+		realm.commitTransaction();
 		currentData = realm.where(Newsfeed.class).equalTo("pid", extras.getLong("pid")).findFirst();
-		
+
 		pid = currentData.getPid();
 
 		feedImageView = (FeedImageView) findViewById(R.id.post_viewer_item_image_view);
@@ -257,8 +291,6 @@ public class PostViewer extends Activity {
 				return false;
 			}
 		});
-		
-		
 
 	}
 

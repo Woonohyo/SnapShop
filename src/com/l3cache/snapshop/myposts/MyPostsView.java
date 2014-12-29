@@ -24,6 +24,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -33,7 +35,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.gson.JsonObject;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
@@ -43,7 +44,7 @@ import com.l3cache.snapshop.listener.EndlessScrollListener;
 import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
-public class MyPostsView extends Fragment {
+public class MyPostsView extends Fragment implements OnItemClickListener {
 	private static final String TAG = MyPostsView.class.getSimpleName();
 	private GridView gridView;
 	private MyPostsAdapter postsAdapter;
@@ -68,6 +69,7 @@ public class MyPostsView extends Fragment {
 		gridView = (GridView) view.findViewById(R.id.my_posts_main_grid_view);
 		postsAdapter = new MyPostsAdapter(getActivity(), realm.where(MyPost.class).findAll(), true);
 		gridView.setAdapter(postsAdapter);
+		gridView.setOnItemClickListener(this);
 		gridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
@@ -175,5 +177,16 @@ public class MyPostsView extends Fragment {
 		realm.beginTransaction();
 		realm.where(MyPost.class).findAll().clear();
 		realm.commitTransaction();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Intent intent = new Intent();
+		intent.setAction("com.l3cache.snapshop.postviewer.PostViewer");
+		intent.putExtra("pid", id);
+		intent.putExtra("class", SnapConstants.CLASS_MYPOST);
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
+
 	}
 }

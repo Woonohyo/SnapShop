@@ -223,6 +223,7 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent("com.l3cache.snapshop.postviewer.PostViewer");
 				intent.putExtra("pid", id);
+				intent.putExtra("class", SnapConstants.CLASS_NEWSFEED);
 				startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_left_to_right_in, R.anim.slide_left_to_right_out);
 

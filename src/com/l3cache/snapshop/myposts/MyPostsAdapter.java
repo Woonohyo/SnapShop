@@ -113,9 +113,7 @@ public class MyPostsAdapter extends RealmBaseAdapter<MyPost> {
 
 											@Override
 											public void failure(RetrofitError arg0) {
-												Toast.makeText(context,
-														"Network Error - " + arg0.getLocalizedMessage(),
-														Toast.LENGTH_SHORT).show();
+												Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
 											}
 										});
 

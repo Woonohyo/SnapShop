@@ -51,4 +51,8 @@ public final class SnapConstants {
 	public static final int INTERNET_BUTTON = 1003;
 
 	public static final int REQUEST_UPLOAD = 263;
+	
+	public static final int CLASS_NEWSFEED = 0;
+	public static final int CLASS_MYSNAP = 1;
+	public static final int CLASS_MYPOST = 2;
 }
