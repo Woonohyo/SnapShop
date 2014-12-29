@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.hardware.camera2.TotalCaptureResult;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,15 +31,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.internal.mr;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
-import com.l3cache.snapshop.newsfeed.Newsfeed;
-import com.l3cache.snapshop.postviewer.PostViewer;
 import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
@@ -48,15 +44,17 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 	private static final String TAG = MySnapsView.class.getSimpleName();
 	private GridView gridView;
 	private MySnapsAdapter snapsAdapter;
-	private ArrayList<Newsfeed> feedItems;
+	private ArrayList<MySnap> feedItems;
 	private int resultPageStart = 1;
 	protected int numOfTotalResult;
 	private static String URL_FEED;
 	private SnapPreference pref;
+	private Realm realm;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		registerGoogleAnalytics();
+		realm = Realm.getInstance(getActivity());
 
 		pref = new SnapPreference(getActivity());
 		URL_FEED = SnapConstants.SERVER_URL
@@ -64,8 +62,8 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 
 		View view = inflater.inflate(R.layout.activity_my_snaps_view, container, false);
 		gridView = (GridView) view.findViewById(R.id.my_snaps_main_grid_view);
-		feedItems = new ArrayList<Newsfeed>();
-		snapsAdapter = new MySnapsAdapter(getActivity(), feedItems);
+		feedItems = new ArrayList<MySnap>();
+		snapsAdapter = new MySnapsAdapter(getActivity(), realm.where(MySnap.class).findAll(), true);
 		gridView.setAdapter(snapsAdapter);
 		gridView.setOnItemClickListener(this);
 		gridView.setOnScrollListener(new EndlessScrollListener() {
@@ -95,14 +93,13 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Realm realm = Realm.getInstance(getActivity());
 		SnapNetworkUtils netUtils = new SnapNetworkUtils();
-		if (netUtils.isOnline(getActivity()))
+		if (netUtils.isOnline(getActivity())) {
+			realm.beginTransaction();
+			realm.where(MySnap.class).findAll().clear();
+			realm.commitTransaction();
 			fetchDataFromServer(resultPageStart);
-		else {
-			Realm realm = Realm.getInstance(getActivity());
-			RealmResults<Newsfeed> results = realm.where(Newsfeed.class).equalTo("userLike", 1).findAll("pid", false);
-			feedItems.addAll(results);
-			numOfTotalResult = feedItems.size();
 		}
 	}
 
@@ -168,8 +165,7 @@ public class MySnapsView extends Fragment implements OnItemClickListener {
 					continue;
 				}
 
-				// Newsfeed item = new Newsfeed();
-				Newsfeed item = realm.createObject(Newsfeed.class);
+				MySnap item = realm.createObject(MySnap.class);
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
 				item.setShopUrl(feedObj.getString("shopUrl"));

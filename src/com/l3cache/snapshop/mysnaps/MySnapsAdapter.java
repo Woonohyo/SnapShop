@@ -1,19 +1,17 @@
 package com.l3cache.snapshop.mysnaps;
 
-import java.util.ArrayList;
-
+import io.realm.Realm;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,53 +21,44 @@ import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
-import com.l3cache.snapshop.newsfeed.Newsfeed;
 import com.l3cache.snapshop.retrofit.DefaultResponse;
 import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
-public class MySnapsAdapter extends BaseAdapter {
-	private Activity activity;
-	private LayoutInflater inflater;
-	private ArrayList<Newsfeed> feedItems;
-	private MySnapsAdapter adapter;
+public class MySnapsAdapter extends RealmBaseAdapter<MySnap> {
 	private Button unsnapButton;
 	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-	public MySnapsAdapter(Activity activity, ArrayList<Newsfeed> feedItems) {
-		this.activity = activity;
-		this.feedItems = feedItems;
-		adapter = this;
+	public MySnapsAdapter(Context context, RealmResults<MySnap> realmResults, boolean automaticUpdate) {
+		super(context, realmResults, automaticUpdate);
 	}
 
 	@Override
 	public int getCount() {
-		return feedItems.size();
+		return realmResults.size();
 	}
 
 	@Override
-	public Object getItem(int location) {
-		return feedItems.get(location);
+	public MySnap getItem(int position) {
+		return realmResults.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return feedItems.get(position).getPid();
+		return realmResults.get(position).getPid();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		if (inflater == null)
-			inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (convertView == null)
 			convertView = inflater.inflate(R.layout.my_snaps_volley_list_row, null);
 
 		if (imageLoader == null)
 			imageLoader = AppController.getInstance().getImageLoader();
 
-		Newsfeed item = feedItems.get(position);
+		MySnap item = realmResults.get(position);
 
 		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.my_snap_image_view);
 		TextView writerTextView = (TextView) convertView.findViewById(R.id.my_snap_writer_text_view);
@@ -100,7 +89,7 @@ public class MySnapsAdapter extends BaseAdapter {
 			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 					.setConverter(new GsonConverter(new Gson())).build();
 			SnapShopService service = restAdapter.create(SnapShopService.class);
-			SnapPreference pref = new SnapPreference(activity);
+			SnapPreference pref = new SnapPreference(context);
 			int position;
 			int pid;
 
@@ -116,17 +105,19 @@ public class MySnapsAdapter extends BaseAdapter {
 								if (defResp.getStatus() == SnapConstants.SUCCESS) {
 									if (getCount() == 0)
 										return;
-									feedItems.remove(position);
-									adapter.notifyDataSetChanged();
-									Toast.makeText(activity, "Unsnap - " + pid, Toast.LENGTH_SHORT).show();
+									Realm realm = Realm.getInstance(context);
+									realm.beginTransaction();
+									realmResults.remove(position);
+									realm.commitTransaction();
+									Toast.makeText(context, "Unsnap - " + pid, Toast.LENGTH_SHORT).show();
 								} else {
-									Toast.makeText(activity, "Unsnap Failed", Toast.LENGTH_SHORT).show();
+									Toast.makeText(context, "Unsnap Failed", Toast.LENGTH_SHORT).show();
 								}
 							}
 
 							@Override
 							public void failure(RetrofitError arg0) {
-								Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+								Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
 							}
 						});
 

@@ -2,7 +2,7 @@ package com.l3cache.snapshop.retrofit;
 
 public class TotalPriceResponse {
 	int result;
-	int total;
+	long total;
 
 	public int getResult() {
 		return result;
@@ -12,11 +12,11 @@ public class TotalPriceResponse {
 		this.result = result;
 	}
 
-	public int getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(int total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

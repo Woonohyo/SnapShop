@@ -6,8 +6,9 @@
 
 package com.l3cache.snapshop.myposts;
 
+import io.realm.Realm;
+
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,12 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.converter.GsonConverter;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,8 +24,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -40,26 +33,24 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.l3cache.snapshop.R;
 import com.l3cache.snapshop.SnapConstants;
 import com.l3cache.snapshop.SnapPreference;
 import com.l3cache.snapshop.app.AppController;
 import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
-import com.l3cache.snapshop.newsfeed.Newsfeed;
-import com.l3cache.snapshop.retrofit.DefaultResponse;
-import com.l3cache.snapshop.retrofit.SnapShopService;
+import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
 
 public class MyPostsView extends Fragment {
 	private static final String TAG = MyPostsView.class.getSimpleName();
 	private GridView gridView;
-	private ArrayList<Newsfeed> feedItems;
 	private MyPostsAdapter postsAdapter;
 	private int numOfTotalResult;
 	SnapPreference pref;
-
+	private Realm realm;
+	private SnapNetworkUtils netUtils = new SnapNetworkUtils();
 	private static String URL_FEED = null;
 
 	@Override
@@ -68,72 +59,15 @@ public class MyPostsView extends Fragment {
 		t.setScreenName(MyPostsView.class.getSimpleName());
 		t.send(new HitBuilders.AppViewBuilder().build());
 
+		realm = Realm.getInstance(getActivity());
 		pref = new SnapPreference(getActivity());
 		URL_FEED = SnapConstants.SERVER_URL
 				+ SnapConstants.MYPOST_REQUEST(pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0));
 
 		View view = inflater.inflate(R.layout.activity_my_posts_view, container, false);
 		gridView = (GridView) view.findViewById(R.id.my_posts_main_grid_view);
-		feedItems = new ArrayList<Newsfeed>();
-		postsAdapter = new MyPostsAdapter(getActivity(), feedItems);
+		postsAdapter = new MyPostsAdapter(getActivity(), realm.where(MyPost.class).findAll(), true);
 		gridView.setAdapter(postsAdapter);
-		gridView.setOnItemLongClickListener(new OnItemLongClickListener() {
-			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
-					.setConverter(new GsonConverter(new Gson())).build();
-			SnapShopService service = restAdapter.create(SnapShopService.class);
-			int pid;
-			int mPosition;
-
-			/**
-			 * 롱터치를 통해 포스트 삭제
-			 */
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
-				pid = (int) id;
-				mPosition = position;
-				alt_bld.setMessage("Do you want to delete your post?").setCancelable(true)
-						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								service.deletePost(pid, pref.getValue(SnapPreference.PREF_CURRENT_USER_ID, 0),
-										new Callback<DefaultResponse>() {
-											@Override
-											public void success(DefaultResponse defResp, retrofit.client.Response arg1) {
-												if (defResp.getStatus() == SnapConstants.SUCCESS) {
-													Toast.makeText(getActivity(), "The post was deleted.",
-															Toast.LENGTH_SHORT).show();
-													feedItems.remove(mPosition);
-													postsAdapter.notifyDataSetChanged();
-												} else if (defResp.getStatus() == SnapConstants.ERROR) {
-													Toast.makeText(getActivity(), "Deletion failed", Toast.LENGTH_SHORT)
-															.show();
-												}
-											}
-
-											@Override
-											public void failure(RetrofitError arg0) {
-												Toast.makeText(getActivity(),
-														"Network Error - " + arg0.getLocalizedMessage(),
-														Toast.LENGTH_SHORT).show();
-
-											}
-										});
-
-							}
-						}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-
-				AlertDialog alert = alt_bld.create();
-				alert.setTitle("Delete Post");
-				alert.show();
-
-				return true;
-			}
-		});
-
 		gridView.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
@@ -151,7 +85,10 @@ public class MyPostsView extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		fetchDataFromServer(1);
+		if (netUtils.isOnline(getActivity())) {
+			clearRealm();
+			fetchDataFromServer(1);
+		}
 	}
 
 	private void fetchDataFromServer(int start) {
@@ -201,11 +138,12 @@ public class MyPostsView extends Fragment {
 				Toast.makeText(getActivity(), "No My Posts", Toast.LENGTH_SHORT).show();
 				return;
 			}
+			realm.beginTransaction();
 			numOfTotalResult = response.getInt("total");
 			JSONArray feedArray = response.getJSONArray("data");
 			for (int i = 0; i < feedArray.length(); i++) {
 				JSONObject feedObj = (JSONObject) feedArray.get(i);
-				Newsfeed item = new Newsfeed();
+				MyPost item = realm.createObject(MyPost.class);
 				item.setPid(feedObj.getInt("pid"));
 				item.setTitle(feedObj.getString("title"));
 				item.setShopUrl(feedObj.getString("shopUrl"));
@@ -217,14 +155,12 @@ public class MyPostsView extends Fragment {
 				item.setWriter(feedObj.getString("writer"));
 				item.setUserLike(feedObj.getInt("like"));
 				item.setRead(feedObj.getInt("read"));
-				feedItems.add(item);
 			}
-
-			// notify data changes to list adapater
-			postsAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			e.printStackTrace();
+			realm.commitTransaction();
 		}
+		realm.commitTransaction();
 	}
 
 	@Override
@@ -232,7 +168,12 @@ public class MyPostsView extends Fragment {
 		Log.i(TAG, "Result - " + resultCode);
 	}
 
-	public void notifyDataSetChange() {
-
+	/**
+	 * @brief Realm 내에 모든 NewsfeedData를 제거한다.
+	 */
+	private void clearRealm() {
+		realm.beginTransaction();
+		realm.where(MyPost.class).findAll().clear();
+		realm.commitTransaction();
 	}
 }

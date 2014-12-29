@@ -37,7 +37,7 @@ public class AppController extends Application {
 		super.onCreate();
 		mInstance = this;
 	}
-	
+
 	public static synchronized AppController getInstance() {
 		return mInstance;
 	}
@@ -85,4 +85,10 @@ public class AppController extends Application {
 		}
 		return mTrackers.get(trackerId);
 	}
+	
+	public static Boolean valueOf(boolean b) {
+		return b ? Boolean.TRUE : Boolean.FALSE;
+	}
+	
+	
 }

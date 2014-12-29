@@ -1,5 +1,9 @@
 package com.l3cache.snapshop.myposts;
 
+import io.realm.Realm;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
+
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -30,47 +34,39 @@ import com.l3cache.snapshop.retrofit.SnapShopService;
 import com.l3cache.snapshop.volley.ExtendedImageLoader;
 import com.l3cache.snapshop.volley.FeedImageView;
 
-public class MyPostsAdapter extends BaseAdapter {
-	private Activity activity;
-	private LayoutInflater inflater;
-	private ArrayList<Newsfeed> feedItems;
+public class MyPostsAdapter extends RealmBaseAdapter<MyPost> {
 	private Button deleteButton;
-	private MyPostsAdapter adapter;
 	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-	public MyPostsAdapter(Activity activity, ArrayList<Newsfeed> feedItems) {
-		this.activity = activity;
-		this.feedItems = feedItems;
-		adapter = this;
+	public MyPostsAdapter(Context context, RealmResults<MyPost> realmResults, boolean automaticUpdate) {
+		super(context, realmResults, automaticUpdate);
 	}
 
 	@Override
 	public int getCount() {
-		return feedItems.size();
+		return realmResults.size();
 	}
 
 	@Override
-	public Object getItem(int location) {
-		return feedItems.get(location);
+	public MyPost getItem(int location) {
+		return realmResults.get(location);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return feedItems.get(position).getPid();
+		return realmResults.get(position).getPid();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		if (inflater == null)
-			inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (convertView == null)
 			convertView = inflater.inflate(R.layout.my_posts_volley_list_row, null);
 
 		if (imageLoader == null)
 			imageLoader = AppController.getInstance().getImageLoader();
 
-		Newsfeed item = feedItems.get(position);
+		MyPost item = realmResults.get(position);
 
 		FeedImageView feedImageView = (FeedImageView) convertView.findViewById(R.id.my_post_image_view);
 		TextView titleTextView = (TextView) convertView.findViewById(R.id.my_post_title_text_view);
@@ -85,7 +81,7 @@ public class MyPostsAdapter extends BaseAdapter {
 			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(SnapConstants.SERVER_URL)
 					.setConverter(new GsonConverter(new Gson())).build();
 			SnapShopService service = restAdapter.create(SnapShopService.class);
-			SnapPreference pref = new SnapPreference(activity);
+			SnapPreference pref = new SnapPreference(context);
 			int position;
 			int pid;
 
@@ -93,7 +89,7 @@ public class MyPostsAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				position = (int) v.getTag();
 				pid = (int) getItemId(position);
-				AlertDialog.Builder alt_bld = new AlertDialog.Builder(activity);
+				AlertDialog.Builder alt_bld = new AlertDialog.Builder(context);
 				alt_bld.setMessage("Do you want to delete your post?").setCancelable(true)
 						.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
@@ -102,20 +98,22 @@ public class MyPostsAdapter extends BaseAdapter {
 											@Override
 											public void success(DefaultResponse defResp, retrofit.client.Response arg1) {
 												if (defResp.getStatus() == SnapConstants.SUCCESS) {
-													feedItems.remove(position);
-													adapter.notifyDataSetChanged();
-													Toast.makeText(activity, "The post was deleted", Toast.LENGTH_SHORT)
+													Realm realm = Realm.getInstance(context);
+													realm.beginTransaction();
+													realmResults.remove(position);
+													realm.commitTransaction();
+													Toast.makeText(context, "The post was deleted", Toast.LENGTH_SHORT)
 															.show();
 
 												} else {
-													Toast.makeText(activity, "Deletion failed", Toast.LENGTH_SHORT)
+													Toast.makeText(context, "Deletion failed", Toast.LENGTH_SHORT)
 															.show();
 												}
 											}
 
 											@Override
 											public void failure(RetrofitError arg0) {
-												Toast.makeText(activity,
+												Toast.makeText(context,
 														"Network Error - " + arg0.getLocalizedMessage(),
 														Toast.LENGTH_SHORT).show();
 											}

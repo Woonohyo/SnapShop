@@ -1,5 +1,6 @@
 package com.l3cache.snapshop.login;
 
+import io.realm.Realm;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -51,7 +52,8 @@ public class LoginView extends FragmentActivity {
 		Tracker t = ((AppController) getApplication()).getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName(LoginView.class.getSimpleName());
 		t.send(new HitBuilders.AppViewBuilder().build());
-
+		
+		Realm.deleteRealmFile(getApplicationContext());
 		context = getApplicationContext();
 		pref = new SnapPreference(context);
 

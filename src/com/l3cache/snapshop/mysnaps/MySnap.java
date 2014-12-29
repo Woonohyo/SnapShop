@@ -1,6 +1,10 @@
 package com.l3cache.snapshop.mysnaps;
 
-public class MySnap {
+import io.realm.RealmObject;
+import io.realm.annotations.RealmClass;
+
+@RealmClass
+public class MySnap extends RealmObject {
 	private int pid;
 	private String title;
 	private String shopUrl;
