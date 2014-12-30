@@ -41,7 +41,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 	private static final String TAG = NewsfeedVolleyRealmAdapter.class.getSimpleName();
 	ExtendedImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-	private static class MyViewHolder {
+	private static class NewsFeedViewHolder {
 		FeedImageView feedImageView;
 		TextView writerTextView;
 		Button priceButton;
@@ -66,12 +66,12 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		MyViewHolder viewHolder;
+		NewsFeedViewHolder viewHolder;
 		Newsfeed item = realmResults.get(position);
 
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.newsfeed_volley_list_row, parent, false);
-			viewHolder = new MyViewHolder();
+			viewHolder = new NewsFeedViewHolder();
 			viewHolder.feedImageView = (FeedImageView) convertView.findViewById(R.id.newsfeed_item_image_view);
 			viewHolder.writerTextView = (TextView) convertView.findViewById(R.id.newsfeed_item_writer_text_view);
 			viewHolder.priceButton = (Button) convertView.findViewById(R.id.newsfeed_item_price_button);
@@ -84,7 +84,7 @@ public class NewsfeedVolleyRealmAdapter extends RealmBaseAdapter<Newsfeed> imple
 			convertView.setTag(viewHolder);
 
 		} else {
-			viewHolder = (MyViewHolder) convertView.getTag();
+			viewHolder = (NewsFeedViewHolder) convertView.getTag();
 		}
 
 		if (imageLoader == null)

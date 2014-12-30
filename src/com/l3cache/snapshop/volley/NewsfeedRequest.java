@@ -21,7 +21,6 @@ public class NewsfeedRequest extends Request<JSONObject> {
 
 	public NewsfeedRequest(int method, String url, ErrorListener listener) {
 		super(method, url, listener);
-		// TODO Auto-generated constructor stub
 	}
 
 	public NewsfeedRequest(String url, Map<String, String> params, Listener<JSONObject> responseListener,

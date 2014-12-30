@@ -26,6 +26,19 @@
         android:dropDownSelector="@color/white"
         android:focusable="false" />
 
+    <Button
+        android:id="@+id/newsfeed_refresh_button"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_parent_rounded_corner"
+        android:gravity="center|center_vertical"
+        android:text="Check New Post!"
+        android:textColor="@color/snap_green" >
+    </Button>
+
     <com.l3cache.snapshop.fab.FloatingActionsMenu
         android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"

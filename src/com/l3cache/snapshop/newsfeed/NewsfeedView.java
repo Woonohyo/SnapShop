@@ -46,6 +46,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -64,9 +65,7 @@ import com.l3cache.snapshop.app.AppController.TrackerName;
 import com.l3cache.snapshop.fab.FloatingActionButton;
 import com.l3cache.snapshop.fab.FloatingActionsMenu;
 import com.l3cache.snapshop.listener.EndlessScrollListener;
-import com.l3cache.snapshop.naversearch.SearchResultsView;
 import com.l3cache.snapshop.photocrop.Crop;
-import com.l3cache.snapshop.postviewer.PostViewer;
 import com.l3cache.snapshop.upload.UploadPostView;
 import com.l3cache.snapshop.utils.SnapNetworkUtils;
 import com.l3cache.snapshop.volley.NewsfeedRequest;
@@ -89,14 +88,14 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 	private OnTouchListener newPostButtonTouchListener;
 	private SnapNetworkUtils netUtils = new SnapNetworkUtils();
 	private Realm realm;
+	private Button refreshButton;
 	/**
-	 * GCM으로부터 Notification이 온 경우 gridview를 새로고침한다.
+	 * GCM으로부터 Notification이 온 경우 Refresh Button을 화면에 보여주고, 터치할 경우 데이터를 새로 받아온다.
 	 */
 	private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			clearRealm();
-			reloadDataFromServer();
+			refreshButton.setVisibility(View.VISIBLE);
 		}
 	};
 
@@ -114,11 +113,6 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		mGridView.setOnScrollListener(endlessScrollListener);
 		initGridViewItemClickListener();
 		mGridView.setOnItemClickListener(gridViewItemClickListener);
-		// mGridView.setOnRefreshListener(new OnRefreshListener<GridView>() {
-		// @Override
-		// public void onRefresh(PullToRefreshBase<GridView> refreshView) {
-		// }
-		// });
 
 		sortSpinner = (Spinner) view.findViewById(R.id.newsfeed_spinner_sort);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -126,6 +120,23 @@ public class NewsfeedView extends Fragment implements OnItemSelectedListener {
 		sortSpinner.setAdapter(spinnerAdapter);
 		sortSpinner.setOnItemSelectedListener(this);
 		sortSpinner.setSelection(1);
+
+		refreshButton = (Button) view.findViewById(R.id.newsfeed_refresh_button);
+		refreshButton.setVisibility(View.INVISIBLE);
+		refreshButton.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					clearRealm();
+					reloadDataFromServer();
+					Toast.makeText(getActivity(), "Refreshing!", Toast.LENGTH_SHORT).show();
+					refreshButton.setVisibility(View.INVISIBLE);
+					return true;
+				}
+				return false;
+			}
+		});
 
 		initNewPostButtonTouchListener();
 
