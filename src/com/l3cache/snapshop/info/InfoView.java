@@ -65,12 +65,13 @@ public class InfoView extends Fragment {
 				if (tpResp.getResult() == SnapConstants.SUCCESS) {
 					totalPostPriceTextView.setText(format.format(tpResp.getTotal()));
 				} else {
-					totalPostPriceTextView.setText("Error");
+					totalPostPriceTextView.setText("0");
 				}
 			}
 
 			@Override
 			public void failure(RetrofitError error) {
+				totalPostPriceTextView.setText("0");
 				Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -81,12 +82,13 @@ public class InfoView extends Fragment {
 				if (tpResp.getResult() == SnapConstants.SUCCESS) {
 					totalSnapPriceTextView.setText(format.format(tpResp.getTotal()));
 				} else {
-					totalSnapPriceTextView.setText("Error");
+					totalSnapPriceTextView.setText("0");
 				}
 			}
 
 			@Override
 			public void failure(RetrofitError error) {
+				totalSnapPriceTextView.setText("0");
 				Toast.makeText(getActivity(), "Network Error", Toast.LENGTH_SHORT).show();
 			}
 		});
